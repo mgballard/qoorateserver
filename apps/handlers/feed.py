@@ -4,7 +4,7 @@ from brubeck.request_handling import JSONMessageHandler
 from brubeck.templating import load_jinja2_env, Jinja2Rendering
 import sys
 import urllib2
-import urlparse
+from urlparse import urlparse
 import functools
 import logging
 import os
@@ -1138,10 +1138,10 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
         
         if url[0:1] == '/':
-            url = "%s%s" % (base_url, pageUrl)
+            url = "%s%s" % (base_url, url)
 
         elif parse_url[2] == '':
-            url = "%s/%s" % (base_url, pageUrl)
+            url = "%s/%s" % (base_url, url)
 
         else:
             path_parts = url.split('/')
@@ -1149,6 +1149,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             url = "%s/%s/" % (base_url, path_parts.join('/'), url)
 
         logging.debug("base_url %s" % base_url)
+        logging.debug("url %s" % url)
 
         return url
 

@@ -1518,7 +1518,7 @@ $(document).ready(function() {
                 // $replyLink.addClass('disabled');
                 // $dynForm.find('a.attachLink').addClass('disabled');
             }
-            var $loading = $('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_URI + '/img/load.gif" /></div></div></div>');
+            var $loading = $('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_URI + '/q/img/load.gif" /></div></div></div>');
 
             // SM: 20120104 - Moved loading image
             //$('div.' + _id).prepend(loading_html);
