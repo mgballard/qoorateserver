@@ -1,6 +1,13 @@
 var qoorateConfig = {
     QOORATE_URI: 'http://qrate.co',
+    QOORATE_API_URI: 'http://qoorate.sethmurphy.com/q',
     PROXY_URI: '/qoo_post.php',
+
+    XHR_PROXY_URI: '/q/feed', // if client supports? not yet.
+                              // would append QOORATE_URI
+    UPLOAD_URI: '/q_post.php?action=uploader',
+    XHR_UPLOAD_URI: '/q/uploader', // if client supports? not yet.
+                                   // would append QOORATE_URI
     POST_MAX_LEN: 1000
 }
 

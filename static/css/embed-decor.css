@@ -470,7 +470,7 @@ This also includes all
 a.q_toggle.q_children,
 #q_overlay_content a.login span
 {
-    background: url("/img/q_sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("../img/q_sprite.png") no-repeat scroll 0 0 transparent;
 }
 
 #q_ #q_socl .q_inr {
@@ -670,7 +670,7 @@ a.q_toggle.q_children,
 }
 
 #q_ div.flagAreaWrapper-outer {
-    background: url("/img/q_sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("../img/q_sprite.png") no-repeat scroll 0 0 transparent;
     background-position: -194px -267px;
 }
 

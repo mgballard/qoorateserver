@@ -4,6 +4,7 @@ from brubeck.request_handling import JSONMessageHandler
 from brubeck.templating import load_jinja2_env, Jinja2Rendering
 import sys
 import urllib2
+import urlparse
 import functools
 import logging
 import os

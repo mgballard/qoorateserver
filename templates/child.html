@@ -1,5 +1,7 @@
+            {% if comment.child_sequence == 1 %}
             <a class="q_toggle q_children toggled co-{{comment.relatedId}}" href="#" style="display: none; ">toggle</a>
             <div class="q_qth"></div>
+            {% endif %}            
             <div class="q_inr">
                 <div class="q_left">
                     <img width="50" height="50" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge)}}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />

@@ -31,30 +31,35 @@ class EmbedHandler(Jinja2Rendering, QoorateBaseHandler, WebMessageHandler):
 
 
     def get(self):
-
-        comments = self.comment_item_queryset.load_comments_by_location_and_page(self.table, self.location)
-        contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
-
-        contribution_text = "Be the First to Contribute"
-
-        if contributions == 1:
-            contribution_text = "%d Contribution" % contributions
-        elif contributions > 1:
-            contribution_text = "%d Contributions" % contributions
-
-        parent_tag = 'p' + self.table[1:]
-        context = {
-            'app': self.application.get_settings('app'),
-            'location': self.location,
-            'qoorate_url': self.qoorate_url,
-            'parent_tag': parent_tag,
-            'table': self.table,
-            'page': self.page,
-            'comments': comments,
-            'contribution_text': contribution_text,
-            'current_user': self.current_user,
-            'related_user': None,
-            'thumbnailLargeHash': None,
-        }
-
-        return self.render_template('embed.html', **context)
+        if self.get_argument('action', None) == 'embed_head':
+            logging.debug('embed_head')
+            context = {'qoorate_base_uri': self.settings['QOORATE_API_URI']}
+            return self.render_template('embed_head.html', **context)
+        else:
+            logging.debug('embed_content')
+            comments = self.comment_item_queryset.load_comments_by_location_and_page(self.table, self.location)
+            contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
+    
+            contribution_text = "Be the First to Contribute"
+    
+            if contributions == 1:
+                contribution_text = "%d Contribution" % contributions
+            elif contributions > 1:
+                contribution_text = "%d Contributions" % contributions
+    
+            parent_tag = 'p' + self.table[1:]
+            context = {
+                'app': self.application.get_settings('app'),
+                'location': self.location,
+                'qoorate_url': self.qoorate_url,
+                'parent_tag': parent_tag,
+                'table': self.table,
+                'page': self.page,
+                'comments': comments,
+                'contribution_text': contribution_text,
+                'current_user': self.current_user,
+                'related_user': None,
+                'thumbnailLargeHash': None,
+            }
+    
+            return self.render_template('embed_content.html', **context)

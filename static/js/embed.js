@@ -1658,13 +1658,11 @@ $(document).ready(function() {
     var createUploader = function(id) {
         var uploader = new qq.FileUploader({
             element: document.getElementById(id),
-            //action: qoorateConfig.QOORATE_URI + '/uploader',
-            //action: '/uploader',
             action: qoorateConfig.PROXY_URI + '?action=uploader',
             debug: true,
             onComplete: function(id, fileName, responseJSON) { 
                                                                 if( $('.q_qq-upload-success').length > 0 ) { 
-                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_URI + '/php/tmp/' + responseJSON.hash + '_s.jpg">'
+                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/uploader/images/' + responseJSON.hash + '">'
                                                                     $('.q_qq-upload-success').prepend('<span class="q_qq-upload-file-preview">' + preImg + '</span>');
                                                                     var $replyPhoto = $('.do.action.replyPhoto');
                                                                     var preVal = $replyPhoto.data("preVal");
@@ -1699,7 +1697,7 @@ $(document).ready(function() {
                 }
             }
 
-            var url = qoorateConfig.QOORATE_URI + '/oauth/' + provider_full + '/login'
+            var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login'
             $.oauthpopup({
                 path: url + '?QOOID=' + $.cookie('QOOID'),
                 callback: getCallback(callback),
