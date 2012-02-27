@@ -1,0 +1,25 @@
+{% for comment in comments %}
+    {% if comment.relatedId > 0 %}
+        <li id="{{table}}-{{comment.id}}" class="q_item lv-2 vi-l tp-0 co-{{comment.relatedId}} c cn-1 {{parent_tag}}-{{comment.id}} l">
+            {% include "child.html" %}
+        </li>
+    {% elif comment.type == 0 %}
+        <li id="{{table}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}} ">
+            {% include "comment.html" %}
+        </li>
+    {% elif comment.type == 1 %}
+        <li id="{{table}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}} ">
+            {% include "image.html" %}
+        </li>
+    {% elif comment.type == 2 %}
+        <li id="{{table}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}} ">
+            {% include "link.html" %}
+        </li>
+    {% elif comment.type == 10 %}
+        <li id="{{table}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}} ">
+            {% include "topic.html" %}
+        </li>
+    {% endif %}        
+{% else %}
+    <!-- no comments -->
+{% endfor %}
