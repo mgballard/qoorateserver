@@ -8,7 +8,10 @@ from urlparse import urlparse
 from PIL import Image as PilImage
 import os
 import logging
-
+import urllib2
+import md5
+import time
+import magic
 import boto
 from boto.s3.key import Key
 
