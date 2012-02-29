@@ -63,19 +63,14 @@ class QoorateBaseHandler(MessageHandler):
         return self.get_argument('q_api_key', None)
 
     @lazyprop
-    def q_api_key(self):
-        """this is required for Brubeck authentication decorater to work"""
-        return self.get_argument('q_api_key', None)
-
-    @lazyprop
     def q_api_secret(self):
         """this is required for Brubeck authentication decorater to work"""
-        return self.get_argument('q_api_key', None)
+        return self.get_argument('q_api_secret', None)
 
     @lazyprop
     def q_short_name(self):
         """this is required for Brubeck authentication decorater to work"""
-        return self.get_argument('q_api_key', None)
+        return self.get_argument('q_short_name', None)
 
     @lazyprop
     def table(self):
@@ -85,13 +80,8 @@ class QoorateBaseHandler(MessageHandler):
         return self.get_argument('table', None)
 
     @lazyprop
-    def page(self):
-        """defines the page the comments are for"""
-        return self.get_argument('page', None)
-
-    @lazyprop
     def location(self):
-        """defines the item(same as page?) the comments are for"""
+        """defines the page/location the comments are for"""
         return self.get_argument('location', None)
 
     @lazyprop

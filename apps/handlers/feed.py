@@ -156,9 +156,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
     def prepare(self):
         # TODO: Actually get these from the DB
-        self._location = 'b4d7305594aafa9493f2b7e14d2ff492'
-        self._table = 'q_4044060355'
-
         """prepare what we need for each request"""
         self.comment_item_queryset = CommentItemQueryset(self.application.get_settings('mysql'), self.table, db_conn = self.application.db_conn)
 
@@ -284,17 +281,17 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         # The client expects error = 0 to mean success
         self.add_to_payload('contributions', self.getContributionCount())
         self.add_to_payload('table', self.table)
-        self.add_to_payload('page', self.page)
+        self.add_to_payload('location', self.location)
         self.add_to_payload('error', 0)
         self.set_status(200)
         return self.render()
 
     def getContributionCount(self):
         """adds our contribtion count to the payload"""
-        if self.table == None or self.page == None:
+        if self.table == None or self.location == None:
             return 0
         else:
-            return self.comment_queryset.get_count_by_table_and_location(self.table, self.page)
+            return self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
 
     ##
     ## All off our action methods
@@ -371,7 +368,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         parentId = 0
         parent = None
         if self.relatedId > 0:
-            parentId = self.comment_queryset.get_parent_id(self.page, self.relatedId, self.table)
+            parentId = self.comment_queryset.get_parent_id(self.location, self.relatedId, self.table)
             if parentId == 0:
                 parentId = self.relatedId
 
@@ -425,7 +422,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             'relatedId':        self.relatedId,
             'parentId':         parentId, 
             'name':             name,
-            'location':         self.page,
+            'location':         self.location,
             'userId':           self.current_user.id,
             'type':             type,
             'voteCount':        0,
@@ -459,7 +456,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
                 'location': self.location,
                 'parent_tag': parent_tag,
                 'table': self.table,
-                'page': self.page,
                 'comments': [item],
                 'current_user': self.current_user,
                 'related_user': related_user,
@@ -470,7 +466,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             # currentlly JS wants all comments for a prent when a reply is made
             # so, we will do teh same for now. seems harsh.
             if item.parentId > 0:
-                comments = self.comment_item_queryset.load_comments_by_location_and_page(self.table, self.location, parentId = item.parentId)
+                comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, parentId = item.parentId)
                 context['comments'] = comments
 
             html = self.render_partial('comments.html', **context)
@@ -1198,7 +1194,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             dateOrder = 'DESC'
             voteOrder = None
 
-        comments = self.comment_item_queryset.load_comments_by_location_and_page(self.table, self.location, sortOrder=sortOrder, dateOrder=dateOrder, voteOrder=voteOrder)
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, sortOrder=sortOrder, dateOrder=dateOrder, voteOrder=voteOrder)
         contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
 
 
@@ -1208,7 +1204,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             'location': self.location,
             'parent_tag': parent_tag,
             'table': self.table,
-            'page': self.page,
             'comments': comments,
             'current_user': self.current_user,
             'related_user': None,

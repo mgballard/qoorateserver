@@ -34,7 +34,7 @@ $(document).ready(function() {
 
     /* Our "global" vars */
     // GD moved for availability in sort
-    var page_md5 = $('#q_').attr('class');
+    var location_md5 = $('#q_').attr('class');
     
     //close the sort drop down if its open
     $('body').click(function(){
@@ -677,7 +677,7 @@ $(document).ready(function() {
  
     // SM: 20111228 - Moved from doPost
     // GD: 20110102 - Moved from a click function for availability in sort onchange
-    var handleResponse = function( $source_object, _table,_item,_id,_action,_block,_page ) {
+    var handleResponse = function( $source_object, _table,_item,_id,_action,_block,_location ) {
         return function(data) {
             if(data) {
                 // SM: 20120107 - Moved parsing message to new function
@@ -738,6 +738,7 @@ $(document).ready(function() {
                                 $('#q_cmnt_contents').children().remove();
                                 $('#q_cmnt_contents').append($data);
                                 $('#q_cmnt').css('visibility', 'visible');
+                                addLastItemClassToChildren( $('#q_cmnt_contents') );
                                 return false;
                             }
 
@@ -1433,7 +1434,7 @@ $(document).ready(function() {
 
 
     // SM: 20111229 - added source object as first parameter
-    var doPost = function($source_object, _table,_item,_id,_action,_block,_page) {
+    var doPost = function($source_object, _table,_item,_id,_action,_block,_location) {
         //    console.log("table:"+_table);
         //    console.log("item:"+_item);
         //    console.log("id:"+_id);
@@ -1458,7 +1459,7 @@ $(document).ready(function() {
 
         var _query = $allInputs.serializeArray();
         _query.push({ "name":"action",    "value":_action});
-        _query.push({ "name":"page",    "value":_page});
+        _query.push({ "name":"location",    "value":_location});
         _query.push({ "name":"referer", "value":window.location.href}); // SM: we need this to ('replyTopic')post a link on social shares
         _query.push({ "name":"table",    "value":_table});
 
@@ -1551,7 +1552,7 @@ $(document).ready(function() {
         } else {
             //console.log(_block);
             //console.log("action:" + _action);
-            $.post(qoorateConfig.PROXY_URI, _query, handleResponse( $source_object, _table,_item, _id, _action, _block, _page ));
+            $.post(qoorateConfig.PROXY_URI, _query, handleResponse( $source_object, _table,_item, _id, _action, _block, _location ));
             //.complete( function() {
             //    $replyLink.removeClass('disabled');
             //}); 
@@ -2017,19 +2018,19 @@ $(document).ready(function() {
                           !$this.hasClass('getMoreChildren') && !$this.hasClass('upVote') && 
                           !$this.hasClass('downVote') && !isLoggedIn() 
                        ) {
-                        var getDoPost = function( $source, target_table, target_item, target_id, post_action, block_class, page_md5) {
+                        var getDoPost = function( $source, target_table, target_item, target_id, post_action, block_class, location_md5) {
                             return function() {
                                 $source.addClass('disabled');
-                                doPost( $source, target_table, target_item, target_id, post_action, block_class, page_md5 );
+                                doPost( $source, target_table, target_item, target_id, post_action, block_class, location_md5 );
                             }
                         };
-                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoPost( $this, target_table, target_item, target_id, post_action, block_class, page_md5 ) );
+                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoPost( $this, target_table, target_item, target_id, post_action, block_class, location_md5 ) );
                         return false;
                     }
 
                     $this.addClass('disabled');
                     // SM: 20111229 - Added source as first parameter
-                    doPost($this, target_table,target_item,target_id,post_action,block_class,page_md5);
+                    doPost($this, target_table,target_item,target_id,post_action,block_class,location_md5);
                     return false;
                 }
     

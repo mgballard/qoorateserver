@@ -45,6 +45,9 @@ class MySqlQueryset(object):
         """Make sure we have a db connection, and return it"""
         if self.db_conn == None:
             self.init_db_conn()
+        else:
+            # try to avoid broken pipe error
+            self.db_conn.ping()
 
         return self.db_conn
 

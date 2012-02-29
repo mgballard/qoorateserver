@@ -10,7 +10,7 @@ from dictshield.fields import compound as CompoundFields
 from modules.mysql.querysets import MySqlQueryset, MySqlApiQueryset
 
 import dictshield
-from models.models import Comment, Image, User, Qoorate, CommentItem, Vote, Flag
+from models.models import Comment, Image, User, Qoorate, CommentItem, Vote, Flag, KeyPair, Qoorate
 
 ###
 ### All of our application specific data interaction with any data store happens in a Queryset object
@@ -34,7 +34,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
 
 
-    def load_comments_by_location_and_page(self, table, page=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC'):
+    def load_comments_by_table_and_location(self, table, location=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC'):
         """Loads comment"""
         self.init_db_conn()
 
@@ -89,7 +89,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
         params_dict = {
             'table': table,
-            'location': page,
+            'location': location,
             'parentRangeTop': parentRangeTop,
             'parentOffset': parentOffset,
             'parentRangeTop': parentRangeTop,
@@ -156,24 +156,21 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
             ((0 = %(childRangeTop)d and child_sequence >= %(childOffset)d) or (child_sequence=0 or child_sequence BETWEEN %(childOffset)d AND %(childRangeTop)d))
         """ % params_dict
 
-        logging.debug(sql)
 
-        cursor = self.db_conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute (sql)
-        rows = cursor.fetchall ()
+        rows = self.query(sql)
 
         comments = []
 
 
         for row in rows:
-            for field in row:
-                logging.debug("%s: %s" % (field, row[field]))
+            #for field in row:
+            #    logging.debug("%s: %s" % (field, row[field]))
  
             # logging.debug("row -> \n %s" % (row))
             comment = CommentItem(**row)
             # logging.debug("comment -> \n %s" % (comment.to_json()))
             if comment.type==1:
-                logging.debug("table, comment.id: %s, %s" % (table, comment.id))
+                #logging.debug("table, comment.id: %s, %s" % (table, comment.id))
                 comment.images = self.image_queryset.load_images_by_item_id(table, comment.id)
 
             comments.append(comment)
@@ -252,12 +249,7 @@ class CommentQueryset(MySqlApiQueryset):
             SELECT count(*) as recordCount FROM `%s` WHERE `location` = ?
         """ % table
 
-        logging.debug(sql)
-
-        cursor = self.db_conn.cursor()
-        cursor.execute (sql)
-        row = cursor.fetchone ()
-
+        row = self.fetch (sql)
 
         if row is None:
             logging.debug("No contributions")
@@ -303,8 +295,6 @@ class UserQueryset(MySqlApiQueryset):
         """ % (self.get_fields_list(), self.table_name)
 
         row = self.query(sql, [qooid], self.FORMAT_DICT,True)
-
-        logging.debug(row)
 
         if row is None:
             return None
@@ -549,3 +539,105 @@ class FlagQueryset(MySqlApiQueryset):
             return 0
         
         return row['flagCount']
+
+
+class KeyPairQueryset(MySqlApiQueryset):
+    """ This is a simple, completely standard one to one mapping to the DB
+        Only dict are returned, if you want a DictShield item 
+        that is the callers responsability to call dictListToDictShieldList
+    """
+
+    def __init__(self, settings, db_conn = None, **kw):
+        """We may want to resuse a db_conn, not sure yet
+           We need to pass the tablename since it may be different
+           based on the API key
+        """
+        """call our MySql __init__.
+           This will create a connection for us if we need it
+        """
+        super(KeyPairQueryset, self).__init__(settings, db_conn=db_conn, **kw)
+        
+        self.table_name = settings["TABLES"]["KEYPAIR"]["TABLE_NAME"]
+        self.fields = settings["TABLES"]["KEYPAIR"]["FIELDS"]
+        self.fields_muteable = settings["TABLES"]["KEYPAIR"]["FIELDS_MUTEABLE"]
+
+    def dictListToDictShieldList(self, dictList):
+        """utility function to convert a list of dict items to a list of DictShield items
+           think hard before you use this, you are probably wasting your time, and the computers CPU
+           TODO: This really is common functionality, probably should be abstracted a bit
+        """
+        items = []
+
+        for dictItem in dictList:
+            items.append(KeyPair(**dictItem))
+
+        return items
+
+    ###
+    ### Our special queries that have filters
+    ###
+
+    def authenticate(self, key, secret):
+        """authenticate an API key"""
+        sql = """
+            SELECT %s FROM `%s` WHERE `key` = %%s and `secret`= %%s
+        """ % (self.get_fields_list(), self.table_name)
+
+        row = self.dictListToDictShieldList(self.query(sql, [key, secret]))
+        
+        if row == None:
+            return False;
+        else:
+            return True;
+
+
+class QoorateQueryset(MySqlApiQueryset):
+    """ This is a simple, completely standard one to one mapping to the DB
+        Only dict are returned, if you want a DictShield item 
+        that is the callers responsability to call dictListToDictShieldList
+    """
+
+    def __init__(self, settings, db_conn = None, **kw):
+        """We may want to resuse a db_conn, not sure yet
+           We need to pass the tablename since it may be different
+           based on the API key
+        """
+        """call our MySql __init__.
+           This will create a connection for us if we need it
+        """
+        super(QoorateQueryset, self).__init__(settings, db_conn=db_conn, **kw)
+        
+        self.table_name = settings["TABLES"]["QOORATE"]["TABLE_NAME"]
+        self.fields = settings["TABLES"]["QOORATE"]["FIELDS"]
+        self.fields_muteable = settings["TABLES"]["QOORATE"]["FIELDS_MUTEABLE"]
+
+    def dictListToDictShieldList(self, dictList):
+        """utility function to convert a list of dict items to a list of DictShield items
+           think hard before you use this, you are probably wasting your time, and the computers CPU
+           TODO: This really is common functionality, probably should be abstracted a bit
+        """
+        items = []
+
+        for dictItem in dictList:
+            items.append(Qoorate(**dictItem))
+
+        return items
+
+    ###
+    ### Our special queries that have filters
+    ###
+
+    def get_by_short_title(self, short_title):
+        """Loads qoorate by short name"""
+
+        sql = """
+            SELECT %s FROM `%s` WHERE `shortTitle` = %%s
+        """ % (self.get_fields_list(), self.table_name)
+
+        row = self.dictListToDictShieldList(self.query(sql, [short_title]))
+        
+        if row == None or row == []:
+            return None;
+        else:
+            return row[0];
+        

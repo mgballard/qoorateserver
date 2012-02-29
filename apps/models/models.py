@@ -104,27 +104,27 @@ class CommentItem(Document):
     """A single comment message
     This is not really an entity now, 
     but the data returned by a query need to build the template"""
-    parent_sequence = fields.LongField(required=True)
-    child_sequence = fields.LongField(required=True)
-    id = fields.LongField(required=True,id_field=True)
-    locationId = fields.LongField(required=True)
-    relatedId = fields.LongField(required=True)
-    parentId = fields.LongField(required=True)
-    userId = fields.LongField(required=True)
+    parent_sequence = fields.IntField(required=True)
+    child_sequence = fields.IntField(required=True)
+    id = fields.IntField(required=True,id_field=True)
+    locationId = fields.IntField(required=True)
+    relatedId = fields.IntField(required=True)
+    parentId = fields.IntField(required=True)
+    userId = fields.IntField(required=True)
     username = fields.StringField(max_length=255)
     userThumbnailLarge = fields.StringField(max_length=255)
     relatedUsername = fields.StringField(max_length=255)
     relatedUserThumbnailLarge = fields.StringField(max_length=255)
-    type = fields.LongField(required=True)
+    type = fields.IntField(required=True)
     name = fields.StringField(max_length=1000)
     location = fields.StringField(max_length=255)
     description = fields.StringField(max_length=5000)
-    voteCount = fields.LongField(required=True)
-    voteNumber = fields.LongField(required=True)
-    votesUp = fields.LongField(required=True)
-    votesDown = fields.LongField(required=True)
-    flagCount = fields.LongField(required=True)
-    sortOrder = fields.LongField(required=True)
+    voteCount = fields.IntField(required=True)
+    voteNumber = fields.IntField(required=True)
+    votesUp = fields.IntField(required=True)
+    votesDown = fields.IntField(required=True)
+    flagCount = fields.IntField(required=True)
+    sortOrder = fields.IntField(required=True)
     status = fields.StringField(max_length=255)
     thumbnailSmall = fields.StringField(max_length=40)
     thumbnailLarge = fields.StringField(max_length=40)
@@ -178,3 +178,44 @@ class Flag(Document):
     def __init__(self, *args, **kwargs):
         super(Flag, self).__init__(*args, **kwargs)
         self.timestamp = int(time.time() * 1000)
+
+class KeyPair(Document):
+    """An API key pair (key, secret)
+    Matches a row in MySQL table"""
+
+    id = fields.LongField(required=True,id_field=True)
+    key = fields.LongField(required=True)
+    secret = fields.LongField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(KeyPair, self).__init__(*args, **kwargs)
+        self.timestamp = int(time.time() * 1000)
+
+class Qoorate(Document):
+    """A single flag
+    Matches a row in MySQL table"""
+
+    id = fields.LongField(required=True,id_field=True)
+    userId = fields.LongField(required=True)
+    shortTitle = fields.StringField(required=True, max_length=255)
+    longTitle = fields.StringField(required=True, max_length=255)
+    url = fields.StringField(required=True, max_length=250)
+    preferences = fields.StringField(required=True, max_length=1000)
+    description = fields.StringField(max_length=255)
+    fieldNames = fields.StringField(max_length=255)
+    refTable = fields.StringField(required=True, max_length=255)
+    hasCat = fields.StringField(max_length=255)
+    hasLoc = fields.StringField(max_length=255)
+    hasPrice = fields.StringField(max_length=255)
+    hasDesc = fields.StringField(max_length=255)
+    createDate = fields.StringField(max_length=255)
+    hangeDate = fields.StringField(max_length=255)
+    catNames = fields.StringField(required=True, max_length=1000)
+    catAllowed = fields.StringField(required=True, max_length=1000)
+    thumbnailSmall = fields.StringField(max_length=255)
+    thumbnailLarge = fields.StringField(max_length=255)
+
+    def __init__(self, *args, **kwargs):
+        super(Qoorate, self).__init__(*args, **kwargs)
+        self.timestamp = int(time.time() * 1000)
+

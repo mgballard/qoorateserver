@@ -19,7 +19,7 @@ import datetime
 import qoorate
 
 from handlers.feed import FeedHandler
-from handlers.embed import EmbedHandler
+from handlers.embed import EmbedHandler,EmbedHandlerJSON 
 from modules.uploader.handlers import TemporaryImageUploadHandler, TemporaryImageViewHandler
 from handlers.oauth import QoorateOAuthHandler
 
@@ -40,6 +40,7 @@ config = {
     'mongrel2_pair': ('ipc://run/mongrel2_send', 'ipc://run/mongrel2_recv'),
     'handler_tuples': [ ## Set up our routes
         (r'^/q/feed', FeedHandler),
+        (r'^/q/embed/json', EmbedHandlerJSON),
         (r'^/q/embed', EmbedHandler),
         (r'^/q/uploader/images/(?P<file_name>.+)$', TemporaryImageViewHandler),
         (r'^/q/uploader', TemporaryImageUploadHandler),
