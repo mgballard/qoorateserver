@@ -121,3 +121,20 @@ class QoorateBaseHandler(MessageHandler):
         """used to initialize and cache the user queryset"""
         return self.settings['QOORATE_URI']
         
+    @lazyprop
+    def moreIndex(self):
+        """used to initialize and cache the user queryset"""
+        return self.get_argument('moreIndex', 1)
+        
+
+    @lazyprop
+    def childCount(self):
+        """get the number of children for paging"""
+        if self.action == 'getMoreChildren':
+            return 0
+        else:
+            return self.settings['CHILD_PAGE_SIZE']
+
+    @lazyprop
+    def parentCount(self):
+            return self.settings['PARENT_PAGE_SIZE']

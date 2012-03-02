@@ -47,7 +47,7 @@ def get_head_resources(qoorate_base_uri):
             )
         ),
     
-        ( "script", (
+        ( "jsconf", (
                 ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
                 ('type', "text/javascript"),
             )
@@ -132,7 +132,7 @@ class EmbedHandler(Jinja2Rendering, EmbedBaseHandler, WebMessageHandler):
             for resource in head_resources:
                 if resource[0]=='link':
                     content += build_link(resource[1])
-                if resource[0]=='script':
+                if resource[0]=='script' or resource[0]=='jsconf':
                     content += build_script(resource[1])
 
             self.set_status('200')
@@ -147,7 +147,12 @@ class EmbedHandler(Jinja2Rendering, EmbedBaseHandler, WebMessageHandler):
                 logging.debug('embed_content key secret invalid')
                 return self.render_template('embed_content_error.html', **context)            
             
-            comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, parentCount=self.settings['PARENT_PAGE_SIZE'] ,childCount=self.settings['CHILD_PAGE_SIZE'])
+            comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
+                self.location, 
+                parentOffset = self.moreIndex, 
+                parentCount=self.settings['PARENT_PAGE_SIZE'], 
+                childCount=self.settings['CHILD_PAGE_SIZE'])
+
             contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
     
             contribution_text = "Be the First to Contribute"
@@ -171,6 +176,9 @@ class EmbedHandler(Jinja2Rendering, EmbedBaseHandler, WebMessageHandler):
                 'current_user': self.current_user,
                 'related_user': None,
                 'thumbnailLargeHash': None,
+                'parentCount': self.parentCount,
+                'childCount': self.childCount,
+                'moreIndex': self.moreIndex,
             }
     
             return self.render_template('embed_content.html', **context)
@@ -188,7 +196,12 @@ class EmbedHandlerJSON(EmbedBaseHandler, JSONMessageHandler):
         head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
         self.add_to_payload('head', head_resources)
 
-        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, parentCount=self.settings['PARENT_PAGE_SIZE'] ,childCount=self.settings['CHILD_PAGE_SIZE'])
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
+            self.location,  
+            parentOffset = self.moreIndex, 
+            parentCount=self.settings['PARENT_PAGE_SIZE'], 
+            childCount=self.settings['CHILD_PAGE_SIZE'])
+
         contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
 
         contribution_text = "Be the First to Contribute"
@@ -210,6 +223,9 @@ class EmbedHandlerJSON(EmbedBaseHandler, JSONMessageHandler):
             'current_user': self.current_user,
             'related_user': None,
             'thumbnailLargeHash': None,
+            'parentCount': self.parentCount,
+            'childCount': self.childCount,
+            'moreIndex': self.moreIndex,
         }
 
         content = self.render_partial('embed_content.html', **context)

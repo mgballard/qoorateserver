@@ -90,6 +90,12 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return self.get_argument('relatedId',  0)
 
     @lazyprop
+    def parentId(self):
+        """ xxx argument
+        """
+        return self.get_argument('parentId',  0)
+
+    @lazyprop
     def description(self):
         """ xxx argument
         """
@@ -367,23 +373,13 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
         parentId = 0
         parent = None
-        if self.relatedId > 0:
-            parentId = self.comment_queryset.get_parent_id(self.location, self.relatedId, self.table)
-            if parentId == 0:
-                parentId = self.relatedId
-
+        related_comment = None
         related_user = None
-        if parentId > 0:
-            # get our related parent
-            parent_comment = Comment(**self.comment_queryset.read_one(parentId, table_name = self.table)[1])
-            
-            if parent_comment == None:
-                raise Exception("Invalid relatedId")
+        if self.relatedId > 0:
+            related_comment = self.comment_queryset.read_one(self.relatedId, table_name=self.table)[1]
+            parentId = related_comment['parentId'] if related_comment['parentId'] !=0 else related_comment['id']
+            related_user = User(**self.user_queryset.read_one(related_comment['userId'])[1])
 
-            # get our related parent
-            logging.debug("parent_comment.userId: %s" % parent_comment.userId)
-            related_user = User(**self.user_queryset.read_one(parent_comment.userId)[1])
-            logging.debug("related_user: %s" % related_user)
         # if we have a thumbnail, save to S3 and replace value withe new URL
         #if thumbnailLarge != None:
 
@@ -461,14 +457,43 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
                 'related_user': related_user,
                 'comment_images': [comment_image],
                 'thumbnailLargeHash': self.thumbnailLarge,
+                'parentCount': self.parentCount,
+                'childCount': self.childCount,
+                'moreIndex': self.moreIndex,
             }
             
             # currentlly JS wants all comments for a prent when a reply is made
-            # so, we will do teh same for now. seems harsh.
+            # so, we will do the same for now. seems harsh.
             if item.parentId > 0:
-                comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, parentId = item.parentId)
-                context['comments'] = comments
+                comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
+                    self.location, 
+                    parentId = item.parentId)
 
+                # we also want the new item to always be after related item
+                item_index = -1
+                related_item_index = -1
+                if len(comments) > 2:
+                    for x in range(0, len(comments)):
+                        comment = comments[x]
+                        if comment.id == item.id:
+                            item_index = x
+    
+                        if comment.id == item.relatedId:
+                            related_item_index = x
+                        if item_index>0 and related_item_index > 0:
+                            break;
+    
+                    item = comments[item_index]
+                    del comments[item_index]
+                    if related_item_index == 0:
+                        comments = comments[0] + [item] + comments[2:]
+                    elif related_item_index + 1 == len(comments):
+                        comments = comments[0:related_item_index + 1] + [item]
+                    else:
+                        comments = comments[0:related_item_index + 1] + [item] + comments[related_item_index + 2:]
+
+                context['comments'] = comments
+                    
             html = self.render_partial('comments.html', **context)
             logging.debug(html)
             self.add_to_payload('item', item)
@@ -1173,8 +1198,30 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return
 
     def performMoreChildren(self):
-        """xxx"""
-        raise Exception("performMoreChildren not implemented.")
+        """get all the children for a parent"""
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
+            self.location,  
+            parentId = self.parentId, 
+            parentCount=self.parentCount,
+            childCount=self.childCount)
+
+        parent_tag = 'p' + self.table[1:]
+
+        context = {
+            'app': self.application.get_settings('app'),
+            'location': self.location,
+            'parent_tag': parent_tag,
+            'table': self.table,
+            'comments': comments,
+            'current_user': self.current_user,
+            'related_user': None,
+            'parentCount': self.parentCount,
+            'childCount': self.childCount,
+            'moreIndex': self.moreIndex,
+        }
+        
+        self.add_to_payload("content", self.render_partial('comments.html', **context))
+
         return
 
     def performSort(self):
@@ -1194,7 +1241,15 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             dateOrder = 'DESC'
             voteOrder = None
 
-        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, self.location, sortOrder=sortOrder, dateOrder=dateOrder, voteOrder=voteOrder)
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
+            self.location,  
+            parentOffset = self.moreIndex, 
+            parentCount=self.settings['PARENT_PAGE_SIZE'] ,
+            childCount=self.settings['CHILD_PAGE_SIZE'], 
+            sortOrder=sortOrder, 
+            dateOrder=dateOrder, 
+            voteOrder=voteOrder)
+
         contributions = self.comment_queryset.get_count_by_table_and_location(self.table, self.location)
 
 
@@ -1207,6 +1262,9 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             'comments': comments,
             'current_user': self.current_user,
             'related_user': None,
+            'parentCount': self.parentCount,
+            'childCount': self.childCount,
+            'moreIndex': self.moreIndex,
         }
         
         self.add_to_payload("content", self.render_partial('comments.html', **context))

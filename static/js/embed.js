@@ -796,7 +796,8 @@ $(document).ready(function() {
     
                             // SM: 2011127 - Massage our order a bit for instant gratification
                             // child comment should be directly after related item
-                            var item = data_object.item;
+                            // WE DO THIS ON THE SERVER NOW
+                            /*var item = data_object.item;
                             var table = data_object.table;
                             if ( item && item.relatedId > 0 ) {
                                 var $new_item = null;
@@ -882,6 +883,7 @@ $(document).ready(function() {
                                 }
                                 $data = updateChildCNOrderClass( $data );
                             }
+                            */
                             // end massaging our new item placement
 
 
