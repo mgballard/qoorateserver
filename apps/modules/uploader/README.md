@@ -1,1 +1,0 @@
-This module contains basic file upload capabilities for brubeck

@@ -755,23 +755,6 @@ $(document).ready(function() {
                             }
 
                             if(_action == 'getMore') {
-                                /*
-                                 *
-                                 * NOT BEING USED WITH COMMENTS APPENDED TO TOP NOW DELETE?
-                                 * var nextId = $('span.more_link_all').next().attr('id');
-                                $span_sibling = $('a.getMore').parent().next();
-                                if($span_sibling.length > 0) {
-                                    $('span.more_link_all').remove();
-                                    if($data.find('div').parents().find('div.'+nextId).length > 0) {
-                                        $span_sibling.before(data);
-                                        $span_sibling.remove();
-                                    }else{
-                                        $span_sibling.before(data);
-                                    }
-                                }else{
-                                    $('.getMore').remove();
-                                    $('#q_cmnt_contents').append(data);
-                                }*/
                                 $('.getMore').remove();
                                 var $comments = $('#q_cmnt_contents');
                                 $comments.append($data);
@@ -890,10 +873,8 @@ $(document).ready(function() {
                             if ( !$('#'+_id).hasClass('lv-1') ) {
                                 //alert('THIS WORKS');
                                 _parent = $('#'+_id).prevAll('.lv-1')[0]; 
-                                var class_arr = _block.attr('class').split(" ");
-                                var parent_id = class_arr[class_arr.length - 1];
                                 $data = $data.slice(1);
-                                $('.'+parent_id).remove();
+                                $('.co-' + getValueFromClasses('co', _block.attr('class'))).remove();
                                 $parent = $(_parent);
                                 $parent.after($data);//.fadeIn('fast');*/
                             } else if ( $('#'+_id).hasClass('lv-1') ) {
