@@ -1,2 +1,6 @@
 development.py
 *.pyc
+apps/build
+apps/dist
+build
+dist
