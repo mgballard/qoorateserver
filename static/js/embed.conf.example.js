@@ -1,7 +1,7 @@
 var qoorateConfig = {
     QOORATE_URI: 'http://qrate.co',
-    QOORATE_API_URI: 'http://qoorate.sethmurphy.com/q',
-    PROXY_URI: '/qoo_post.php',
+    QOORATE_API_URI: 'http://beta.qrate.co/q',
+    PROXY_URI: '/demo/qoo_post.php',
 
     XHR_PROXY_URI: '/q/feed', // if client supports? not yet.
                               // would append QOORATE_URI
@@ -37,4 +37,4 @@ var qoorateLang = {
     FLAG_ACTION_TYPES: [ [ '1', 'Spam' ], [ '2', 'Offensive' ], [ '3', 'Off Topic' ], [ '4', 'Disagree' ] ],
     SORT_ACTION_TYPES: [ [ '1', 'voting'], [ '2', 'recent'], [ '3', 'oldest'] ],
     LOGIN_TYPES: [ [ 'tw', 'Twitter', 'twitter' ], [ 'fb', 'Facebook', 'facebook' ], [ 'gp', 'Google+', 'googleplus' ] ]
-} 
+}
