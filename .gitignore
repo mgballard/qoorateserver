@@ -4,3 +4,4 @@ apps/build
 apps/dist
 build
 dist
+*.conf.js
