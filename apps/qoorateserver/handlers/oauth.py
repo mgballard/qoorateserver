@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from brubeck.templating import Jinja2Rendering
-from brubeckoauth.handlers import OAuthHandler
+from brubeckoauth.handlers import OAuthMixin
 from qoorateserver.querysets.querysets import UserQueryset
 from qoorateserver.models.models import User
 from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
@@ -10,7 +10,7 @@ import logging
 ##
 ## Our oauth handler class definition
 ##
-class QoorateOAuthHandler(Jinja2Rendering, OAuthHandler):
+class QoorateOAuthHandler(Jinja2Rendering, OAuthMixin):
     """our qoorate specific oAuth handler"""
     
     ## Define these if you do not want to use redis to persist data thoughout the oauth request"""
@@ -18,6 +18,7 @@ class QoorateOAuthHandler(Jinja2Rendering, OAuthHandler):
     #    "default": (MyOAuthQueries, oAuthModel),
     #    "oauth": (MyUserQueries, UserModel)
     #}
+
     def prepare(self):
         self.user_queryset = UserQueryset(self.application.get_settings('mysql'), db_conn = self.application.db_conn)
 
