@@ -236,65 +236,65 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             ## Since we follow a pattern here, we could probably be
             ## less verbose.
             if self.action == 'logoffUser':
-                self.performLogoffUser()
+                self.perform_logoff_user()
             elif self.action == 'addUser':
-                self.performAddUser()
+                self.perform_add_user()
             elif self.action == 'editUser':
-                self.performEditUser()
+                self.perform_edit_user()
             elif self.action == 'deleteUser':
-                self.performDeleteUser()
+                self.perform_delete_user()
             elif self.action == 'addRelated':
-                self.performAddRelated()
+                self.perform_add_related()
             elif self.action == 'editRelated':
-                self.performEditRelated()
+                self.perform_edit_related()
             elif self.action == 'deleteRelated':
-                self.performDeleteRelated()
+                self.perform_delete_related()
             elif self.action == 'deleteComment':
-                self.performDeleteComment()
+                self.perform_delete_comment()
             elif self.action == 'addItem':
-                self.performAddItem()
+                self.perform_add_item()
             elif self.action == 'editItem':
-                self.performEditItem()
+                self.perform_edit_item()
             elif self.action == 'deleteItem':
-                self.performDeleteItem()
+                self.perform_delete_item()
             elif self.action == 'addTag':
-                self.performAddTag()
+                self.perform_add_tag()
             elif self.action == 'editTag':
-                self.performEditTag()
+                self.perform_edit_tag()
             elif self.action == 'deleteTag':
-                self.performDeleteTag()
+                self.perform_delete_tag()
             elif self.action == 'upVote':
-                self.performVote(self.UP)
+                self.perform_vote(self.UP)
             elif self.action == 'downVote':
-                self.performVote(self.DOWN)
+                self.perform_vote(self.DOWN)
             elif self.action == 'addQoorate':
-                self.performAddQoorate()
+                self.perform_add_qoorate()
             elif self.action == 'editQoorate':
-                self.performEditQoorate()
+                self.perform_edit_qoorate()
             elif self.action == 'deleteQoorate':
-                self.performDeleteQoorate()
+                self.perform_delete_qoorate()
             elif self.action == 'attachLink':
-                self.performAttachLink()
+                self.perform_attach_link()
             elif self.action == 'attachVideo':
-                self.performAttachVideo()
+                self.perform_attach_video()
             elif self.action == 'attachPhoto':
-                self.performAttachPhoto()
+                self.perform_attach_photo()
             elif self.action == 'authentication':
-                self.performAuthentication()
+                self.perform_authentication()
             elif self.action == 'flag':
-                self.performFlag()
+                self.perform_flag()
             elif self.action == 'createTopic':
-                self.performTopic()
+                self.perform_topic()
             elif self.action == 'getMoreChildren':
-                self.performMoreChildren()
+                self.perform_more_children()
             elif self.action == 'getMore':
-                self.performMore()
+                self.perform_more()
             elif self.action == 'shareItem':
-                self.performShareItem()
+                self.perform_share_item()
             elif self.action == 'sort':
-                self.performSort()
+                self.perform_sort()
             elif self.action == 'validateLogin':
-                self.performValidateLogin()
+                self.perform_validate_login()
             else:
                 raise Exception("Unsupported action: %s" % self.action)
         except Exception as e:
@@ -306,14 +306,14 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             return self.render()
         # Success
         # The client expects error = 0 to mean success
-        self.add_to_payload('contributions', self.getContributionCount())
+        self.add_to_payload('contributions', self.get_contribution_count())
         self.add_to_payload('table', self.table)
         self.add_to_payload('location', self.location)
         self.add_to_payload('error', 0)
         self.set_status(200)
         return self.render()
 
-    def getContributionCount(self):
+    def get_contribution_count(self):
         """adds our contribtion count to the payload"""
         if self.table == None or self.location == None:
             return 0
@@ -328,41 +328,41 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
     ## However, they are left here for legacy documentation
     ## since this is a rewrite of a PHP prototype
     ##
-    def performLogoffUser(self):
+    def perform_logoff_user(self):
         """removes the session cookie from our user"""
         if self.current_user != None:
             self.user_queryset.logout_by_qooid(self.qooid)
         return
 
-    def performAddUser(self):
+    def perform_add_user(self):
         raise NotImplementedError
 
     @authenticated
-    def performEditUser(self):
+    def perform_edit_user(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteUser(self):
+    def perform_delete_user(self):
         raise NotImplementedError
 
     @authenticated
-    def performAddRelated(self):
+    def perform_add_related(self):
         raise NotImplementedError
 
     @authenticated
-    def performEditRelated(self):
+    def perform_edit_related(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteRelated(self):
+    def perform_delete_related(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteComment(self):
+    def perform_delete_comment(self):
         raise NotImplementedError
 
     @authenticated
-    def performAddItem(self):
+    def perform_add_item(self):
         """add a new item (comment, topic, photo or link)"""        
         if self.table == None:
             raise Exception("Table must be set!")
@@ -540,32 +540,32 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return comments
 
     @authenticated
-    def performEditItem(self):
+    def perform_edit_item(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteItem(self):
+    def perform_delete_item(self):
         raise NotImplementedError
 
     @authenticated
-    def performAddTag(self):
+    def perform_add_tag(self):
         raise NotImplementedError
 
     @authenticated
-    def performEditTag(self):
+    def perform_edit_tag(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteTag(self):
+    def perform_delete_tag(self):
         raise NotImplementedError
 
     ##
     ## Voting methods
     ##
 
-    def performVote(self, direction):
+    def perform_vote(self, direction):
         """perform a requested vote"""
-        logging.debug("performVote(%s)" % direction)
+        logging.debug("perform_vote(%s)" % direction)
         parent_votes = None
         votes = None
         if self.itemId == None:
@@ -602,7 +602,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
                             parentItem.votesUp, parentItem.votesDown
                         )
                     )
-            logging.debug("performVote adding to payload")
+            logging.debug("perform_vote adding to payload")
             self.add_to_payload('voteCount', str(item.voteCount))
             logging.debug("voteCount: %s " % item.voteCount)
             self.add_to_payload('voteNumber', str(item.voteNumber))
@@ -714,9 +714,9 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
     ##
 
     @authenticated
-    def performFlag(self):
+    def perform_flag(self):
         """perform a flag"""
-        logging.debug("performFlag")
+        logging.debug("perform_flag")
         if self.itemId == None:
             self._itemId = self.relatedId
         item = None
@@ -728,7 +728,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             flag = self._flag(item)
             item = self.update_flag_count(item)
             self.send_flag_alert(item, flag)
-            logging.debug("performFlag adding to payload")
+            logging.debug("perform_flag adding to payload")
             self.add_to_payload('flagCount', str(item.flagCount))
             logging.debug("flagCount: %s " % item.flagCount)
             success_message = ""
@@ -823,19 +823,19 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         #mail ( to_address , subject , message, headers )
         return
 
-    def performAddQoorate(self):
+    def perform_add_qoorate(self):
         raise NotImplementedError
 
     @authenticated
-    def performEditQoorate(self):
+    def perform_edit_qoorate(self):
         raise NotImplementedError
 
     @authenticated
-    def performDeleteQoorate(self):
+    def perform_delete_qoorate(self):
         raise NotImplementedError
 
     @authenticated
-    def performAttachLink(self):
+    def perform_attach_link(self):
         """get a list of image urls from a page"""
         replyLink = self.get_argument('replyLink', None)
         title = None
@@ -846,8 +846,8 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             the_page = response.read()
             pool = BeautifulSoup(the_page)
             title = self.getLinkTitle(pool)
-            description = self.getLinkDescription(pool)
-            images = self.getLinkImages(pool, replyLink)
+            description = self.get_link_description(pool)
+            images = self.get_link_images(pool, replyLink)
         self.add_to_payload('title', title)
         self.add_to_payload('description', description)
         self.add_to_payload('images', images)
@@ -886,7 +886,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             pass
         return None        
 
-    def getLinkDescription(self, pool):
+    def get_link_description(self, pool):
         """get title tag from a BeatifulSoup 'pool'"""
         description = ''
 
@@ -903,7 +903,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
         return description
 
-    def getLinkImages(self, pool, pageUrl):
+    def get_link_images(self, pool, pageUrl):
         """get image choices to attach to a link 
         from a BeatifulSoup 'pool'
         """
@@ -915,7 +915,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         if tags != None and len(tags) > 0:
             for tag in tags:
                 try:
-                    url = self.fixUrl(
+                    url = self.fix_url(
                         self._get_tag_attr(tag, 'content'),
                         pageUrl
                     )
@@ -930,7 +930,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             )
             if tags != None and len(tags) > 0:
                 for tag in tags:
-                    url = self.fixUrl(
+                    url = self.fix_url(
                         self._get_tag_attr(tag, 'content'),
                         pageUrl
                     )
@@ -940,7 +940,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         tags = pool.findAll('img')
         if tags != None  and len(tags) > 0:
             for tag in tags:
-                url = self.fixUrl(
+                url = self.fix_url(
                     self._get_tag_attr(tag, 'src'),
                     pageUrl
                 )
@@ -948,7 +948,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
                     urls.append(url)
         return urls
 
-    def screenUrl(self, url):
+    def screen_url(self, url):
         """try to filter out images for a thumbnail 
         based on ad like behavior
         """
@@ -956,10 +956,10 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             return False;
         return True
         
-    def fixUrl(self, url, pageUrl):
+    def fix_url(self, url, pageUrl):
         """attempts to give a url an absolute path"""
-        logging.debug("fixUrl('%s', '%s')" % (url, pageUrl))
-        if self.screenUrl(url) == False:
+        logging.debug("fix_url('%s', '%s')" % (url, pageUrl))
+        if self.screen_url(url) == False:
             return None
         if url[0:4] == 'http':
             return url
@@ -978,18 +978,18 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return url
 
     @authenticated
-    def performAttachVideo(self):
+    def perform_attach_video(self):
         raise NotImplementedError
 
     @authenticated
-    def performAttachPhoto(self):
+    def perform_attach_photo(self):
         raise NotImplementedError
 
-    def performAuthentication(self):
+    def perform_authentication(self):
         raise NotImplementedError
 
     @authenticated
-    def performTopic(self):
+    def perform_topic(self):
         raise NotImplementedError
 
     ##
@@ -1014,7 +1014,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
         return context
         
-    def performMoreChildren(self):
+    def perform_more_children(self):
         """get all the children for a parent"""
         comments = self.comment_item_queryset.load_comments_by_table_and_location(
             self.table, 
@@ -1030,7 +1030,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         )
         return
 
-    def performMore(self):
+    def perform_more(self):
         """get more contributions"""
         comments = self.comment_item_queryset.load_comments_by_table_and_location(
             self.table, 
@@ -1048,7 +1048,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
 
         return
 
-    def performSort(self):
+    def perform_sort(self):
         """sort our items and return them all"""
 
         # our default (sort == 1)
@@ -1103,7 +1103,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return
          
     @authenticated
-    def performShareItem(self):
+    def perform_share_item(self):
         """Share an item on the current logged in social network"""
         """ SAMPLE REQUEST:
         replyComment:test share
@@ -1115,7 +1115,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         itemId:46
         relatedId:46
         """
-        logging.debug("performShareItem")
+        logging.debug("perform_share_item")
         item = Comment(**self.comment_queryset.read_one(self.itemId)[1])
         provider = ''
         user = self.current_user
@@ -1244,7 +1244,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         return OAuthRequest(**data)
 
     @authenticated
-    def performValidateLogin(self):
+    def perform_validate_login(self):
         """let the client know we are logged in"""
         # If we got this far, we are logged in, 
         # just send back our provider.
