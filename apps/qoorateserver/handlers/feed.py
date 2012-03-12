@@ -845,7 +845,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             response = urllib2.urlopen(replyLink)
             the_page = response.read()
             pool = BeautifulSoup(the_page)
-            title = self.getLinkTitle(pool)
+            title = self.get_link_title(pool)
             description = self.get_link_description(pool)
             images = self.get_link_images(pool, replyLink)
         self.add_to_payload('title', title)
@@ -853,7 +853,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         self.add_to_payload('images', images)
         return
 
-    def getLinkTitle(self, pool):
+    def get_link_title(self, pool):
         """get title tag from a BeatifulSoup 'pool'"""
         title = ''
         tag = pool.find('meta', attr={

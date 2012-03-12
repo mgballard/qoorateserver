@@ -27,7 +27,8 @@ class QoorateBaseHandler(MessageHandler):
 
     @lazyprop
     def current_user(self):
-        """this is required for Brubeck authentication decorater to work"""
+        """this is required for Brubeck authentication decorator to work
+        """
         return self.user_queryset.get_by_qooid(self.qooid)
 
     ##
@@ -41,7 +42,8 @@ class QoorateBaseHandler(MessageHandler):
         """get our QOOTID cookie
         this is our session cookie
         we mainly just use this for our authentication
-        IMPORTANT: This is the clients responsibility to se this and forward olong with the proxied request
+        IMPORTANT: This is the clients responsibility to set this 
+        and forward along with the proxied request
         """
         return self.get_cookie('QOOID', None)
 
@@ -59,29 +61,34 @@ class QoorateBaseHandler(MessageHandler):
 
     @lazyprop
     def q_api_key(self):
-        """this is required for Brubeck authentication decorater to work"""
+        """this is required for Brubeck authentication decorater to work
+        """
         return self.get_argument('q_api_key', None)
 
     @lazyprop
     def q_api_secret(self):
-        """this is required for Brubeck authentication decorater to work"""
+        """this is required for Brubeck authentication decorater to work
+        """
         return self.get_argument('q_api_secret', None)
 
     @lazyprop
     def q_short_name(self):
-        """this is required for Brubeck authentication decorater to work"""
+        """this is required for Brubeck authentication decorater to work
+        """
         return self.get_argument('q_short_name', None)
 
     @lazyprop
     def table(self):
         """defines the table comments are stored in
-        TODO: this is bad ... we should get everything based on the api_key and api_secret
+        TODO: this is bad ... 
+        we should get everything based on the api_key and api_secret
         """
         return self.get_argument('table', None)
 
     @lazyprop
     def location(self):
-        """defines the page/location the comments are for"""
+        """defines the page/location the comments are for
+        """
         return self.get_argument('location', None)
 
     @lazyprop
@@ -114,7 +121,10 @@ class QoorateBaseHandler(MessageHandler):
     @lazyprop
     def user_queryset(self):
         """used to initialize and cache the user queryset"""
-        return UserQueryset(self.application.get_settings('mysql'), self.application.db_conn)
+        return UserQueryset(
+            self.application.get_settings('mysql'),
+            self.application.db_conn
+        )
 
     @lazyprop
     def qoorate_url(self):
@@ -126,7 +136,7 @@ class QoorateBaseHandler(MessageHandler):
         """ xxx argument
         """
         return int(self.get_argument('parentId', 0))
-        
+
     @lazyprop
     def moreIndex(self):
         """used to initialize and cache the user queryset"""
@@ -150,13 +160,11 @@ class QoorateBaseHandler(MessageHandler):
         The comments list will have one more than requested to let us
         know we need a more link.
         """
-        if self.parentId > 0 and self.childCount == 0:
+        if ((self.parentCount == 0 ) or 
+           (self.parentId > 0 and self.childCount == 0)):
             return False;
-            
         parent_count = 0;
-
         for comment in comments:
             if comment.parentId == 0:
                 parent_count += 1
-        
-        return parent_count > self.moreIndex + self.parentCount - 1
+        return parent_count > self.parentCount - 1
