@@ -229,7 +229,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
                 json.dumps(self.message.arguments)
             )
         )
-        logging.debug("action: %s" + self.get_argument('action'))
+        logging.debug("action: %s" % self.action)
 
         try:
             ## we are just delegating here. 
