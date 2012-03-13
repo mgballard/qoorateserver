@@ -470,8 +470,12 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 #q_ .q_main_body .q_img img {
-  margin: 0 auto;
+  margin: 0;
   padding-bottom: .5em;
+}
+
+#q_  .tp-1 .q_main_body .q_img img {
+  margin: 0 auto;
 }
 
 #q_ .q_item .q_qth {
