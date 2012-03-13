@@ -1168,17 +1168,20 @@ $(document).ready(function() {
         var $elem = $( '.dyn.' + id).find(".dynReplyWrap");
 
         return function(data) {
-
-            if ( data[0] != '{' ) {
-               var datas = data.split('\r\n\r\n');
-               if( datas.length > 1) {
-                   data = datas[1];
-               } else {
-                  data = datas[0];
-               }
+            if (data instanceof Object) {
+                
+            } else { 
+                if ( data[0] != '{' ) {
+                   var datas = data.split('\r\n\r\n');
+                   if( datas.length > 1) {
+                       data = datas[1];
+                   } else {
+                      data = datas[0];
+                   }
+                }
+                data = $.parseJSON(data);
             }
 
-            data = $.parseJSON(data);
             if ( data.error > 0) {
                 // SM: 20111219 - Display an error now
                 errorMsg(data.error, data.message);
@@ -1646,7 +1649,7 @@ $(document).ready(function() {
             debug: true,
             onComplete: function(id, fileName, responseJSON) { 
                                                                 if( $('.q_qq-upload-success').length > 0 ) { 
-                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/uploader/images/' + responseJSON.hash + '">'
+                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/q/uploader/images/' + responseJSON.hash + '">'
                                                                     $('.q_qq-upload-success').prepend('<span class="q_qq-upload-file-preview">' + preImg + '</span>');
                                                                     var $replyPhoto = $('.do.action.replyPhoto');
                                                                     var preVal = $replyPhoto.data("preVal");
@@ -1681,7 +1684,7 @@ $(document).ready(function() {
                 }
             }
 
-            var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login'
+            var url = qoorateConfig.QOORATE_API_URI + '/q/oauth/' + provider_full + '/login'
             $.oauthpopup({
                 path: url + '?QOOID=' + $.cookie('QOOID'),
                 callback: getCallback(callback),
@@ -1734,6 +1737,9 @@ $(document).ready(function() {
     var parseJSONresponse = function(data) {
         if ( data == null )
             return [null, null];
+
+        if (data instanceof Object)
+            return [data, data.content]
 
         if ( data[0] != '{' ) {
             data = data.split('\r\n\r\n');
