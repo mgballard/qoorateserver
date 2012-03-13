@@ -54,7 +54,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
     ## Lazy parameters, needed by most function, but not all
     ##
     ## IMPORTANT: These are only properties a user can set.
-    
+
     @lazyprop
     def replyComment(self):
         """replyComment argument.
@@ -611,7 +611,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             logging.debug("votesUp: %s " % item.votesUp)
             self.add_to_payload('votesDown', str(item.votesDown))
             logging.debug("votesDown: %s " % item.votesDown)
-
         return
 
     def update_vote_counts(self, item):
@@ -619,13 +618,10 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         logging.debug("update_vote_counts(%s)" % item)
         isTopic = False
         includeChildVotes = True
-        
         if item.type == 10:
             isTopic = True
             includeChildVotes = False
-
         logging.debug(item.to_json())
-
         votes = self.vote_queryset.get_vote_counts_by_item_id(
             item.id,
             self.table,
@@ -889,7 +885,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
     def get_link_description(self, pool):
         """get title tag from a BeatifulSoup 'pool'"""
         description = ''
-
         tag = pool.find('meta', attr={
                 'property': re.compile('(?i)og:description')
             }
@@ -900,7 +895,6 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             tag = pool.find('meta', {'name': re.compile('(?i)description')})
             if tag != None:
                 description = self._get_tag_attr(tag, 'content')
-
         return description
 
     def get_link_images(self, pool, pageUrl):
@@ -955,7 +949,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
         if url.find("/ad/") > -1:
             return False;
         return True
-        
+
     def fix_url(self, url, pageUrl):
         """attempts to give a url an absolute path"""
         logging.debug("fix_url('%s', '%s')" % (url, pageUrl))
@@ -1011,76 +1005,79 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             'moreIndex': self.moreIndex,
             'has_more_contributions': self.has_more_contributions(comments),
         }
-
         return context
-        
-    def perform_more_children(self):
-        """get all the children for a parent"""
-        comments = self.comment_item_queryset.load_comments_by_table_and_location(
-            self.table, 
-            self.location, 
-            parentId = self.parentId, 
-            parentCount=self.parentCount,
-            childCount=self.childCount)
-        context = self.get_comment_context(comments)
-        self.add_to_payload("content", self.render_partial(
-                'comments.html',
-                **context
-            )
-        )
-        return
+
+    def _get_sort_parameters(self):
+        """Get our sort parameters and attach our properties to self."""
+        # our default (sort == 1)
+        self.sortOrder = 'voteNumber';
+        self.dateOrder = 'ASC';
+        self.voteOrder = 'DESC';
+        if self.sort == '3': # oldest
+            self.sortOrder = 'createDate'
+            self.dateOrder = 'ASC'
+            self.voteOrder = None
+        elif self.sort == '2': # recent
+            self.sortOrder = 'createDate'
+            self.dateOrder = 'DESC'
+            self.voteOrder = None
 
     def perform_more(self):
         """get more contributions"""
+        self._get_sort_parameters()
         comments = self.comment_item_queryset.load_comments_by_table_and_location(
             self.table, 
             self.location, 
             parentOffset = self.moreIndex, 
             parentCount=self.parentCount, 
-            childCount=self.childCount)
+            childCount=self.childCount, 
+            sortOrder=self.sortOrder, 
+            dateOrder=self.dateOrder, 
+            voteOrder=self.voteOrder)
         context = self.get_comment_context(comments)
-        
         self.add_to_payload("content", self.render_partial(
                 'comments.html',
                 **context
             )
         )
+        return
 
+    def perform_more_children(self):
+        """get all the children for a parent"""
+        self._get_sort_parameters()
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(
+            self.table, 
+            self.location, 
+            parentId = self.parentId, 
+            parentCount=self.parentCount,
+            childCount=self.childCount, 
+            sortOrder=self.sortOrder, 
+            dateOrder=self.dateOrder, 
+            voteOrder=self.voteOrder)
+        context = self.get_comment_context(comments)
+        self.add_to_payload("content", self.render_partial(
+                'comments.html',
+                **context
+            )
+        )
         return
 
     def perform_sort(self):
         """sort our items and return them all"""
-
-        # our default (sort == 1)
-        sortOrder = 'voteNumber';
-        dateOrder = 'ASC';
-        voteOrder = 'DESC';
-
-        if self.sort == '3': # oldest
-            sortOrder = 'createDate'
-            dateOrder = 'ASC'
-            voteOrder = None
-        elif self.sort == '2': # recent
-            sortOrder = 'createDate'
-            dateOrder = 'DESC'
-            voteOrder = None
-
+        self._get_sort_parameters()
         comments = self.comment_item_queryset.load_comments_by_table_and_location(
             self.table, 
             self.location, 
             parentOffset = self.moreIndex, 
             parentCount=self.settings['PARENT_PAGE_SIZE'] ,
             childCount=self.settings['CHILD_PAGE_SIZE'], 
-            sortOrder=sortOrder, 
-            dateOrder=dateOrder, 
-            voteOrder=voteOrder)
-
+            sortOrder=self.sortOrder, 
+            dateOrder=self.dateOrder, 
+            voteOrder=self.voteOrder)
         contributions = self.comment_queryset.get_count_by_table_and_location(
             self.table,
             self.location
         )
-
-
         parent_tag = 'p' + self.table[1:]
         context = {
             'app': self.application.get_settings('app'),
@@ -1101,7 +1098,7 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
             )
         )
         return
-         
+
     @authenticated
     def perform_share_item(self):
         """Share an item on the current logged in social network"""
