@@ -242,7 +242,7 @@ class CommentQueryset(MySqlApiQueryset):
             logging.debug("No contributions")
             return 0
         else:
-            logging.debug("Number of contributions %d" % row['recordCount'])
+            logging.debug("Number of contributions %s" % row['recordCount'])
             return row['recordCount']
 
     def get_contribution_count_by_table_and_location(self, table, location):
@@ -547,7 +547,7 @@ class FlagQueryset(MySqlApiQueryset):
         return row['flagCount']
 
 
-class KeyPairQueryset(MySqlApiQueryset):
+class KeypairQueryset(MySqlApiQueryset):
     """ This is a simple, completely standard one to one mapping to the DB
         Only dict are returned, if you want a DictShield item 
         that is the callers responsability to call dictListToDictShieldList
@@ -561,8 +561,7 @@ class KeyPairQueryset(MySqlApiQueryset):
         """call our MySql __init__.
            This will create a connection for us if we need it
         """
-        super(KeyPairQueryset, self).__init__(settings, db_conn, **kw)
-        
+        super(KeypairQueryset, self).__init__(settings, db_conn, **kw)
         self.table_name = settings["TABLES"]["KEYPAIR"]["TABLE_NAME"]
         self.fields = settings["TABLES"]["KEYPAIR"]["FIELDS"]
         self.fields_muteable = settings["TABLES"]["KEYPAIR"]["FIELDS_MUTEABLE"]
@@ -573,10 +572,8 @@ class KeyPairQueryset(MySqlApiQueryset):
            TODO: This really is common functionality, probably should be abstracted a bit
         """
         items = []
-
         for dictItem in dictList:
             items.append(KeyPair(**dictItem))
-
         return items
 
     ###
@@ -585,6 +582,8 @@ class KeyPairQueryset(MySqlApiQueryset):
 
     def authenticate(self, key, secret):
         """authenticate an API key"""
+        if hasattr(self, '_authenticated'):
+            return getattr(self, '_authenticated')
         sql = """
             SELECT %s FROM `%s` WHERE `key` = %%s and `secret`= %%s
         """ % (self.get_fields_list(), self.table_name)
@@ -592,8 +591,10 @@ class KeyPairQueryset(MySqlApiQueryset):
         row = self.dictListToDictShieldList(self.query(sql, [key, secret]))
         
         if row == None:
+            self._authenticated = False
             return False;
         else:
+            self._authenticated = True
             return True;
 
 
