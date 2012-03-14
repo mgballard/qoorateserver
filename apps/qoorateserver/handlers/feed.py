@@ -23,7 +23,7 @@ from brubeckoauth.models import OAuthRequest
 
 
 from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
-from qoorateserver.handlers.base import QoorateBaseHandler
+from qoorateserver.handlers.base import QoorateMixin
 from qoorateserver.models.models import (
     CommentItem,
     User,
@@ -44,7 +44,7 @@ from qoorateserver.querysets.querysets import (
 ##
 ## Our feed handler class definitions
 ##
-class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
+class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
     """Handles poll requests from user; sends out queued messages.
        This handler feels like it does a little too much,
        but it is a port of the original PHP code.
@@ -178,36 +178,27 @@ class FeedHandler(Jinja2Rendering, QoorateBaseHandler,JSONMessageHandler):
     UP = 1
     DOWN = -1
 
-    def __init__(self, application, message, *args, **kwargs):
-        super(FeedHandler, self).__init__(
-            application, message, *args, **kwargs
-        )
-        logging.debug('FeedHandler __init__')
-        ## Hook up our Queryset objects here
-        self.vote_queryset = VoteQueryset(
-            self.application.get_settings('mysql'), self.application.db_conn
-        )
-        self.flag_queryset = FlagQueryset(
-            self.application.get_settings('mysql'), self.application.db_conn
-        )
-
     def prepare(self):
         """prepare what we need for each request"""
         image_table = None
+        if self.table == None:
+            self.set_table()
+
         if self.table != None:
             """it's ok if we don't get here.
             We may be a request that doesn't deal with comment items
             """
+            logging.debug("feed.prepare, table: %s" % self.table)
             image_table = self.table + '_images'
-            self.comment_queryset = CommentQueryset(
+            self._comment_queryset = CommentQueryset(
                 self.application.get_settings('mysql'),
                 self.table, self.application.db_conn
             )
-            self.image_queryset = ImageQueryset(
+            self._image_queryset = ImageQueryset(
                 self.application.get_settings('mysql'),
                 image_table, self.application.db_conn
             )
-            self.comment_item_queryset = CommentItemQueryset(
+            self._comment_item_queryset = CommentItemQueryset(
                 self.application.get_settings('mysql'),
                 self.table, self.application.db_conn
             )
