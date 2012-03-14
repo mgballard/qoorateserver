@@ -1482,7 +1482,7 @@ $(document).ready(function() {
         }
 
         if (_action == 'getMore') {
-            _id = parseInt(_id)+5;
+            _id = parseInt(_id) + qoorateConfig.PARENT_PAGE_SIZE;
             _query.push({"name":"moreIndex", "value":_id});
             var sort = $('#q_sort_by').val();
             _query.push({"name":"sort", "value":sort});
