@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 import logging
 from brubeck.request_handling import MessageHandler
-from qoorateserver.querysets.querysets import UserQueryset
+from qoorateserver.querysets.querysets import (
+    QoorateQueryset,
+    UserQueryset,
+    CommentQueryset,
+    CommentItemQueryset,
+    KeypairQueryset,
+    FlagQueryset,
+    VoteQueryset,
+)
 from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
 
 ##
 ## Our Qoorate base handler definition
 ##
 
-class QoorateBaseHandler(MessageHandler):
-    """our base handler
+class QoorateMixin(object):
+    """our base handler mixin
     we should never route to this"""
     ##
     ## Some functionality maybe Brubeck should have?
@@ -82,6 +90,7 @@ class QoorateBaseHandler(MessageHandler):
         """defines the table comments are stored in
         TODO: this is bad ... 
         we should get everything based on the api_key and api_secret
+        No longer just passed parameter
         """
         return self.get_argument('table', None)
 
@@ -119,29 +128,19 @@ class QoorateBaseHandler(MessageHandler):
         return self.application.get_settings('app')
 
     @lazyprop
-    def user_queryset(self):
-        """used to initialize and cache the user queryset"""
-        return UserQueryset(
-            self.application.get_settings('mysql'),
-            self.application.db_conn
-        )
-
-    @lazyprop
     def qoorate_url(self):
         """used to initialize and cache the user queryset"""
         return self.settings['QOORATE_URI']
 
     @lazyprop
     def parentId(self):
-        """ xxx argument
-        """
+        """ parentId argument"""
         return int(self.get_argument('parentId', 0))
 
     @lazyprop
     def moreIndex(self):
         """used to initialize and cache the user queryset"""
         return int(self.get_argument('moreIndex', 1))
-        
 
     @lazyprop
     def childCount(self):
@@ -153,7 +152,82 @@ class QoorateBaseHandler(MessageHandler):
 
     @lazyprop
     def parentCount(self):
-            return self.settings['PARENT_PAGE_SIZE']
+        return self.settings['PARENT_PAGE_SIZE']
+
+    ##
+    ## Set all our Querysets
+    ##
+
+    @lazyprop
+    def user_queryset(self):
+        """used to initialize and cache the user queryset"""
+        return UserQueryset(
+            self.application.get_settings('mysql'),
+            self.application.db_conn
+        )
+
+    @lazyprop
+    def qoorate_queryset(self):
+        """Get the qoorate queryset."""
+        ## Hook up our Queryset objects here
+        return QoorateQueryset(
+            self.application.get_settings('mysql'), self.application.db_conn
+        )
+
+
+    @lazyprop
+    def image_queryset(self):
+        """Get the image queryset."""
+        return ImageQueryset(
+            self.application.get_settings('mysql'), self.table, self.application.db_conn
+        )
+
+    @lazyprop
+    def comment_queryset(self):
+        """Get the comment queryset."""
+        return CommentQueryset(
+            self.application.get_settings('mysql'), self.table, self.application.db_conn
+        )
+
+    @lazyprop
+    def comment_item_queryset(self):
+        """Get the comment_item queryset to validate API settings."""
+        return CommentItemQueryset(
+            self.application.get_settings('mysql'), self.table, self.application.db_conn
+        )
+
+    @lazyprop
+    def keypair_queryset(self):
+        """get the keypair queryset to validate API settings"""
+        return KeypairQueryset(
+            self.application.get_settings('mysql'), self.application.db_conn
+        )
+
+    @lazyprop
+    def vote_queryset(self):
+        """Get the vote queryset."""
+        return VoteQueryset(
+            self.application.get_settings('mysql'), self.application.db_conn
+        )
+
+    @lazyprop
+    def flag_queryset(self):
+        """get the flag queryset"""
+        return  FlagQueryset(
+            self.application.get_settings('mysql'), self.application.db_conn
+        )
+
+    def set_table(self):
+        """get the table from api if needed"""
+        if not self.q_api_key == None and not self.q_api_secret == None:
+            if self.keypair_queryset.authenticate(self.q_api_key, self.q_api_secret):
+                qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
+                if not qoorate == None and not qoorate.refTable == None:
+                    self._table = qoorate.refTable
+                    logging.debug('set_table: %s' % self._table)
+        else:
+            logging.debug('unable to set_table')
+
 
     def has_more_contributions(self, comments):
         """inspect a list of comment and let us know if we have more
