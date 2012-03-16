@@ -4,6 +4,7 @@ from brubeckmysql.base import create_db_conn
 import time
 import datetime
 import logging
+from gevent.queue import Queue
 
 class Qoorate(BrooklynCodeBrubeck):
 
@@ -14,13 +15,17 @@ class Qoorate(BrooklynCodeBrubeck):
         """
         super(Qoorate, self).__init__(settings_file, project_dir, **kwargs)
 
+        pool_size = 10
+
         if self.db_conn == None:
             # create our db_conn if we have the settings to        
             if settings_file != None:
                 mysql_settings = self.get_settings('mysql')
                 if mysql_settings != None:
-                    logging.debug("creating application db_conn")
-                    self.db_conn = create_db_conn(mysql_settings)
+                    logging.debug("creating application db_conn pool")
+                    self.db_conn = Queue()
+                    for i in range(pool_size): 
+                        self.db_conn.put_nowait(create_db_conn(mysql_settings)) 
 
 
 ##

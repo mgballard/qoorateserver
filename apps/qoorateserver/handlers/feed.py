@@ -90,12 +90,12 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         return self.get_argument('description', None)
 
     @lazyprop
-    def post(self):
-        """ post argument.
+    def post_to(self):
+        """ post_to argument.
         If present indicates we want to share the item 
         via current social network.
         """
-        return self.get_argument('post', None)
+        return self.get_argument('post_to', None)
 
     @lazyprop
     def locationId(self):
@@ -456,7 +456,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 'has_more_contributions': False,
             }
             # share us if we have been asked to
-            if not self.post is None:
+            if not self.post_to is None:
                 logging.debug("sharing new item.")
                 provider = None
                 user = self.current_user
@@ -937,7 +937,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         """try to filter out images for a thumbnail 
         based on ad like behavior
         """
-        if url.find("/ad/") > -1:
+        if url == None or url.find("/ad/") > -1:
             return False;
         return True
 
@@ -1161,7 +1161,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 if len(text) > 100:
                     text = "%s%s" % (text[0:100], '...')
             ref = self.referer.split("#")[0]
-            link = "%s#%s" % (ref, item.id)
+            link = "%s#%s-%s" % (ref, self.table, item.id)
             text = "%s%s\n%s" % (text, q, link)
             url = "https://api.twitter.com/1/statuses/update.json"
             query_params = {}

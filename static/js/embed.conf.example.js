@@ -1,15 +1,16 @@
 var qoorateConfig = {
-    QOORATE_URI: 'http://qrate.co',
+    QOORATE_URI: 'http://beta.qrate.co',
     QOORATE_API_URI: 'http://beta.qrate.co/q',
-    PROXY_URI: '/demo/qoo_post.php',
+    PROXY_URI: '/demo/q_post.php',
 
     XHR_PROXY_URI: '/q/feed', // if client supports? not yet.
                               // would append QOORATE_URI
     UPLOAD_URI: '/q_post.php?action=uploader',
     XHR_UPLOAD_URI: '/q/uploader', // if client supports? not yet.
                                    // would append QOORATE_URI
-    POST_MAX_LEN: 1000
-}
+    POST_MAX_LEN: 1000,
+    PARENT_PAGE_SIZE: 10,
+    CHILD_PAGE_SIZE: 10}
 
 var qoorateLang = {
     FLAG_SUCCESS: 'Thank you for your feedback.',

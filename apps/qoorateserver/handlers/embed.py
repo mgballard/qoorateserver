@@ -72,9 +72,9 @@ def get_head_resources(qoorate_base_uri):
     ]
 
 ##
-## Our embed handler class definition
+## Our embed mixin class definition
 ##
-class EmbedMixin(QoorateMixin):
+class EmbedMixin(object):
     """this loads the initial comments for a page"""
 
     def prepare(self):
@@ -104,7 +104,9 @@ class EmbedMixin(QoorateMixin):
         # so, we reparse the url
 
     def get_content_context(self):
+        logging.debug("get_content_context")
         self.set_table()
+        logging.debug("table: %s" % self.table)
         comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
             self.location, 
             parentOffset = self.moreIndex, 
@@ -138,7 +140,7 @@ class EmbedMixin(QoorateMixin):
 ##
 ## Our embed handler class definition
 ##
-class EmbedHandler(Jinja2Rendering, EmbedMixin):
+class EmbedHandler(Jinja2Rendering, EmbedMixin, QoorateMixin):
     """this loads the initial comments for a page"""
 
     def get(self):
@@ -161,10 +163,10 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin):
             self.set_body(content)
             return self.render()
         else:
-            logging.debug('embed_content called')
-            if not self.keypair_queryset.authenticate(self.q_api_key, self.q_api_secret):
+            logging.debug("embed_content called (key,secret): (%s,%s)" % (self.q_api_key, self.q_api_secret))
+            if not self.keypair_queryset.authenticate(self.q_api_key, self.q_api_secret) == True:
                 logging.debug('embed_content key secret invalid')
-                return self.render_template('embed_content_error.html', **context)            
+                return self.render_template('errors.html', **{'error_code': 0})            
             context = self.get_content_context()
             return self.render_template('embed_content.html', **context)
 
@@ -173,10 +175,11 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin):
 ## Our JSON embed handler class definition
 ## When content isn't enough, use JSON
 ##
-class EmbedHandlerJSON(JSONMessageHandler, EmbedMixin):
+class EmbedHandlerJSON(JSONMessageHandler, EmbedMixin, QoorateMixin):
     """this loads the initial comments for a page"""
 
     def get(self):
+        logging.debug('get EmbedHandlerJSON')
         head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
         self.add_to_payload('head', head_resources)
         context = self.get_content_context()

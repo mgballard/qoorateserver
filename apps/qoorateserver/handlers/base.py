@@ -47,7 +47,7 @@ class QoorateMixin(object):
 
     @lazyprop
     def qooid(self):
-        """get our QOOTID cookie
+        """get our QOOID cookie
         this is our session cookie
         we mainly just use this for our authentication
         IMPORTANT: This is the clients responsibility to set this 
@@ -135,12 +135,12 @@ class QoorateMixin(object):
     @lazyprop
     def parentId(self):
         """ parentId argument"""
-        return int(self.get_argument('parentId', 0))
+        return int(self.get_argument('parentId', "0"))
 
     @lazyprop
     def moreIndex(self):
         """used to initialize and cache the user queryset"""
-        return int(self.get_argument('moreIndex', 1))
+        return int(self.get_argument('moreIndex', "1"))
 
     @lazyprop
     def childCount(self):

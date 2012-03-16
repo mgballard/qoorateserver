@@ -582,20 +582,20 @@ class KeypairQueryset(MySqlApiQueryset):
 
     def authenticate(self, key, secret):
         """authenticate an API key"""
-        if hasattr(self, '_authenticated'):
-            return getattr(self, '_authenticated')
+        if hasattr(self, '_authenticate'):
+            logging.debug("returning `%s` from authenticate cached." % self._authenticate)
+            return getattr(self, '_authenticate')
+
         sql = """
             SELECT %s FROM `%s` WHERE `key` = %%s and `secret`= %%s
         """ % (self.get_fields_list(), self.table_name)
-
-        row = self.dictListToDictShieldList(self.query(sql, [key, secret]))
-        
+        row = self.query(sql, [key, secret])
         if row == None:
-            self._authenticated = False
-            return False;
+            self._authenticate = False
         else:
-            self._authenticated = True
-            return True;
+            self._authenticate = True
+        logging.debug("returning %s from authencticate." % self._authenticate)
+        return self._authenticate
 
 
 class QoorateQueryset(MySqlApiQueryset):

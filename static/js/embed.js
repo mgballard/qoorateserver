@@ -998,8 +998,8 @@ $(document).ready(function() {
         }
 
         var postTo = '<span class="postTo">' +
-                        '<input class="post" type="checkbox" checked="checked" name="post" value="post" />' +
-                        '<label for "post">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
+                        '<input class="post_to" type="checkbox" checked="checked" name="post_to" value="post_to" />' +
+                        '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
                      '</span>';
 
         // our default action, submit button label and state
@@ -1013,8 +1013,8 @@ $(document).ready(function() {
         } else if ( _form == 'replyComment' ) {
             form_html = commentTextarea;
         } else if ( _form == 'share' ) {
-            // Don't display our social post checkbox and change the action and label for the submit button
-            postTo = '<input class="post" type="hidden" name="post" value="post" />';
+            // Don't display our social post_to checkbox and change the action and label for the submit button
+            postTo = '<input class="post_to" type="hidden" name="post_to" value="post_to" />';
             actionType = 'shareItem';
             actionLabel = qoorateLang.POST_TO_BUTTON + ' ' + social;
             disabled = '';
