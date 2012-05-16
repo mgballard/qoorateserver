@@ -5,9 +5,83 @@ import time
 import datetime
 import logging
 from gevent.queue import Queue
+from gevent.greenlet import Greenlet
+from gevent.event import Event
+
+##
+## Submit an item to be generate a relevancy index
+##
+
+def qoorate_determine_relevency(application, item):
+    """schedule an indexing using concurrency"""
+    logging.info("qoorate_determine_relevency, start: %s" % item)
+    g = Greenlet(qoorate_generate_relevency, item)
+    logging.info("qoorate_generate_relevency, greenlet, start(): %s" % item)
+    g.start()
+    logging.info("qoorate_generate_relevency, end: %s" % item)
+
+def qoorate_generate_relevency(application, item):
+    """ generate our relevancy number and persist the item"""
+    # this is the algorithm to determine the actual number
+    def qoorate_compute_relevency(item):
+        """generate our index for relevancy."""   
+        logging.info("qoorate_compute_relevency, start: %s" % item)
+        relevancy = 0
+        # for now just use voting logic already in place
+        votesUp = item.votesUp
+        votesDown = item.votesDown
+        if votesUp== None:
+            votesUp = 0;
+        if votesDown== None:
+            votesDown = 0;
+        voteCount = votesUp + votesDown
+        voteNumber = votesUp - votesDown
+        if item.type == 10 :
+            voteNumber = voteCount
+        logging.info("qoorate_compute_relevency, end: %s (%s)" % item, relevancy)
+        relevancy = voteNumber
+        return relevancy
+
+    # call and log our actions
+    logging.info("qoorate_generate_relevency, start: %s" % item)
+    relevancy = qoorate_compute_relevency(application, item)    
+    if item.sortOrder != relevancy:
+        # update our sortOrder
+        logging.info("qoorate_generate_relevency, update sort order, start: %s (%s, %s)" % item, item.sortOrder, relevancy)
+        comment_queryset = CommentQueryset(
+            application.get_settings('mysql'),
+            item.tableName, application.db_conn
+        )
+        item.sortOrder = relevancy
+        results = self._comment_item_queryset.create_one(
+                    item,
+                    table_name = item.tableName
+                )
+        if comment_queryset.MSG_UPDATED == result[0]:
+            logging.info("qoorate_generate_relevency, UPDATE SUCCESS: %s (%s)" % item, relevancy)
+
+    logging.info("qoorate_generate_relevency, end: %s (%s)" % item, relevancy)
+    return relevancy
+
+def qoorate_compute_relevency(item):
+    """generate our index for relevancy."""   
+    logging.info("qoorate_compute_relevency, start: %s" % item)
+    # for now just use voting logic already in place
+    votesUp = item.votesUp
+    votesDown = item.votesDown
+    if votesUp== None:
+        votesUp = 0;
+    if votesDown== None:
+        votesDown = 0;
+    voteCount = votesUp + votesDown
+    voteNumber = votesUp - votesDown
+    if item.type == 10 :
+        voteNumber = voteCount
+    logging.info("qoorate_compute_relevency, end: %s" % item)
+    return voteNumber
 
 class Qoorate(BrooklynCodeBrubeck):
-
+    """Custom application class for Qoorate."""
     def __init__(self, settings_file=None, project_dir=None,
                  *args, **kwargs):
         """ Most of the parameters are dealt with by Brubeck,
@@ -27,6 +101,12 @@ class Qoorate(BrooklynCodeBrubeck):
                     for i in range(pool_size): 
                         self.db_conn.put_nowait(create_db_conn(mysql_settings)) 
 
+    def determine_relevency(self, item):
+        """schedule an indexing using concurrency"""
+        logging.info("qoorate_determine_relevency, start: %s" % item)
+        logging.info("qoorate_generate_relevency, star greenlet: %s" % item)
+        qoorate_determine_relevency(item)
+        logging.info("qoorate_generate_relevency, end: %s" % item)
 
 ##
 ## This are just some general function I couldn't thing of anywhere else to put
