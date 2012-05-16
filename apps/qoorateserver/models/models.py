@@ -1,13 +1,14 @@
 #!/usr/bin/env python
+import datetime
+import json
+import time
+from datetime import timedelta
 from dictshield import fields
 from dictshield.document import Document, EmbeddedDocument
 from dictshield.fields import ShieldException
 from dictshield.fields.compound import EmbeddedDocumentField
-import json
-import datetime
-import time
-from datetime import timedelta
 from qoorateserver.qoorate import getTimeAgo
+
 ##
 ## Our dictshield class defintions
 ##
@@ -22,7 +23,9 @@ class Qoorate(Document):
 class User(Document):
     """a qoorate user
     Matches a row in MySQL table"""
-    id = fields.LongField(required=True,id_field=True)
+    class Meta:
+        id_field = fields.LongField
+
     role = fields.LongField(required=True)
     email = fields.StringField(required=True)
     password = fields.StringField(required=True, max_length=255)
@@ -48,8 +51,9 @@ class User(Document):
 class Comment(Document):
     """A single comment message
     Matches a row in MySQL table"""
+    class Meta:
+        id_field = fields.LongField
 
-    id = fields.LongField(required=True,id_field=True)
     locationId = fields.LongField(required=True)
     relatedId = fields.LongField(required=True)
     parentId = fields.LongField(required=True)
@@ -87,7 +91,9 @@ class Image(EmbeddedDocument):
     """A single comment message
     Matches a row in MySQL table"""
 
-    id = fields.LongField(required=True,id_field=True)
+    class Meta:
+        id_field = fields.LongField
+
     itemId = fields.LongField(required=True)
     s3Bucket = fields.StringField(required=True, max_length=255)
     thumbnailLargeHash = fields.StringField(required=True, max_length=255)
@@ -104,9 +110,12 @@ class CommentItem(Document):
     """A single comment message
     This is not really an entity now, 
     but the data returned by a query need to build the template"""
+
+    class Meta:
+        id_field = fields.LongField
+
     parent_sequence = fields.IntField(required=True)
     child_sequence = fields.IntField(required=True)
-    id = fields.IntField(required=True,id_field=True)
     locationId = fields.IntField(required=True)
     relatedId = fields.IntField(required=True)
     parentId = fields.IntField(required=True)
@@ -149,7 +158,9 @@ class Vote(Document):
     """A single vote
     Matches a row in MySQL table"""
 
-    id = fields.LongField(required=True,id_field=True)
+    class Meta:
+        id_field = fields.LongField
+
     refTable = fields.StringField(required=True, max_length=255)
     itemId = fields.LongField(required=True)
     userId = fields.LongField(required=True)
@@ -168,7 +179,9 @@ class Flag(Document):
     """A single flag
     Matches a row in MySQL table"""
 
-    id = fields.LongField(required=True,id_field=True)
+    class Meta:
+        id_field = fields.LongField
+
     refTable = fields.StringField(required=True, max_length=255)
     itemId = fields.LongField(required=True)
     userId = fields.LongField(required=True)
@@ -183,7 +196,9 @@ class KeyPair(Document):
     """An API key pair (key, secret)
     Matches a row in MySQL table"""
 
-    id = fields.LongField(required=True,id_field=True)
+    class Meta:
+        id_field = fields.LongField
+
     key = fields.LongField(required=True)
     secret = fields.LongField(required=True)
 
@@ -194,8 +209,9 @@ class KeyPair(Document):
 class Qoorate(Document):
     """A single flag
     Matches a row in MySQL table"""
+    class Meta:
+        id_field = fields.LongField
 
-    id = fields.LongField(required=True,id_field=True)
     userId = fields.LongField(required=True)
     shortTitle = fields.StringField(required=True, max_length=255)
     longTitle = fields.StringField(required=True, max_length=255)
