@@ -777,99 +777,6 @@ $(document).ready(function() {
                                return false;
                             }
     
-                            // SM: 2011127 - Massage our order a bit for instant gratification
-                            // child comment should be directly after related item
-                            // WE DO THIS ON THE SERVER NOW
-                            /*var item = data_object.item;
-                            var table = data_object.table;
-                            if ( item && item.relatedId > 0 ) {
-                                var $new_item = null;
-                                var $related_item = null;
-                                var $new_item_text = null;
-                                var related_item_index = -1;
-                                var item_id = table + '-' + item.id;
-                                var related_item_id = table + '-' + item.relatedId;
-                                var $item = null;
-    
-                                // Loop through our list backwards so we can cleanly remove
-                                for ( var i = $data.length - 1; i > -1; i -- ) {
-                                    $item = $($data[i]);
-                                    if ( $item.attr("id") == item_id ) {
-                                        $new_item = $item;
-                                        $new_item_text = $data[i - 1];
-                                        // remove item from list
-                                        $data.splice( i, 2 );
-                                        // If related item was found (therefore has a greater index)
-                                        //     then decrement the index to make up for the removed element
-                                        if ( related_item_index > -1 )
-                                            related_item_index -= 2;
-                                    }
-                                    if ( $item.attr("id") == related_item_id ) {
-                                        $related_item = $data[i];
-                                        related_item_index = i;
-                                    }
-                                    if ( $related_item && $new_item ) {
-                                        break;
-                                    }
-                                }
-                                if ( $related_item ) {
-                                    // now get our first child controls if they exist in the next item q_toggle, q_qth
-                                    if ( $data.length == related_item_index +1 )
-                                        var $next_item = $( $data[ related_item_index] );
-                                    else
-                                        var $next_item = $( $data[ related_item_index + 2 ] );
-                                    if ( item.relatedId == item.parentId ) {
-                                        // we have special HTML controls we need to put on the moved item
-                                        var $q_qth = $next_item.find(".q_qth");
-                                    if( $q_qth.length > 0 ) {
-                                        $q_qth.detach();
-                                    }
-    
-                                        var $q_toggle = $next_item.find(".q_toggle");
-                                        if( $q_toggle.length > 0 ) {
-                                            $q_toggle.detach();
-                                        }
-                                    } else {
-                                        // we may have to move the control off the item
-                                        var $q_qth = $new_item.find(".q_qth");
-                                        if( $q_qth.length > 0 ) {
-                                            $q_qth.detach();
-                                        }
-    
-                                        var $q_toggle = $new_item.find(".q_toggle");
-                                        if( $q_toggle.length > 0 ) {
-                                            $q_toggle.detach();
-                                        }
-                                    }
-                                    if( related_item_index == 0 ) {
-                                        $data[ related_item_index + 1 ] = $next_item[0];
-                                        $data.splice( related_item_index + 1, 0, $new_item[0], $new_item_text );
-                                        if( $q_qth.length > 0 ) {
-                                            $($data[1]).prepend($q_qth);
-                                        }
-
-                                        if( $q_toggle.length > 0 ) {
-                                            $($data[1]).prepend($q_toggle);
-                                        }
-                                    } else {
-                                        $data[ related_item_index + 2 ] = $next_item[0];
-                                        $data.splice( related_item_index + 2, 0, $new_item[0], $new_item_text );
-                                        if( $q_qth.length > 0 ) {
-                                            $($data[2]).prepend($q_qth);
-                                        }
-
-                                        if( $q_toggle.length > 0 ) {
-                                            $($data[2]).prepend($q_toggle);
-                                        }
-                                   }
-
-                                }
-                                $data = updateChildCNOrderClass( $data );
-                            }
-                            */
-                            // end massaging our new item placement
-
-
                             if ( !$('#'+_id).hasClass('lv-1') ) {
                                 //alert('THIS WORKS');
                                 _parent = $('#'+_id).prevAll('.lv-1')[0]; 
@@ -1792,6 +1699,20 @@ $(document).ready(function() {
                 //$(e.currentTarget).slideUp('250');
             }
     
+        });
+
+        $document.scroll( function(e) {
+            // see if we need to load more items
+            var $more_link = $(".more_link_all"),
+                moreTop = $more_link.offset().top,
+                scrollY = window.scrollY,
+                scroll_diff = (moreTop - scrollY);
+
+            console.log("scroll:" + scroll_diff);
+
+            if (scroll_diff < 1000) {
+                $more_link.find('a').click();
+            }
         });
     
         /*$('input').live('focus', function() {
