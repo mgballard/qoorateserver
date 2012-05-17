@@ -91,9 +91,7 @@ class Image(EmbeddedDocument):
     """A single comment message
     Matches a row in MySQL table"""
 
-    class Meta:
-        id_field = fields.LongField
-
+    id = fields.LongField(id_field=True, required=True)
     itemId = fields.LongField(required=True)
     s3Bucket = fields.StringField(required=True, max_length=255)
     thumbnailLargeHash = fields.StringField(required=True, max_length=255)
