@@ -1701,20 +1701,22 @@ $(document).ready(function() {
     
         });
 
-        $document.scroll( function(e) {
-            // see if we need to load more items
-            var $more_link = $(".more_link_all"),
-                moreTop = $more_link.offset().top,
-                scrollY = window.scrollY,
-                scroll_diff = (moreTop - scrollY);
-
-            console.log("scroll:" + scroll_diff);
-
-            if (scroll_diff < 1000) {
-                $more_link.find('a').click();
-            }
-        });
+        // Auto load on scroll behavior optionalvia conf
+        if (qoorateConfig.AUTO_SCROLL > 0) {
+            $document.scroll( function(e) {
+                // see if we need to load more items
+                var $more_link = $(".more_link_all"),
+                    moreTop = $more_link.offset().top,
+                    scrollY = window.scrollY,
+                    scroll_diff = (moreTop - scrollY);
     
+                console.log("scroll:" + scroll_diff);
+    
+                if (scroll_diff < 1000) {
+                    $more_link.find('a').click();
+                }
+            });
+        }    
         /*$('input').live('focus', function() {
             $(this).val('');
             });

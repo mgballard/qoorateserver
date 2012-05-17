@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+import json
 import logging
 
 from brubeck.request_handling import WebMessageHandler, JSONMessageHandler
 from brubeck.templating import Jinja2Rendering
-
 from qoorateserver.handlers.base import QoorateMixin
+from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
 from qoorateserver.querysets.querysets import CommentItemQueryset, CommentQueryset, QoorateQueryset, KeypairQueryset
 
 def get_head_resources(qoorate_base_uri):
@@ -44,11 +45,12 @@ def get_head_resources(qoorate_base_uri):
                 ('type', "text/css"),
             )
         ),
-        ( "jsconf", (
-                ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
-                ('type', "text/javascript"),
-            )
-        ),
+        # This is inline now
+        #( "jsconf", (
+        #        ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
+        #        ('type', "text/javascript"),
+        #    )
+        #),
         ( "script", (
                 ('src', "%s/js/jquery-1.4.4.min.js" % qoorate_base_uri),
                 ('type', "text/javascript"),
@@ -75,6 +77,20 @@ def get_head_resources(qoorate_base_uri):
 ## Our embed mixin class definition
 ##
 class EmbedMixin(object):
+    @lazyprop
+    def qoorate(self):
+        """our qoorate or instance of a client (api key/secret pair)
+        """
+        qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
+        return qoorate
+
+    @lazyprop
+    def preferences(self):
+        """our client preferences
+        """
+        json_string = self.qoorate.preferences.replace("\r\n","\n").replace("\n", "")
+        return json.loads(json_string)
+
     """this loads the initial comments for a page"""
 
     def prepare(self):
@@ -93,8 +109,7 @@ class EmbedMixin(object):
             logging.debug('QoorateQueryset preparing')
             logging.debug("q_short_name: %s" % self.q_short_name)
             self.qoorate_queryset = QoorateQueryset(self.application.get_settings('mysql'), self.application.db_conn)
-            qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
-            table = qoorate.refTable
+            table = self.qoorate.refTable
             self._table = table
             logging.debug('new table: %s' % self.table)
         self.comment_item_queryset = CommentItemQueryset(self.application.get_settings('mysql'), table, self.application.db_conn)
@@ -134,6 +149,7 @@ class EmbedMixin(object):
             'childCount': self.childCount,
             'moreIndex': self.moreIndex,
             'has_more_contributions': self.has_more_contributions(comments),
+            'preferences': self.preferences['EMBED_CONF_JS'],
         }
         return context;
 
@@ -144,8 +160,11 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin, QoorateMixin):
     """this loads the initial comments for a page"""
 
     def get(self):
+        logging.debug('get EmbedHandler')
         action = self.get_argument('action', None)
         logging.debug("action: %s " % action)
+        logging.debug("qoorate preferences: %s" % self.qoorate.preferences)
+        logging.debug("preferences EMBED_CONF_JS: %s" % self.preferences['EMBED_CONF_JS'])
         if action == 'embed_head':
             logging.debug('embed_head called')
             head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
@@ -180,6 +199,9 @@ class EmbedHandlerJSON(JSONMessageHandler, EmbedMixin, QoorateMixin):
 
     def get(self):
         logging.debug('get EmbedHandlerJSON')
+        action = self.get_argument('action', None)
+        logging.debug("action: %s " % action)
+        logging.debug("qoorate preferences: %s" % self.qoorate.preferences)
         head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
         self.add_to_payload('head', head_resources)
         context = self.get_content_context()

@@ -10,7 +10,9 @@ var qoorateConfig = {
                                    // would append QOORATE_URI
     POST_MAX_LEN: 1000,
     PARENT_PAGE_SIZE: 10,
-    CHILD_PAGE_SIZE: 10}
+    CHILD_PAGE_SIZE: 10,
+    AUTO_SCROLL: 1
+}
 
 var qoorateLang = {
     FLAG_SUCCESS: 'Thank you for your feedback.',
