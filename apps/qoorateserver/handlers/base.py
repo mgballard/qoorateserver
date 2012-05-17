@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import json
 import logging
 from brubeck.request_handling import MessageHandler
 from qoorateserver.querysets.querysets import (
@@ -216,6 +217,26 @@ class QoorateMixin(object):
         return  FlagQueryset(
             self.application.get_settings('mysql'), self.application.db_conn
         )
+
+
+    @lazyprop
+    def qoorate(self):
+        """our qoorate or instance of a client (api key/secret pair)"""
+        if self.table == None:
+            self.set_table()
+        qoorate = self.qoorate_queryset.get_by_ref_table(self.table)
+        return qoorate
+
+    @lazyprop
+    def preferences(self):
+        """our client preferences"""
+        json_string = self.qoorate.preferences.replace("\r\n","\n").replace("\n", "")
+        return json.loads(json_string)
+
+    @lazyprop
+    def theme(self):
+        """our current theme"""
+        return self.preferences['THEME']
 
     def set_table(self):
         """get the table from api if needed"""

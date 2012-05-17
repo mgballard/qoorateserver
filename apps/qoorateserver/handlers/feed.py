@@ -489,7 +489,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 context['has_more_contributions'] = self.has_more_contributions(
                     comments
                 )
-            html = self.render_partial('comments.html', **context)
+            html = self.render_partial(self.preferences['THEME'] + '/comments.html', **context)
             logging.debug(html)
             self.add_to_payload('item', item)
             self.add_to_payload('content', html)
@@ -1027,7 +1027,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             voteOrder=self.voteOrder)
         context = self.get_comment_context(comments)
         self.add_to_payload("content", self.render_partial(
-                'comments.html',
+                self.preferences['THEME'] + '/comments.html',
                 **context
             )
         )
@@ -1047,7 +1047,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             voteOrder=self.voteOrder)
         context = self.get_comment_context(comments)
         self.add_to_payload("content", self.render_partial(
-                'comments.html',
+                self.preferences['THEME'] + '/comments.html',
                 **context
             )
         )
@@ -1084,7 +1084,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'has_more_contributions': self.has_more_contributions(comments),
         }
         self.add_to_payload("content", self.render_partial(
-                'comments.html',
+                self.preferences['THEME'] + '/comments.html',
                 **context
             )
         )

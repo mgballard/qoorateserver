@@ -647,4 +647,18 @@ class QoorateQueryset(MySqlApiQueryset):
             return None;
         else:
             return row[0];
+
+    def get_by_ref_table(self, ref_table):
+        """Loads qoorate by refTable"""
+
+        sql = """
+            SELECT %s FROM `%s` WHERE `refTable` = %%s
+        """ % (self.get_fields_list(), self.table_name)
+
+        row = self.dictListToDictShieldList(self.query(sql, [ref_table]))
+        
+        if row == None or row == []:
+            return None;
+        else:
+            return row[0];
         

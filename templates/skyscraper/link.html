@@ -1,0 +1,49 @@
+            <div class="q_inr">
+                <div class="q_left">
+                    <img width="50" height="50" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge)}}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
+                </div>
+                <div class="q_data">
+                    <div class="q_main">
+                        <div class="q_inr">
+                            <div class="q_main_top">
+                                <div class="q_main_top_inr">
+                                    <div class="q_top_info">
+                                        <span class="q_usr">{{comment.username|default(current_user.username)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
+                                        <div class="q_clear"></div>
+                                    </div>
+                                    <div class="reply top">
+                                        <div class="reply_top_inr">
+                                            <div class="upVote wrap"><a href="#" class="do action upVote {{table}}-{{comment.id}}"></a><span class="voted">{{comment.votesUp}}</span></div>
+                                            <div class="downVote wrap"><a href="#" class="do action downVote {{table}}-{{comment.id}}"></a><span class="voted">{{comment.votesDown}}</span></div>
+                                            <div class="q_clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="q_clear"></div>
+                                </div>
+                            </div>
+                            <div class="q_main_body">
+                                <h3 class="itemDesc pre"><a href="{{comment.description}}" target="_blank" rel="nofollow">{{comment.description}}</a></h3>
+                                <div class="q_img">                            
+                                    <a href="{{comment.description}}" target="_blank" rel="nofollow"><img src="{{app["S3_IMG_PATH"]}}{{comment.thumbnailLarge|default(thumbnailLargeHash)}}_t.jpg" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" /></a>
+                                </div>
+                                <p class="itemName caption type-1">{{comment.name}}</p>
+                            </div>
+                            <div class="q_bottom lv-1">
+                                <fieldset class="reply bottom">
+                                    <legend>Reply</legend>
+                                    <div class="replyFooterWrapper">
+                                        <a id="share_{{table}}-{{comment.id}}" href="#" class="do makeForm share {{table}}-{{comment.id}}"><span>+ Share</span></a>
+                                        <a id="flag_{{table}}-{{comment.id}}" href="#" class="do makeForm flag {{table}}-{{comment.id}}"><span>Flag</span></a>
+                                        <a id="reply_{{table}}-{{comment.id}}" href="#" class="do makeForm replyComment {{table}}-{{comment.id}} reply"><span>Reply</span></a>
+                                        <div class="q_clear"></div>
+                                    </div>
+                                </fieldset>
+                                <div class="dyn {{table}}-{{comment.id}}"></div>
+                            </div>
+                            <div class="q_clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+            <div class="q_clear"></div>

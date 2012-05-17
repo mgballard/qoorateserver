@@ -5,7 +5,6 @@ import logging
 from brubeck.request_handling import WebMessageHandler, JSONMessageHandler
 from brubeck.templating import Jinja2Rendering
 from qoorateserver.handlers.base import QoorateMixin
-from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
 from qoorateserver.querysets.querysets import CommentItemQueryset, CommentQueryset, QoorateQueryset, KeypairQueryset
 
 def get_head_resources(qoorate_base_uri):
@@ -77,20 +76,6 @@ def get_head_resources(qoorate_base_uri):
 ## Our embed mixin class definition
 ##
 class EmbedMixin(object):
-    @lazyprop
-    def qoorate(self):
-        """our qoorate or instance of a client (api key/secret pair)
-        """
-        qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
-        return qoorate
-
-    @lazyprop
-    def preferences(self):
-        """our client preferences
-        """
-        json_string = self.qoorate.preferences.replace("\r\n","\n").replace("\n", "")
-        return json.loads(json_string)
-
     """this loads the initial comments for a page"""
 
     def prepare(self):
@@ -149,7 +134,8 @@ class EmbedMixin(object):
             'childCount': self.childCount,
             'moreIndex': self.moreIndex,
             'has_more_contributions': self.has_more_contributions(comments),
-            'preferences': self.preferences['EMBED_CONF_JS'],
+            'confjs': self.preferences['EMBED_CONF_JS'],
+            'theme': self.preferences['THEME'],
         }
         return context;
 
@@ -187,7 +173,7 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin, QoorateMixin):
                 logging.debug('embed_content key secret invalid')
                 return self.render_template('errors.html', **{'error_code': 0})            
             context = self.get_content_context()
-            return self.render_template('embed_content.html', **context)
+            return self.render_template(self.preferences['THEME'] + '/embed_content.html', **context)
 
 
 ##
@@ -205,7 +191,7 @@ class EmbedHandlerJSON(JSONMessageHandler, EmbedMixin, QoorateMixin):
         head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
         self.add_to_payload('head', head_resources)
         context = self.get_content_context()
-        content = self.render_partial('embed_content.html', **context)
+        content = self.render_partial(self.preferences['THEME'] + '/embed_content.html', **context)
         self.set_status(200)
         self.add_to_payload('content', content)
         return self.render()
