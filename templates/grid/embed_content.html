@@ -61,14 +61,9 @@
         <div class="dyn {{table}}"></div>
     </div><!-- end q_head_wrap -->
     <div id="q_cmnt">
-        <ul id="q_cmnt_contents">
-            {% if theme == 'grid' %}
-                {% include "grid/grid_comments.html" %}
-            {% else %}
-                {% include "grid/comments.html" %}
-            {% endif %}
-
-        </ul><!-- end q_cmnt_contents -->
+        <div id="q_cmnt_contents">
+            {% include "grid/comments.html" %}
+        </div><!-- end q_cmnt_contents -->
     </div><!-- end q_cmnt -->
 </div><!-- end q_ -->
 <!-- end qoorate comments -->

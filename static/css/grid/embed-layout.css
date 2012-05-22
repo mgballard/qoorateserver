@@ -1,0 +1,1139 @@
+/*
+This contains CSS for margins, padding, display, float, etc ...
+*/
+
+#q_ {
+    max-width: 600px;
+    min-width: 250px;
+}
+
+#q_ textarea {
+    height:75px;
+}
+
+#q_ input.replyLink {
+    height:30px;
+    padding: 0 4px;
+}
+
+#q_ textarea.replyTopic {
+    height: 75px;
+}
+
+#q_ .q_head_wrap .dyn {
+    margin: 12px 0;
+}
+
+#q_ .q_sort_wrap {
+    float: right;
+    height: 30px;
+    padding: 0px;
+    margin-left: 10px;
+}
+
+#q_ .q_sort_select {
+    margin: 6px 7px 0 9px;
+    padding: 0;
+}
+
+#q_ .inputAreaWrap-outer + .textAreaWrap-outer {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+#q_ .textAreaWrap-outer,
+#q_ .inputAreaWrap-outer,
+#q_ .q_qq-uploader {
+    padding: 20px !important;
+}
+
+#q_ .textAreaWrap-outer.replyPhoto {
+    padding-bottom:10px !important;
+}
+
+#q_ .dyn .inputAreaWrap-outer.replyLink {
+    padding-bottom:0 !important;
+}
+
+#q_ .dyn .inputAreaWrap-outer.replyLink #q_replyLink {
+    width: 75%;
+    float: left;
+}
+
+#q_ .inputAreaWrap-outer.replyLink .inputAreaWrap-inner .replyLink {
+    width: 20%;
+}
+
+
+#q_ .textAreaWrap-outer.replyLink {
+    padding-top:0 !important;
+}
+
+#q_ .textAreaWrap-inner {
+    padding: 7px;
+}
+
+#q_ .dynReplyWrap {
+    margin: 0 auto !important;
+    top: 25px;
+    right: 3px;
+}
+
+#q_ a.do.upVote, 
+#q_ a.do.downVote
+{
+    display:block;
+    padding:0;
+}
+
+#q_ a.topic {
+    padding: 5px 14px !important;
+    height: 17px !important;
+    width: 33px !important;
+    text-align: center;
+}
+
+#q_ div.first > .q_inr {
+    margin-left:0;
+}
+
+#q_ ul ul ul {
+    padding: 0;
+}
+
+#q_ .q_item > .q_inr,
+#q_ .getMoreChildren {
+    margin-left:110px;
+}
+
+#q_ .q_item.lv-1 .q_inr {
+    margin-left:inherit;
+}
+
+#q_ .q_item.lv-1 {
+    border: 1px solid #A7A7A7;
+}
+
+#q_ .lv-1.vi-l {
+    padding-left:0;
+}
+
+#q_ .lv-1.vi-n {
+    padding-left:0px;
+}
+
+#q_ .lv-2.vi-n {
+    padding-left:0px;
+}
+
+#q_ .lv-3.vi-n {
+    padding-left:30px;
+}
+
+#q_ .lv-4.vi-n {
+    padding-left:60px;
+}
+
+#q_ .lv-5.vi-n {
+    padding-left:90px;
+}
+
+#q_ .lv-6.vi-n {
+    padding-left:120px;
+}
+
+#q_ .lv-7.vi-n {
+    padding-left:150px;
+}
+
+#q_ .lv-8.vi-n {
+    padding-left:180px;
+}
+
+#q_ .lv-9.vi-n {
+    padding-left:210px;
+}
+
+#q_ .dyn {
+    clear:left;
+    position:relative;
+    z-index: 1;
+    display:none;
+    float:left;
+    width: 100%;
+}
+
+#q_ .dyn input.replyLink,
+#q_ .q_qq-upload-button {
+    margin:0;
+    display: block;
+    width: auto;
+    padding:7px;
+}
+
+#q_ .dyn textarea {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#q_ .q_item .dyn textarea {
+    width: 100%;
+}
+
+#q_ .q_item.lv-1 .dyn textarea {
+    width:100%;
+}
+
+#q_ .q_item.c .dyn {
+    float: none;
+    width: auto;
+}
+
+#q_ .qitem.c .dynFormFooter {
+    margin-right: 0;
+}
+
+#q_ .dyn input.replyLink {
+    padding-bottom:0;
+    padding-top:0;
+}
+
+#q_ .dyn a {
+    clear:left;
+}
+
+#q_ .reply legend {
+    display:none;
+}
+
+#q_ a.do.cancel {
+    width:12px;
+    height:12px;
+    float: right;
+    display: block;
+}
+
+#q_ a.do.x {
+    width: 11px;
+    height: 12px;
+    float: right;
+    display: block;
+    padding: 1px 0px 1px 6px;
+}
+
+#q_ a.submit,
+#q_ a.do.action.attachPhoto,
+#q_ a.do.action.attachLink {
+    float: right;
+    margin: 20px ;
+    right: 15px;
+    clear: none;
+}
+
+#q_ a.submit,
+#q_ a.do.action.attachLink {
+    margin: 8px 7px;
+}
+
+#q_ a.shareItem.submit,
+#q_ a.addItem.submit {
+    margin: 0;
+}
+
+#q_ .q_thumbnail {
+    display: inline;
+    float: left;
+    margin-right: 15px;
+}
+
+#q_ .c a.addItem.submit {
+}
+
+#q_ a.do.action.attachPhoto,
+#q_ a.do.action.attachLink {
+    bottom:inherit;
+}
+
+#q_ img {
+    display:inline;
+}
+
+#q_ a.do.flag,
+#q_overlay_content a.dialog,
+#q_ a.do.makeForm,
+#q_ a.view {
+    display:block;
+}
+
+#q_overlay_content a.dialog span,
+#q_ a.do.makeForm span,
+#q_ #topReplyFnxn a span,
+#q_ a.view span {
+    display:block;
+    padding:7px;
+}
+
+#q_ div#topReplyText span {
+    padding:7px;
+}
+
+#q_ div#topReplyText span  {
+    display:block;
+}
+
+#q_ div#topReplyText, #q_ div#topReplyFnxn {
+    float:left;
+}
+
+#q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span {
+    padding:5px 14px;
+}
+#q_overlay_content a.dialog span,
+#q_ a.do.action.shareItem span,
+#q_ a.do.action.addItem span {
+    padding: 5px 14px;
+}
+
+#q_replyTopic {
+    visibility: hidden;
+}
+
+#q_ #q_top {
+    width:100%;
+}
+
+#q_ .q_wrap > ul,
+#q_ div#topReply {
+    clear:left;
+    display:block;
+    width:auto;
+}
+
+#q_ #topReply {
+    width:100%;
+    margin-top:5px;
+}
+
+#q_ #q_cntr,
+#q_ #q_socl,
+#q_ #q_soclusr,
+#q_ #q_fllw,
+#q_ #q_bndg {
+    padding:10px;
+    float:left;
+    height:60px;
+}
+
+#q_ #q_cntr .q_inr,
+#q_ #q_socl .q_inr,
+#q_ #q_soclusr .qinr,
+#q_ #q_fllw .q_inr {
+    margin-top:1.5em;
+}
+
+#q_ #q_cntr span.ttl {
+    float: left;
+}
+
+#q_ #q_cntr {
+    max-width:170px;
+}
+
+#q_overlay_content span.ttl,
+#q_ #q_socl span.ttl,
+#q_ #q_soclusr span.ttl, 
+#q_ #q_fllw span.ttl {
+    float: left;
+    padding-top:7px;
+}
+
+#q_overlay_content span.ttl {
+    padding-top: 0;
+}
+
+#q_ #q_fllw span,
+#q_ #q_soclusr span {
+    padding:7px;
+}
+
+#q_ #q_top {
+    margin-bottom:10px;
+    float:left;
+}
+
+#q_ .q_item {
+    position:relative;
+}
+
+#q_ .q_item .q_left,
+#q_ .q_item .q_data {
+    float:left;
+    position:relative;
+}
+
+#q_ .q_item.lv-1 .q_left {
+    margin-left:10px;
+}
+
+/* ??? */
+#q_ .q_item .q_left {
+    z-index: 2;
+}
+
+#q_ .q_main_top {
+    min-height:7px;
+    padding: 7px 0px 2px 5px;
+    margin-bottom:10px;
+    margin-left:10px;
+    margin-right:10px;
+}
+
+#q_ .c .q_main_top {
+    margin-left:0;
+    margin-right:0;
+}
+
+#q_ .q_top_info,
+#q_ .q_top_info span {
+    float: left;
+}
+
+#q_ .q_top_info span {
+    padding-bottom: 3px;
+}
+
+#q_ .q_top_info {
+    padding-top: 3px;
+    padding-bottom: 10px;
+    margin-right: 144px;
+}
+
+#q_ .tp-10 .q_top_info {
+    margin-right: 0px;
+}
+
+#q_ .q_main_footer,
+#q_ .q_main_body {
+    padding: 12px;
+}
+
+#q_ .c .q_main_body  {
+    padding: 12px;
+}
+
+#q_ .q_main_body .q_img,
+#q_ .q_main_body .itemName,
+#q_ .q_main_body .itemDesc {
+    word-wrap: break-word;
+}
+
+#q_ .q_main_body .q_img,
+#q_ .q_main_body .q_txt {
+    float:left;
+}
+
+#q_ .q_main_body .q_txt {
+    padding: 0 0 1em 0;
+}
+#q_ .c .q_main_body .q_txt {
+    padding: 1em 0 0 0;
+    width: 100%;
+}
+
+#q_ h3.itemName {
+    text-align: center;
+    margin-bottom: .5em;
+}
+#q_ h3.itemDesc {
+    margin-bottom: .5em;
+}
+#q_ .itemName.caption.type-1 {
+    clear: left;
+}
+
+#q_ .tp-2 .q_main_body .q_img {
+    width:100%;
+    margin-right:0;
+}
+
+#q_ .tp-1 .q_main_body .q_txt {
+    margin-left:7px;
+    padding-bottom: .5em;
+}
+
+#q_ .q_main_body .q_img img {
+  margin: 0;
+  padding-bottom: .5em;
+}
+
+#q_  .tp-1 .q_main_body .q_img img {
+  margin: 0 auto;
+}
+
+#q_ .q_item .q_qth {
+    height:16px;
+    width:auto;
+    margin-left:100px;
+    z-index:2;
+    position: relative;
+    margin-bottom: -1px;
+}
+
+#q_ .q_item .q_inr,
+#q_ .getMoreChildren {
+    z-index:1;
+    position:relative;
+}
+
+#q_ .q_item > .q_inr {
+    margin: 0;
+}
+#q_ .getMoreChildren {
+    padding:10px 10px 10px 10px;
+    margin-right: 10px;
+}
+
+#q_ .getMoreChildren {
+    width: auto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-right: 20px;
+}
+
+#q_ .q_item .q_left {
+    width:80px;
+    position: absolute;
+    float: none;
+}
+
+#q_ .q_item .q_left img {
+    padding:7px;
+}
+
+#q_ .q_item {
+    width:auto;
+}
+
+#q_ .q_item.lv-1 .q_inr {
+    padding: inherit;
+}
+
+#q_ .q_item .q_data {
+    width:auto;
+}
+
+#q_ .q_item.lv-1 .q_data,
+#q_ .getMore {
+    width: auto;
+    display: block;
+    float: none;
+}
+
+#q_ .getMoreChildren,
+#q_ .getMore {
+    display: block;
+    position: relative;
+    z-index: 0;
+}
+
+#q_ .getMore {
+    margin: 0;
+    width: auto;
+    padding: 10px 20px 10px 20px;
+}
+
+#q_ #topReplyFnxn fieldset {
+    width: 100%;
+}
+
+#q_ #topReplyFnxn a.makeForm {
+    float:left;
+    padding-top:3px;
+    padding-bottom:3px;
+    height: 24px;
+}
+
+#q_ #topReplyFnxn a.q_sort_button span {
+    padding-right: 20px;
+    margin: 3px 9px 0 3px;
+}
+
+#q_ #topReplyFnxn ul.q_sort_list {
+    margin: 3px 0 0 0;
+    position: relative;
+    z-index: 30;
+    visibility: hidden;
+    padding: 7px 0 7px 0;
+}
+
+#q_ #topReplyFnxn ul.q_sort_list li {
+    padding: 3px 3px 3px 10px;
+    text-align: left;
+}
+
+#q_ #q_logoff {
+    padding: 0 0 0 36px;
+}
+
+#q_ .q_item .q_bottom fieldset,
+#q_ .q_item .q_bottom {
+    clear:left;
+    width: 100%;
+}
+
+#q_ .q_item .q_main,
+#q_ .q_item.q_main > .q_inr {
+    width: 100%;
+}
+
+#q_ .clear {
+    clear:left;
+}
+
+#q_ #topReply .reply a.view {
+    float:right;
+}
+
+#q_ .reply .wrap {
+    display:block;
+    float:left;
+    position:relative;
+    padding:3px;
+}
+
+#q_ .reply.top {
+    position: absolute;
+    right: 0;
+    width: 144px;
+}
+
+#q_ .reply_top_inr {
+    float: right;
+    margin-right: 10px;
+}
+
+#q_ .q_usr {
+    padding-right: 7px;
+    margin-right: 7px;
+    display: block;
+}
+
+#q_ .q_main_body {
+    padding: 12px;
+}
+
+#q_ .q_main_top > span {
+    display:block;
+    float:left;
+}
+
+/* SHARE BOX UI STYLES */
+
+#q_ .contribUI_Image {
+    /* SM: 20120104 - Absolute needed here */
+    position: absolute;
+    left:0;
+    top:0;
+    margin-left: 22px;
+    margin-top: 14px;
+}
+
+#q_ .contribUI_Image li {
+    height: 98px;
+}
+
+#q_ a.contribUI_Left {
+    float: left;
+    width: 27px;
+    height: 23px;
+    clear:none;
+}
+
+#q_ a.contribUI_Right {
+    float: left;
+    width: 25px;
+    height:23px;
+    clear:none;
+}
+
+#q_ .contribUI_Content {
+    display: block;
+    margin: 0 0 0 122px;
+    padding: 12px 12px 0 12px 
+}
+
+#q_ .contribUI_PageNumber {
+    float: left;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+#q_ .contribUI_Text span {
+    margin-left: 2px;
+}
+
+#q_ .contribUI_SelectImage {
+    float: left;
+}
+
+#q_ .contribUI_Checkbox {
+    float: left;
+    margin-top: 6px;
+}
+
+#q_ .contribUI_Checkbox input {
+    float: left;
+}
+
+#q_ .contribUI_Checkbox label {
+    line-height: 2.25em;
+}
+
+#q_ .contribUI_Remove {
+    float: right;
+    padding-top: 3px;
+}
+
+#q_ .contribUI_Wrap {
+    position: relative;
+}
+
+#q_ .contribUI_Wrap .remove_link {
+    float: right;
+    line-height: 2.25em;
+}
+
+#q_ .contribUI_Title h2 {
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    font-size: 12px;
+}
+
+#q_ .contribUI_Summary {
+    margin-bottom: 0;
+    min-height: 31px;
+}
+
+#q_ .contribUI_Summary p{
+    margin: 4px 0;
+}
+
+#q_ #slider {
+    overflow: hidden;
+}
+
+#q_ #slider,
+#q_ #slider li {
+    width: 100px;
+}
+
+#q_ #slider li {
+    float: left;
+}
+
+
+/* ??? */
+/*
+#q_ #slider ul,
+#q_ #slider li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+*/
+
+#q_ .reply .wrap {
+    padding:0;
+}
+
+#q_ #q_bndg a {
+    display:block;
+    height:65px;
+    width:60px;
+    float:left;
+}
+
+#q_ #q_socl .q_inr {
+    padding:0 14px;
+}
+#q_overlay_content a.login span,
+#q_ #q_socl a span  {
+    width:28px;
+    height:28px;
+    display:block;
+    margin-left:7px;
+    float:left;
+    overflow:hidden;
+}
+
+#q_ #topReplyFnxn a.do.makeForm span {
+    padding-left:28px;
+    margin-left: 7px;
+}
+
+
+#q_ #topReplyFnxn a.replyLink span {
+    margin-right: 10px;
+}
+
+#q_ a.q_parent {
+    display:block;
+    float:left;
+    padding-left:20px;
+    padding-top: 3px;
+}
+
+
+#q_ .upVote.wrap,
+#q_ .downVote.wrap {
+    width: 50%;
+    float: left;
+    margin: 2px 0;
+}
+#q_ .downVote.wrap .inner,
+#q_ .replyWrapper .inner {
+    height: 27px;
+}
+
+
+#q_ .upVote.wrap a {
+    margin: 0px 5% 2px 0;
+    float: right;
+    padding-top: 2px;
+    width: 40px;
+    height: 19px;
+    display: block;
+}
+#q_ .downVote.wrap a {
+    margin: 2px 0 0px 5%;
+    float: left;
+    padding-bottom: 2px;
+    width: 40px;
+    height: 19px;
+    display: block;
+}
+
+
+#q_ .replyWrapper {
+    width: 50%;
+    float: left;
+}
+#q_ .vote.wrapper {
+    width: 50%;
+    float: right;
+}
+
+#q_ span.voted {
+    display:block;
+    margin-top: 5px;
+}
+
+#q_ .tp-10 span.voted {
+    width:inherit;
+    top:15px;
+}
+
+#q_ .q_r_usr {
+    float:left;
+    font-size:.9em;
+    line-height:1em;
+    padding:2px 5px 2px 5px;
+    margin-top:-4px;
+    margin-right:1em;
+}
+
+/*image uploader*/
+.q_qq-uploader { 
+    position:relative;
+}
+
+.q_qq-upload-button {
+    display:block; /* or inline-block */
+    width: 105px;
+    padding: 7px 0;
+}
+
+/* ??? */
+.q_qq-upload-drop-area {
+    height: 70px;
+    z-index:2;
+    display: block;
+}
+
+.q_qq-upload-drop-area span {
+    display:block;
+    padding-top: 50%;
+    margin-top:-8px;
+    font-size:16px;
+}
+
+.q_qq-upload-list {
+    margin:15px 35px;
+    padding:0;
+    list-style:disc;
+}
+
+.q_qq-upload-list li {
+    margin:0;
+    padding:0;
+    line-height:15px;
+    font-size:12px;
+}
+
+.q_qq-upload-file,
+.q_qq-upload-spinner,
+.q_qq-upload-size,
+.q_qq-upload-cancel,
+.q_qq-upload-failed-text {
+    margin-right: 7px;
+}
+
+.q_qq-upload-file {}
+.q_qq-upload-spinner {
+    display:inline-block;
+    width:15px;
+    height:15px;
+    vertical-align:text-bottom;
+}
+
+.q_qq-upload-size,.q_qq-upload-cancel {
+    font-size:11px;
+}
+
+.q_qq-upload-failed-text {
+    display:none;
+}
+
+.q_qq-upload-fail .q_qq-upload-failed-text {
+    display:inline;
+}
+
+/*end image uploader*/
+
+.q_qq-upload-fail {
+    margin-top:10px;
+}
+
+#q_ #q_cmnt {
+    clear:both;
+    margin-bottom:10px;
+}
+
+/* SM: 20120104 - Absolute needed here */
+#q_ a.q_toggle.q_children {
+    position:absolute;
+    width:25px;
+    height:25px;
+    left:80px;
+    top:15px;
+}
+
+#q_ .imgLoad {
+    position:relative;
+    padding: 9px 0 10px 0;
+}
+
+#q_ .inputLength {
+    float: right;
+    margin-top: 12px;
+}
+
+
+#q_ div.dynFormFooter {
+    margin: 20px 0 0 20px;
+}
+
+#q_ div.dynFormFooter input {
+    margin: 0px;
+}
+
+#q_ .postTo {
+    float: left;
+    margin: 0 0 5px 0;
+}
+
+#q_ .postTo label {
+    margin-left: .25em;
+}
+
+#q_ .replyFooterWrapper {
+    clear: both;
+    padding-top: 17px;
+    width: 100%;
+}
+
+#q_ .q_item.lv-1 .replyFooterWrapper {
+    margin-bottom: 7px;
+}
+
+#q_ .headerWrapper.c .do.makeForm.reply,
+#q_ .do.makeForm.share,
+#q_ .do.makeForm.flag,
+#q_ .headerWrapper.c .do.makeForm.reply span,
+#q_ .do.makeForm.share span,
+#q_ .do.makeForm.flag span {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: inline;
+}
+
+#q_ .headerWrapper.c .do.makeForm.reply,
+#q_ .do.makeForm.share,
+#q_ .do.makeForm.flag {
+    padding: 3px;
+    float: left;
+    margin: 3px;
+}
+
+#q_ .q_item.lv-1 .do.makeForm.share {
+    margin-left: 10px;
+}
+
+
+
+#q_ .flagAreaWrapper-outer,
+#q_ .headerWrapper.c .do.makeForm.reply,
+#q_ .do.makeForm.flag,
+#q_ .c .do.makeForm.share {
+    margin-left: 0;
+    display: inline;
+}
+
+#q_ .flagAreaWrapper-outer  a.do.flag {
+    display: inline;
+    padding: 0 .5em;
+}
+
+#q_ div.flagAreaWrapper-outer {
+    float: left;
+    padding: 6px 3px 7px 17px;
+}
+
+#q_ ul.q_qq-upload-list li {
+    margin-top:5px;
+}
+
+#q_ ul.q_qq-upload-list li span {
+    margin-right:15px;
+}
+
+#q_ ul.q_qq-upload-list li span.q_qq-upload-file-preview img {
+    display:inline;
+    width:50px;
+    height:50px;
+    vertical-align:middle;
+}
+#q_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* can't rely on this */
+    z-index: 9999;
+}
+#q_overlay_content {
+    position: absolute;
+    width: auto;
+    margin: 0 auto;
+    z-index: 10000;
+    padding: 20px;
+}
+
+#q_overlay_content .overlayContent .contentMessage {
+    padding-bottom: 10px;
+}
+
+#q_overlay_content a span {
+    float: none;
+}
+#q_overlay_content .overlayContent .loginOption {
+    padding: 10px;
+}
+
+#q_overlay_content .loginOptions {
+    margin-bottom: 20px;
+}
+
+#q_overlay_content .loginOptions div.loginButtonWrapper {
+    float: left;
+}
+
+#q_overlay_content .loginOptions a.login {
+    margin: 0 auto;
+}
+
+#q_ .q_item.c > .q_inr {
+    margin: 0px;
+}
+
+#q_ .q_item.c.lm {
+    margin-bottom: 0;
+}
+
+#q_ .q_item.c .q_data {
+    float: none;
+    margin: 0px;
+} 
+
+#q_ .tp-10 a.topic 
+{
+    padding: 5px 10px !important;
+}
+
+#q_ #q_cmnt_contents {
+    margin-top: 15px;
+}
+#q_ .q_main_urs .q_usr_info {
+    margin-left: 45px;
+}
+#q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply {
+    height: 27px;
+}
+#q_ .q_main_body .itemName {
+    margin: 0;
+}
+#q_ .q_item .headerWrapper {
+    height: 1em;
+}
+
+
+#q_ .q_item .q_inr.p .do.makeForm.share,
+#q_ .q_item .q_inr.p .do.makeForm.flag {
+    display: none;
+}
+#q_ .q_item .q_inr.p:hover .do.makeForm.share, 
+#q_ .q_item .q_inr.p:hover .do.makeForm.flag {
+    display: inline;
+}
+
+#q_ .q_item.c .do.makeForm.reply,
+#q_ .q_item.c .do.makeForm.share,
+#q_ .q_item.c .do.makeForm.flag {
+    display: none;
+}
+#q_ .q_item.c:hover .do.makeForm.reply, 
+#q_ .q_item.c:hover .do.makeForm.share, 
+#q_ .q_item.c:hover .do.makeForm.flag,
+#q_ .q_item.c .headerWrapper.active .do.makeForm.reply, 
+#q_ .q_item.c .headerWrapper.active .do.makeForm.share, 
+#q_ .q_item.c .headerWrapper.active .do.makeForm.flag {
+    display: inline;
+}
+
+#q_ .q_item .q_inr.p a.do.action.shareItem span{
+    float: right;
+}
+#q_ .q_item .q_inr.c a.do.action.shareItem span{
+    float: right;
+}
+#q_ .q_item.c {
+    display: none;
+}
+#q_ .q_item.active .q_item.c {
+    display: inline;
+}
+

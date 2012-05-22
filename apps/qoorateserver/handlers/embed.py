@@ -7,76 +7,83 @@ from brubeck.templating import Jinja2Rendering
 from qoorateserver.handlers.base import QoorateMixin
 from qoorateserver.querysets.querysets import CommentItemQueryset, CommentQueryset, QoorateQueryset, KeypairQueryset
 
-def get_head_resources(qoorate_base_uri):
-    return [
-        ( "link", (
-                ('href', "%s/css/embed-base.css" % qoorate_base_uri),
-                ('media', "all"),
-                ('rel', "stylesheet"),
-                ('type', "text/css"),
-            )
-        ),
-        ( "link", (
-                ('href', "%s/css/embed-layout.css" % qoorate_base_uri),
-                ('media', "all"),
-                ('rel', "stylesheet"),
-                ('type', "text/css"),
-            )
-        ),
-        ( "link", (
-                ('href', "%s/css/embed-decor.css" % qoorate_base_uri),
-                ('media', "all"),
-                ('rel', "stylesheet"),
-                ('type', "text/css"),
-            )
-        ),
-        ( "link", (
-                ('href', "%s/css/embed-fonts.css" % qoorate_base_uri),
-                ('media', "all"),
-                ('rel', "stylesheet"),
-                ('type', "text/css"),
-            )
-        ),
-        ( "link", (
-                ('href', "%s/css/embed-mobile.css" % qoorate_base_uri),
-                ('media', "all"),
-                ('rel', "stylesheet"),
-                ('type', "text/css"),
-            )
-        ),
-        # This is inline now
-        #( "jsconf", (
-        #        ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
-        #        ('type', "text/javascript"),
-        #    )
-        #),
-        ( "script", (
-                ('src', "%s/js/jquery-1.4.4.min.js" % qoorate_base_uri),
-                ('type', "text/javascript"),
-            )
-        ),
-        ( "script", (
-                ('src', "%s/js/embed.js" % qoorate_base_uri),
-                ('type', "text/javascript"),
-            )
-        ),
-        ( "script", (
-                ('src', "%s/js/fileuploader.js" % qoorate_base_uri),
-                ('type', "text/javascript"),
-            )
-        ),
-        ( "script", (
-                ('src', "%s/js/jquery.cookie.js" % qoorate_base_uri),
-                ('type', "text/javascript"),
-            )
-        ),
-    ]
-
 ##
 ## Our embed mixin class definition
 ##
 class EmbedMixin(object):
     """this loads the initial comments for a page"""
+
+    def get_head_resources(self, qoorate_base_uri):
+        return [
+            ( "link", (
+                    ('href', "%s/css/%s/embed-base.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            ( "link", (
+                    ('href', "%s/css/%s/embed-layout.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            ( "link", (
+                    ('href', "%s/css/%s/embed-decor.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            ( "link", (
+                    ('href', "%s/css/%s/embed-fonts.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            ( "link", (
+                    ('href', "%s/css/%s/embed-mobile.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            ( "link", (
+                    ('href', "%s/css/%s/embed.css" % (qoorate_base_uri, self.preferences['THEME'])),
+                    ('media', "all"),
+                    ('rel', "stylesheet"),
+                    ('type', "text/css"),
+                )
+            ),
+            # This is inline now
+            #( "jsconf", (
+            #        ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
+            #        ('type', "text/javascript"),
+            #    )
+            #),
+            ( "script", (
+                    ('src', "%s/js/jquery-1.4.4.min.js" % qoorate_base_uri),
+                    ('type', "text/javascript"),
+                )
+            ),
+            ( "script", (
+                    ('src', "%s/js/embed.js" % qoorate_base_uri),
+                    ('type', "text/javascript"),
+                )
+            ),
+            ( "script", (
+                    ('src', "%s/js/fileuploader.js" % qoorate_base_uri),
+                    ('type', "text/javascript"),
+                )
+            ),
+            ( "script", (
+                    ('src', "%s/js/jquery.cookie.js" % qoorate_base_uri),
+                    ('type', "text/javascript"),
+                )
+            ),
+        ]
 
     def prepare(self):
         logging.debug('EmbedHandlerBase preparing')
@@ -153,7 +160,7 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin, QoorateMixin):
         logging.debug("preferences EMBED_CONF_JS: %s" % self.preferences['EMBED_CONF_JS'])
         if action == 'embed_head':
             logging.debug('embed_head called')
-            head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
+            head_resources = self.get_head_resources(self.settings['QOORATE_API_URI'])
             def build_link(resource):
                 return "<link " + " ".join(map((lambda a: "%s='%s'" % (a[0],a[1])),resource)) + " />\r\n"
             def build_script(resource):
@@ -188,7 +195,7 @@ class EmbedHandlerJSON(JSONMessageHandler, EmbedMixin, QoorateMixin):
         action = self.get_argument('action', None)
         logging.debug("action: %s " % action)
         logging.debug("qoorate preferences: %s" % self.qoorate.preferences)
-        head_resources = get_head_resources(self.settings['QOORATE_API_URI'])
+        head_resources = self.get_head_resources(self.settings['QOORATE_API_URI'])
         self.add_to_payload('head', head_resources)
         context = self.get_content_context()
         content = self.render_partial(self.preferences['THEME'] + '/embed_content.html', **context)

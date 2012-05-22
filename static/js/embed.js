@@ -30,6 +30,7 @@ function ImgError( source, url ) {
     return true;
 }
 
+
 $(document).ready(function() {
 
     /* Our "global" vars */
@@ -46,20 +47,53 @@ $(document).ready(function() {
     // SM: 20120106 - This get called on load
     var init = function() {
         addLastItemClassToChildren( $('#q_cmnt_contents') ); // add a class to style our last children
-        dynamicResize();                                     // resize our width for narrow screens
-        createOverlay();                                     // Setup our overlay divs for popups
-        wireEvents();                                        // Setup all our events
+        // resize our width for narrow screens
+        call_theme_function('dynamicResize_pre')
+        if (call_theme_function('dynamicResize') == false){
+            dynamicResize();
+        }
+        call_theme_function('dynamicResize_post')
+        
+        // Setup our overlay divs for popups
+        call_theme_function('createOverlay_pre')
+        if (call_theme_function('createOverlay') == false){
+            createOverlay();
+        }
+        call_theme_function('createOverlay_post')
+
+
+        // Setup all our events
+        call_theme_function('wireEvents_pre')
+        if (call_theme_function('wireEvents') == false){
+            wireEvents();
+        }
+        call_theme_function('wireEvents_post')
         // SM: 20120114 - we need unicode support
-       // $.ajaxSetup({ contentType: "charset=utf-8" });
+        // $.ajaxSetup({ contentType: "charset=utf-8" });
 
         // Attach error to anything, we will just display a message
         // this is needed when using $.post
         $( "#q_" ).ajaxError(function(e, jqxhr, settings, exception) {
           errorMsg(jqxhr.status, jqxhr.responseText);
         });
+        call_theme_function('ready')        
     }
 
 
+    var call_theme_function = function (func_name, args) {
+        try{
+            var theme_func = eval(qoorateConfig.THEME + "_" + func_name);
+            if (theme_func != 'undefined'){
+                theme_func.apply(this, args);
+                return true;
+            }
+        }catch(err){
+            // do nothing
+            return false;
+        }
+        return false;
+    }
+    
     // resizes our width if we are on a narrow screen
     var dynamicResize = function() {
         // Dynamically set our width for smaller screens if needed.
@@ -69,7 +103,7 @@ $(document).ready(function() {
             rescaleImages();
         }else{
             styleMobile(false);
-        
+            rescaleImages();        
         }
  
     }
@@ -89,7 +123,7 @@ $(document).ready(function() {
     // SM: 20110112 - moved from init to function for use when getting more items dynamically  too
     // SM: 20110123 - also responsible for displaying/hiding the toggle button now too
     var addLastItemClassToChildren = function($block) {
-           var $children = $block.find('li.c');
+           var $children = $block.find('.q_item.c');
            $children.removeClass('l');
            $children.removeClass('lm');
 
@@ -127,18 +161,36 @@ $(document).ready(function() {
     }
 
 
+    var images_to_rescale = 0;
+    var images_rescaled = 0;
+    var resize_job;
     // reset the width of our images if they are too big
     var rescaleImages = function() {
-        var $images = $('#q_ .q_main_body .q_img img');
+        var $images = $('#q_ .q_main_body .q_img img, #q_ .q_main_body .q_img a img');
         var $image = null;
+        images_to_rescale = $images.length
+        images_rescaled = 0;
         for( var i = 0; i < $images.length; i++ ) {     
             $image = $($images[i]);
     
             $image.load(function () {
+                images_rescaled++;
                 $this = $(this);
                 var $thisParent = $this.parents('.q_item .q_main_body');
-                if($this.width() > $thisParent.width()) {
-                    $this.css('width', '90%');
+                var $width = $thisParent.width();
+                if(col_width){
+                    $width = col_width;
+                }
+                if($this.width() > $width - 30) {
+                    $this.css('width', $width - 30);
+                }
+                if(resize_job){
+                    clearTimeout(resize_job);
+                }
+                if(images_to_rescale == images_rescaled){
+                    position();
+                }else{
+                    resize_job = setTimeout( position, 100);
                 }
             });
         }
@@ -171,11 +223,13 @@ $(document).ready(function() {
 
     var scrollToObject = function ( $item ) {
         try {
-            var item_top = $item.offset().top;
-            var item_height = $item.height();
-            var item_bottom = item_top + item_height;
-            var scrollY = window.scrollY;
-            var w_height = window.innerHeight;
+            var item_top = $item.offset().top,
+                item_height = $item.height(),
+                item_bottom = item_top + item_height,
+                scrollY = Math.max( (window.scrollY?window.scrollY:0), 
+                                    (document.body.scrollTop?document.body.scrollTop:0), 
+                                    (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) ),
+                w_height = window.innerHeight;
 
             var scrollTo = -1;
 
@@ -453,13 +507,13 @@ $(document).ready(function() {
                 return function() {
                     // position us verticaly in the center
                     // css will take care of our horizontal posion
-                    var c_height = $overlayContent.height();
-                    var w_height = window.innerHeight;
-                    var scroll_y = Math.max( (window.scrollY?window.scrollY:0), 
+                    var c_height = $overlayContent.height(),
+                        w_height = window.innerHeight,
+                        scroll_y = Math.max( (window.scrollY?window.scrollY:0), 
                                               (document.body.scrollTop?document.body.scrollTop:0), 
-                                              (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) );
-                               
-                    var o_top = ( (w_height - c_height) / 2 ) + scroll_y;
+                                              (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) ),
+                        o_top = ( (w_height - c_height) / 2 ) + scroll_y;
+
                     $overlayContent.css('top', o_top);
 
                     var c_width = $overlayContent.width();
@@ -738,6 +792,7 @@ $(document).ready(function() {
                                 $('#q_cmnt_contents').children().remove();
                                 $('#q_cmnt_contents').append($data);
                                 $('#q_cmnt').css('visibility', 'visible');
+                                position();
                                 addLastItemClassToChildren( $('#q_cmnt_contents') );
                                 return false;
                             }
@@ -758,6 +813,7 @@ $(document).ready(function() {
                                 $('.getMore').remove();
                                 var $comments = $('#q_cmnt_contents');
                                 $comments.append($data);
+                                position();
                                 addLastItemClassToChildren( $comments );
                                 return false;
                             }
@@ -798,6 +854,7 @@ $(document).ready(function() {
                                 }
                             }
 
+                            position();
                             // SM: 20110112 - make sure we are properly styled as a last child if needed
                             addLastItemClassToChildren( $('#q_cmnt_contents') );
 
@@ -839,28 +896,74 @@ $(document).ready(function() {
 
 
     var doMakeForm = function(_table,_item,_id,_form) {
-        //console.log(_table);
-        //console.log(_item);
-        //console.log(_id);
+        console.log("doMakeForm");
+        // we need this function to exist to build our form itself
+        call_theme_function('doMakeForm', [_table,_item,_id,_form])
+
+        // SM: 20111214 - Attach our preVals to our inputs
+        var $allInputs = $('.dyn.' + _id + ' :input');
+        for ( var i = 0; i < $allInputs.length; i++ ) {
+            var $input = $($allInputs[i]);
+            var type = $input.attr('type');
+            if(type != "checkbox" && type != "submit") {
+                preVal = $input.data("preVal");
+                if( ! preVal )
+                    $input.data("preVal", $input.val());
+            }
+        }
+
+        // SM: 20111223 - Attach our max length to all our inputs
+        for ( var i = 0; i < $allInputs.length; i++ ) {
+            var $input = $($allInputs[i]);
+            var type = $input.attr('type');
+            if(type != "checkbox" && type != "submit") {
+                $input.data("maxLength", qoorateConfig.POST_MAX_LEN);
+            }
+        }
+
+
+
+        // SM: 20111214 - Now use preVal attached to input element
+        $("textarea")
+            .focus(function() {
+                var $this = $(this);
+                var preVal = $this.data('preVal');
+
+                if( preVal == $this.val() )
+                    $(this).val('');
+            })
+            .blur(function() {
+                 var $this = $(this);
+                 var preVal = $this.data('preVal');
+                 if( $this.val() == '' ) {
+                     $this.val(preVal);
+                 } 
+        });
+
+        // SM: 20111214 - Now use preVal attached to input element
+        $("input")
+            .focus(function() {
+                var $this = $(this);
+                var preVal = $this.data('preVal');
+
+                if( preVal == $this.val() )
+                    $(this).val('');
+            })
+            .blur(function() {
+                 var $this = $(this);
+                var preVal = $this.data('preVal');
+                 if( $this.val() == '' ) {
+                     $this.val(preVal);
+                 } 
+        });
+
+    };
+
+
+    var skyscraper_doMakeForm = function(_table,_item,_id,_form) {
+        console.log("skyscraper_doMakeForm");
         var form_html = '';
 
-
-        if ( false && _form == 'flag' ) {
-            // Show our flag links and that is all
-            form_html = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '"><ul>' +
-                        getFlagActions( _id ) +
-                        '</ul></div>';
-
-            replaceContent( $('.do.makeForm.flag.'+_id), $(form_html), 250 );
-            return;
-        }
-        /*else if ( _form == 'sort' ) {
-           form_html = '<div id="sort_'+ _id + '" class="q_sort_wrap">'+
-             getSortActions(_id ) +
-             '</div>';
-        }*/
-
-      //  var photoText = 'add a caption...';
         var topicText = qoorateLang.TOPIC_COMMENT;
         var commText = qoorateLang.COMMENT;
         var imgText = qoorateLang.IMAGE_COMMENT;
@@ -978,65 +1081,147 @@ $(document).ready(function() {
             });
         }
 
-        // SM: 20111214 - Attach our preVals to our inputs
-        var $allInputs = $('.dyn.' + _id + ' :input');
-        for ( var i = 0; i < $allInputs.length; i++ ) {
-            var $input = $($allInputs[i]);
-            var type = $input.attr('type');
-            if(type != "checkbox" && type != "submit") {
-                preVal = $input.data("preVal");
-                if( ! preVal )
-                    $input.data("preVal", $input.val());
-            }
-        }
-
-        // SM: 20111223 - Attach our max length to all our inputs
-        for ( var i = 0; i < $allInputs.length; i++ ) {
-            var $input = $($allInputs[i]);
-            var type = $input.attr('type');
-            if(type != "checkbox" && type != "submit") {
-                $input.data("maxLength", qoorateConfig.POST_MAX_LEN);
-            }
-        }
-
-
-
-        // SM: 20111214 - Now use preVal attached to input element
-        $("textarea")
-            .focus(function() {
-                var $this = $(this);
-                var preVal = $this.data('preVal');
-
-                if( preVal == $this.val() )
-                    $(this).val('');
-            })
-            .blur(function() {
-                 var $this = $(this);
-                 var preVal = $this.data('preVal');
-                 if( $this.val() == '' ) {
-                     $this.val(preVal);
-                 } 
-        });
-
-        // SM: 20111214 - Now use preVal attached to input element
-        $("input")
-            .focus(function() {
-                var $this = $(this);
-                var preVal = $this.data('preVal');
-
-                if( preVal == $this.val() )
-                    $(this).val('');
-            })
-            .blur(function() {
-                 var $this = $(this);
-                var preVal = $this.data('preVal');
-                 if( $this.val() == '' ) {
-                     $this.val(preVal);
-                 } 
-        });
-
     };
 
+
+
+    var grid_doMakeForm = function(_table,_item,_id,_form) {
+        console.log("grid_doMakeForm");
+        var form_html = '';
+
+        var topicText = qoorateLang.TOPIC_COMMENT;
+        var commText = qoorateLang.COMMENT;
+        var imgText = qoorateLang.IMAGE_COMMENT;
+
+        if(_form == 'replyLink')
+            commText = qoorateLang.REPLY_LINK_COMMENT;
+        else if( _form == 'share' )
+            commText = qoorateLang.SHARE_COMMENT;
+ 
+        // SM: 20111223 - Added display for remaining characters left before max reached
+        var inputLength = '<span class="inputLength">' + qoorateConfig.POST_MAX_LEN + '</span>';
+        var commentTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' + 
+                                '<div class="textAreaWrap-inner">' +
+                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + commText + '</textarea>' +
+                                    inputLength + 
+                                '</div>' +
+                              '</div>';
+        var topicTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' +
+                                '<div class="textAreaWrap-inner">' +
+                                    '<textarea name="replyTopic" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' +
+                                    inputLength +
+                                '</div>' +
+                            '</div>';
+        //var commentTextarea2 = '<div class="textAreaWrap-outer ' + _form + '"><div class="textAreaWrap-inner"><textarea name="replyComment" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' + inputLength + '</div></div>';
+        var imageTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' +
+                                '<div class="textAreaWrap-inner">' +
+                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + imgText + '</textarea>' +
+                                    inputLength +
+                                '</div>' +
+                            '</div>';
+
+        var social = get_class_element($('#q_socl .logged-in'),2);
+        var login_types = qoorateLang.LOGIN_TYPES;
+        var login_type;
+
+        for (var i=0; i < login_types.length; i++) {
+          login_type = login_types[i];
+          if(social == login_type[0]) { 
+            social = login_type[1];
+            break;
+          }
+        }
+
+        var postTo = '<span class="postTo">' +
+                        '<input class="post_to" type="checkbox" checked="checked" name="post_to" value="post_to" />' +
+                        '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
+                     '</span>';
+
+        // our default action, submit button label and state
+        var actionType = 'addItem';
+        var actionLabel = qoorateLang.POST_BUTTON;
+        var disabled = ' disabled';
+        if ( _form == 'replyLink' ) {
+            form_html = formHtml(_form, _id, qoorateLang.LINK, commentTextarea);
+        } if ( _form == 'replyTopic' ) {
+            form_html = topicTextarea;
+        } else if ( _form == 'replyComment' ) {
+            form_html = commentTextarea;
+        } else if ( _form == 'share' ) {
+            // Don't display our social post_to checkbox and change the action and label for the submit button
+            postTo = '<input class="post_to" type="hidden" name="post_to" value="post_to" />';
+            actionType = 'shareItem';
+            actionLabel = qoorateLang.POST_TO_BUTTON + ' ' + social;
+            disabled = '';
+            form_html = commentTextarea;
+        } else if ( _form == 'replyPhoto' ) {
+            var photoId = _id + '-q_qq';
+            form_html = imageTextarea + '<div id="' + photoId  + '">' +
+                                            '<noscript>' +
+                                                '<p>' + qoorateLang.UPLOADER_NO_JAVASCRIPT + '</p>' +
+                                                '<!-- uploader goes here -->' +
+                                            '</noscript>' +
+                                        '</div>';
+        }
+        
+        var form_action = '<a class="do action ' + actionType + ' '+ _id + ' submit' + disabled + '" href="#">' +
+                          '<span>' + actionLabel + '</span>' +
+                          '</a>';
+
+        if ( _form == 'flag' ) {
+            form_action = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
+                        getFlagActions( _id ) +
+                        '</div>';
+            form_html = '';
+            postTo = '';
+        }
+
+        var $dynForm = $('.dyn.'+_id);
+        if ( $dynForm.html() == '' ||
+             $dynForm.parents().is('.q_head_wrap') ||
+             $dynForm.find("." + actionType).length ==0 
+           ) {
+
+            // SM: 20111214 - Create link now defaults to disabled, and now has a var that can be changed
+            // SM: 20120104 - Cancel button now lives outside the div so it can be positioned with float only
+            var form = form_html + 
+                        '<div class="dynFormFooter">' + postTo + 
+                        form_action + 
+                        '<br class="q_clear" />' + 
+                        '</div>' +
+                        '<div class="q_clear"></div>';
+            $dynForm.html(form).fadeIn('250',function() { 
+                if(_form == 'replyPhoto') {
+                    //console.log(photoId);
+                    createUploader(photoId);
+                    $('#'+photoId).append('<input id="photoHash" name="thumbnailLarge" type="hidden" />' +
+                                          '<input id="replyPhoto" name="replyPhoto" type="hidden" value="" />');
+                }
+                scrollToObject($dynForm);
+            });
+
+        } else {
+            $dynForm.fadeIn('250', function() {
+                scrollToObject($dynForm);
+            });
+        }
+        $dynForm.show();
+        var $pi = $dynForm.closest('.q_item.lv-1'),
+            $rb = $pi.find('#reply_' + _id);
+        $pi.addClass('active');
+        $rb.addClass('active');
+        $rb.parent().addClass('active');
+
+        var $attached_item = $this.parents('.q_item:first'),
+            is_child = $attached_item.hasClass('c');
+        if(is_child) {
+          grid_move_beneath($pi, $dynForm.height());
+        }else{
+          grid_move_beneath($pi, $pi.height() - $dynForm.position().top);
+        }
+        
+
+    };
 
     var formHtml = function(formType, id, value, textAreaType) {
 
@@ -1508,8 +1693,8 @@ $(document).ready(function() {
 
 
     var validateURL = function(textval) {
-        var urlregex1 = new RegExp("^(http:\/\/|https:\/\/){1}([0-9A-Za-z]+\.)");
-        var urlregex2 = new RegExp("^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
+        var urlregex1 = new RegExp("^(http:\/\/|https:\/\/){1}([0-9A-Za-z]+\.)"),
+            urlregex2 = new RegExp("^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
         if (!urlregex2.test(textval)) {
             if (!urlregex1.test(textval)) {
                 textval = "http://"+textval;
@@ -1672,7 +1857,7 @@ $(document).ready(function() {
      ***************************************************/
     var wireEvents = function() {
         
-        var $document = $(document);
+       var $document = $(document);
 
        $document.delegate("input", "focus blur", function(event) {
             // SM: 20111214 - Now attach preVal to input element for pretext hint
@@ -1701,14 +1886,17 @@ $(document).ready(function() {
     
         });
 
-        // Auto load on scroll behavior optionalvia conf
+        // Auto load on scroll behavior optional via conf
         if (qoorateConfig.AUTO_SCROLL > 0) {
             $document.scroll( function(e) {
                 // see if we need to load more items
                 var $more_link = $(".more_link_all"),
                     moreTop = $more_link.offset().top,
-                    scrollY = window.scrollY,
-                    scroll_diff = (moreTop - scrollY);
+                    scrollY = Math.max( (window.scrollY?window.scrollY:0), 
+                                        (document.body.scrollTop?document.body.scrollTop:0), 
+                                        (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) ),
+                    w_height = window.innerHeight,
+                    scroll_diff = (moreTop - scrollY - w_height);
     
                 console.log("scroll:" + scroll_diff);
     
@@ -1844,7 +2032,7 @@ $(document).ready(function() {
               scrollToObject($('#q_sort_list'));
               return false;
             }
-    
+
            //GD: 20111218 check if its the
             var allClasses = $this.attr('class');
             var allClassesArray = allClasses.split(" ");
@@ -1856,23 +2044,57 @@ $(document).ready(function() {
                     $('.q_item').toggleClass('vi-l').toggleClass('vi-n');
                     return false;
                 }
-    
+                var $attached_item = $this.parents('.q_item:first'),
+                    is_child = $attached_item.hasClass('c');
+
                 if(allClassesArray[1] == 'x') {
-                  $this.parents('.dyn:first').hide();
+                  var $dynForm = $this.parents('.dyn:first'),
+                    $p = $dynForm.parent(),
+                    $rb = $p.find('.active'),
+                    $pi = $dynForm.closest('.q_item.lv-1'),
+                    h = $pi.height() - $dynForm.position().top;
+
+                  if(is_child) {
+                    h = $dynForm.height();
+                    $dynForm.hide();
+                    $p.removeClass('active');
+                    $rb.removeClass('active');
+                    $rb.parent().removeClass('active');
+                  }else{
+                    $dynForm.hide();
+                    $pi.removeClass('active');
+                    $p.removeClass('active');
+                    $rb.removeClass('active');
+                    $rb.parent().removeClass('active');
+
+                    var o = $pi.find('q_item.c');
+                    jQuery.each(o, function(i, val) {
+                      $dynForm = $this.parents('.dyn:first');
+                      $p = $dynForm.parent();
+                      $rb = $p.find('.active');
+    
+                      $dynForm.hide();
+                      $dynForm.closest('.q_item.lv-1').removeClass('active');
+                      $p.removeClass('active');
+                      $rb.removeClass('active');
+                      $rb.parent().removeClass('active');
+                    });
+    
+                  }
+                  grid_move_beneath($pi, h * (-1))
                   return false;
                 }
-    
+
                 var target_function = allClassesArray[2];
                 var target_id = allClassesArray[3];
                 // we won't have an id for logoff
                 var target_itemArray = [];
                 if( target_id )
                     target_itemArray = target_id.split("-");
-    
-    
+
                 var target_item_parent = null;
                 var target_table = null;
-               
+
                 if(target_itemArray.length > 1) { 
                     target_table = target_itemArray[0];
                     target_item = target_itemArray[1];
@@ -1881,7 +2103,7 @@ $(document).ready(function() {
                     target_item = null;
                 }
                   //GD 20111218 Handle Get More Children 
-    
+
     
                 if(allClassesArray[1] == 'makeForm') {
                     var form_type = allClassesArray[2];
@@ -1988,7 +2210,131 @@ $(document).ready(function() {
         });
     }; // end wireEvents
 
+
+    var skyscraper_wireEvents_pre = function() {
+        
+    }; // end skyscraper_wireEvents_pre
+    var skyscraper_wireEvents_post = function() {
+        
+    }; // end skyscraper_wireEvents_post
+
+    var grid_wireEvents_pre = function() {
+        
+    }; // end grid_wireEvents_pre
+
+    var grid_wireEvents_post = function() {
+        
+    }; // end grid_wireEvents_post
     
+
+    var skyscraper_ready = function() {
+        
+    }; // end skyscraper_ready
+
+    var grid_ready = function() {
+    }; // end grid_ready
+
+    var grid_dynamicResize_pre = function() {
+        return grid_position()
+    }; // end grid_dynamicResize_pre
+
+    var position = function() {
+        var ret = call_theme_function('position') 
+        rescaleImages();
+        return ret;
+    };
+    
+    var grid_move_beneath = function($item, dist) {
+        var k = $item.attr('class');
+        var col = k.match(/\bcol-[0-9]+\b/)[0].match(/[0-9]+/)[0],
+            row = k.match(/\brow-[0-9]+\b/)[0].match(/[0-9]+/)[0],
+            o = $('#q_cmnt_contents .q_item.lv-1.col-' + col),
+            o_top = 0;
+        jQuery.each(o, function(i, val) {
+                if(i > row) {
+                    val = $(val);
+                    var coord = val.position();
+                    o_top = coord.top + dist;
+                    val.css("top", o_top + "px");
+                }
+        
+        });
+    };
+
+    var col_width = 600;
+    var grid_position = function() {
+
+        var o = $('#q_cmnt_contents .q_item.lv-1'),
+            width = 600,
+            cols = qoorateConfig.GRID_COLUMNS,
+            col_trim = qoorateConfig.GRID_COLUMN_TRIM,
+            row_trim = qoorateConfig.GRID_ROW_TRIM,
+            col = 0,
+            row = 0,
+            o_top_start = 0,
+            o_left_start = 0,
+            o_top = 0,
+            o_left = 0,
+            lastrowheights;
+        
+        lastrowheights = new Array(cols);
+        col_width = width / cols - col_trim;
+        
+        jQuery.each(o, function(i, val) {
+                val = $(val);
+
+                var coord = val.position();
+                if ( i == 0 ) {
+                    console.log("first item!");
+                    o_top_start = coord.top;
+                    o_left_start = coord.left;
+                    o_top = o_top_start;
+                    o_left = o_left_start;
+                    console.log(o_top_start);
+                    console.log(o_left_start);
+                    console.log(o_top);
+                    console.log(o_left);
+                }
+                if (row > 0) {
+                    o_top = lastrowheights[col][0] + lastrowheights[col][1];
+                }
+                val.css("top", o_top + "px");
+                val.css("left", o_left + "px");
+                val.css("width", col_width + "px");
+                val.css("position", "absolute");
+                val.addClass("col-" + col);
+                val.addClass("row-" + row);
+                lastrowheights[col] = [o_top, val.height() + row_trim];
+                col++;
+                if (col >= cols) {
+                    col = 0;
+                    row++;
+                    o_left = o_left_start;
+                } else {
+                    o_left += (col_width + col_trim);
+                }
+        
+            });
+            
+            // position our more link
+            // get our last row and find the item that goes to the end
+            var bottom = 0, b=0;
+            for(var i=0; i<cols; i++){
+                var o = lastrowheights[lastrowheights.length - i - 1];
+                b = o[0] + o[1];
+                if(b > bottom) {
+                    bottom = b;
+                }
+            }
+            o_top = bottom;
+            val = $(".more_link_all")
+            val.css("top", o_top + "px");
+            val.css("left", o_left_start + "px");
+            val.css("width", ((col_width * cols) + (col_trim * cols)) + "px");
+            val.css("position", "absolute");
+            return;
+    }; // end grid_position
+
     /*!
     * jQuery OAuth via popup window plugin
     *
