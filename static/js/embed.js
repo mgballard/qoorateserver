@@ -683,9 +683,10 @@ $(document).ready(function() {
         if ( $textarea.hasClass( 'action' ) ) {
             if ( $textarea.hasClass( 'replyComment' ) || $textarea.hasClass('replyTopic') ||
                  $textarea.hasClass('replyLink') || $textarea.hasClass('replyPhoto') || $textarea.hasClass('share') ) {
-                var $addItem = $( 'a.addItem' );
-                var preVal = $this.data("preVal");
-                var maxLength = $textarea.data("maxLength");
+                var $addItem = $textareaParent.find( 'a.addItem' ),
+                    preVal = $this.data("preVal"),
+                    maxLength = $textarea.data("maxLength");
+                
                 if ( $addItem.length == 0) {
                     $addItem = $( 'a.shareItem' );
                 }
@@ -1207,19 +1208,21 @@ $(document).ready(function() {
         }
         $dynForm.show();
         var $pi = $dynForm.closest('.q_item.lv-1'),
-            $rb = $pi.find('#reply_' + _id);
+            $rb = $pi.find('#reply_' + _id),
+            is_active = $rb.hasClass('active');
         $pi.addClass('active');
         $rb.addClass('active');
         $rb.parent().addClass('active');
 
-        var $attached_item = $this.parents('.q_item:first'),
-            is_child = $attached_item.hasClass('c');
-        if(is_child) {
-          grid_move_beneath($pi, $dynForm.height());
-        }else{
-          grid_move_beneath($pi, $pi.height() - $dynForm.position().top);
-        }
-        
+        if(!is_active){
+            var $attached_item = $this.parents('.q_item:first'),
+                is_child = $attached_item.hasClass('c');
+            if(is_child) {
+              grid_move_beneath($pi, $dynForm.height());
+            }else{
+              grid_move_beneath($pi, $pi.height() - $dynForm.position().top);
+            }
+        }        
 
     };
 
@@ -1918,7 +1921,7 @@ $(document).ready(function() {
     
         // SM: 20111214 - Added for keypress behavior
         $document.delegate('input',"keyup",function(event) {
-            $this = $(this);
+            var $this = $(this);
             if ( $this.hasClass( 'action' ) ) {
                 if ( $this.hasClass( 'replyLink' ) ) {
                     validateReplyLink( $this );
@@ -1927,16 +1930,17 @@ $(document).ready(function() {
         });
     
         $document.delegate('textarea',"keyup",function(event) {
-            $this = $(this);
+            var $this = $(this);
             textareaValidateAction($this);
+
+            var $thisParent = $this.parents('.dyn'),
+                charCount = $thisParent.find('.inputLength').text(),
+                maxLength = $this.data("maxLength"),
+                $inputVal = $thisParent.find('input').val(),
+                $attachLink = $thisParent.find('a.attachLink');
+
     
             // MB: 20110103 - allow post w/out link thumbnail BEGIN
-            var $thisParent = $this.parents('.dyn');
-            var charCount = $thisParent.find('.inputLength').text();
-            var maxLength = $this.data("maxLength");
-    
-            var $inputVal = $thisParent.find('input').val();
-            var $attachLink = $thisParent.find('a.attachLink');
     
             if(($inputVal != '') && ($inputVal != qoorateLang.LINK) && (charCount < maxLength) && (!$attachLink.hasClass('disabled'))) { 
                 $thisParent.find('a.addItem').removeClass('disabled');
