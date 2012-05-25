@@ -47,6 +47,9 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_qq-uploader {
     padding: 20px !important;
 }
+#q_ .textAreaWrap-outer {
+    padding: 0 15px 15px 15px !important;
+}
 
 #q_ .textAreaWrap-outer.replyPhoto {
     padding-bottom:10px !important;
@@ -74,6 +77,10 @@ This contains CSS for margins, padding, display, float, etc ...
     padding: 7px;
 }
 
+#q_ .q_head_wrap .textAreaWrap-inner {
+    background: #ffffff;
+}
+
 #q_ .dynReplyWrap {
     margin: 0 auto !important;
     top: 25px;
@@ -87,13 +94,6 @@ This contains CSS for margins, padding, display, float, etc ...
     padding:0;
 }
 
-#q_ a.topic {
-    padding: 5px 14px !important;
-    height: 17px !important;
-    width: 33px !important;
-    text-align: center;
-}
-
 #q_ div.first > .q_inr {
     margin-left:0;
 }
@@ -102,17 +102,16 @@ This contains CSS for margins, padding, display, float, etc ...
     padding: 0;
 }
 
-#q_ .q_item > .q_inr,
-#q_ .getMoreChildren {
-    margin-left:110px;
-}
-
 #q_ .q_item.lv-1 .q_inr {
     margin-left:inherit;
 }
 
 #q_ .q_item.lv-1 {
     border: 1px solid #A7A7A7;
+    border: none;
+}
+#q_ .q_item.lv-1.active {
+    border: none;
 }
 
 #q_ .lv-1.vi-l {
@@ -160,8 +159,8 @@ This contains CSS for margins, padding, display, float, etc ...
     position:relative;
     z-index: 1;
     display:none;
-    float:left;
-    width: 100%;
+    float:none;
+    width: auto;
 }
 
 #q_ .dyn input.replyLink,
@@ -237,15 +236,15 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 8px 7px;
 }
 
-#q_ a.shareItem.submit,
-#q_ a.addItem.submit {
+#q_ .q_item a.shareItem.submit,
+#q_ .q_item a.addItem.submit {
     margin: 0;
 }
 
 #q_ .q_thumbnail {
     display: inline;
     float: left;
-    margin-right: 15px;
+    margin-right: 9px;
 }
 
 #q_ .c a.addItem.submit {
@@ -290,10 +289,13 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span {
     padding:5px 14px;
 }
-#q_overlay_content a.dialog span,
+#q_overlay_content a.dialog span {
+    padding: 5px 14px;
+}
 #q_ a.do.action.shareItem span,
 #q_ a.do.action.addItem span {
-    padding: 5px 14px;
+    padding: 3px 7px;
+    line-height: 1.5em;
 }
 
 #q_replyTopic {
@@ -416,7 +418,7 @@ This contains CSS for margins, padding, display, float, etc ...
 
 #q_ .q_main_footer,
 #q_ .q_main_body {
-    padding: 12px;
+    padding: 14px 10px;
 }
 
 #q_ .c .q_main_body  {
@@ -490,17 +492,6 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_item > .q_inr {
     margin: 0;
 }
-#q_ .getMoreChildren {
-    padding:10px 10px 10px 10px;
-    margin-right: 10px;
-}
-
-#q_ .getMoreChildren {
-    width: auto;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    margin-right: 20px;
-}
 
 #q_ .q_item .q_left {
     width:80px;
@@ -536,6 +527,7 @@ This contains CSS for margins, padding, display, float, etc ...
     display: block;
     position: relative;
     z-index: 0;
+    padding: 12px;
 }
 
 #q_ .getMore {
@@ -803,7 +795,7 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 0px 5% 2px 0;
     float: right;
     padding-top: 2px;
-    width: 40px;
+    width: 39px;
     height: 19px;
     display: block;
 }
@@ -811,12 +803,10 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 2px 0 0px 5%;
     float: left;
     padding-bottom: 2px;
-    width: 40px;
+    width: 39px;
     height: 19px;
     display: block;
 }
-
-
 #q_ .replyWrapper {
     width: 50%;
     float: left;
@@ -831,9 +821,52 @@ This contains CSS for margins, padding, display, float, etc ...
     margin-top: 5px;
 }
 
-#q_ .tp-10 span.voted {
-    width:inherit;
-    top:15px;
+#q_ .vote.wrapper.topic a {
+    margin: 0;
+    float: none;
+    padding: 2px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+#q_ upVote.wrap.topic,
+#q_ downVote.wrap.topic {
+    display: block;
+    width: auto;
+    float: none;
+    background-color: #E5E5E5;
+}
+#q_ .upVote.wrap.topic,
+#q_ .downVote.wrap.topic {
+    clear: both;
+    width: auto;
+    float: none;
+    margin: .5em 0;
+    height: 1.5em;
+    text-align: center;
+    background-color: #C7C7C7;
+    line-height: 1em;
+    font-weight: normal;
+    font-size: .8em;
+}
+
+#q_ .downVote.wrap.topic a,
+#q_ .upVote.wrap.topic a {
+    margin: 0;
+    float: none;
+    padding: 0;
+    width: auto;
+    height: auto;
+    display: inline;
+}
+#q_ .downVote.wrap.topic .inner,
+#q_ .upVote.wrap.topic .inner {
+    height: auto;
+}
+#q_ .downVote.wrap.topic span.voted,
+#q_ .upVote.wrap.topic span.voted {
+    display:inline;
+    margin: 0;
 }
 
 #q_ .q_r_usr {
@@ -944,6 +977,9 @@ This contains CSS for margins, padding, display, float, etc ...
 
 #q_ div.dynFormFooter {
     margin: 20px 0 0 20px;
+}
+#q_ div.dynFormFooter.flag {
+    margin: 7px 0 1em 12px;
 }
 
 #q_ div.dynFormFooter input {
@@ -1079,13 +1115,9 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 0px;
 } 
 
-#q_ .tp-10 a.topic 
-{
-    padding: 5px 10px !important;
-}
-
 #q_ #q_cmnt_contents {
     margin-top: 15px;
+    position: relative;
 }
 #q_ .q_main_urs .q_usr_info {
     margin-left: 45px;
@@ -1130,10 +1162,15 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_item .q_inr.c a.do.action.shareItem span{
     float: right;
 }
-#q_ .q_item.c {
+#q_ .q_item.c,
+#q_ .more_link_child {
     display: none;
 }
-#q_ .q_item.active .q_item.c {
-    display: inline;
+#q_ .q_item.active .q_item.c,
+#q_ .q_item.active .more_link_child  {
+    display: block;
 }
 
+#q_ .dynForm-header {
+    padding: 1em 0;
+}

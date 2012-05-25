@@ -39,11 +39,35 @@ This contains all font styles except color
 }
 
 
-#q_ .upVote a {
-    line-height: 10px;
-}
+#q_ .upVote a,
 #q_ .downVote a {
     line-height: 10px;
+}
+#q_ .upVote.topic a,
+#q_ .downVote.topic a {
+    line-height: 1.5em;
+}
+#q_ .upVote.wrap.topic, 
+#q_ .downVote.wrap.topic {
+    line-height: 1.5em;
+    color: #FFFFFF;
+    font-size: 11px;
+}
+#q_ .upVote.wrap.topic a, 
+#q_ .downVote.wrap.topic a {
+    line-height: inherit;
+    font-size: inherit;
+}
+#q_ .upVote.wrap.topic a:visited, 
+#q_ .downVote.wrap.topic a:visited,
+#q_ .upVote.wrap.topic a, 
+#q_ .downVote.wrap.topic a {
+    color: #FFFFFF;
+}
+#q_ .upVote.wrap.topic span, 
+#q_ .downVote.wrap.topic span {
+    line-height: inherit;
+    font-size: inherit;
 }
 
 #q_ a,
@@ -199,4 +223,16 @@ This contains all font styles except color
 #q_overlay_content .overlayContent .loginOption,
 #q_overlay_content .overlayContent .contentButtons {
     text-align: center;
+}
+#q_ .getMore,
+#q_ .getMoreChildren {
+    text-transform: uppercase;
+    text-align: center;
+}
+#q_ .dynForm-header {
+    padding: 1em 0;
+    text-transform: uppercase;
+}
+#q_ .q_head_wrap .dynForm-header {
+    color: #ffffff;
 }

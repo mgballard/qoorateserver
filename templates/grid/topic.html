@@ -6,19 +6,17 @@
                                 <div class="headerWrapper p">
                                     <a id="share_{{table}}-{{comment.id}}" href="#" class="do makeForm share {{table}}-{{comment.id}}"><span>+ Share</span></a>
                                     <a id="flag_{{table}}-{{comment.id}}" href="#" class="do makeForm flag {{table}}-{{comment.id}}"><span>Flag</span></a>
-                                    <div class="q_clear"></div>                                     
+                                    <div class="q_clear"></div>
                                 </div>
                             </div>
-
                             <div class="q_main_body">
                                 <div class="q_txt">
                                     <p class="itemName caption type-{{type}}">{{comment.name}}</p>
                                 </div>
-                                <div class="upVote wrap topic"><a href="#" class="do action upVote {{table}}-{{comment.id}} topic">yes</a><span class="voted">{{comment.votesUp}} votes</span></div>
-                                <div class="downVote wrap topic"><a href="#" class="do action downVote {{table}}-{{comment.id}} topic">no</a><span class="voted">{{comment.votesDown}} votes</span></div>
-                                <div class="q_clear"></div>                                
+                                <div class="upVote wrap topic"><a href="#" class="do action upVote {{table}}-{{comment.id}} topic">yes</a> (<span class="voted">{{comment.votesUp}}</span>)</div>
+                                <div class="downVote wrap topic"><a href="#" class="do action downVote {{table}}-{{comment.id}} topic">no</a> (<span class="voted">{{comment.votesDown}}</span>)</div>
+                                <div class="q_clear"></div>
                             </div>
-
                             <div class="q_main_footer">
                                 <div class="q_main_user">
                                     <div class="q_thumbnail">
@@ -41,10 +39,10 @@
                                             <div class="q_clear"></div>                                     
                                         </div>
                                     </div>
-                                    <div class="vote wrapper">
+                                    <div class="vote wrapper topic">
                                         <div class="inner">
-                                            <div class="upVote wrap"><a href="#" class="do action upVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesUp}}</span></a></div>
-                                            <div class="downVote wrap"><a href="#" class="do action downVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesDown}}</span></a></div>
+                                            <div class="upVote wrap"><!-- <a href="#" class="do action upVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesUp}}</span></a> --></div>
+                                            <div class="downVote wrap"><!-- <a href="#" class="do action downVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesDown}}</span></a> --></div>
                                             <div class="q_clear"></div>
                                         </div>
                                     </div>

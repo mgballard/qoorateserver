@@ -338,7 +338,7 @@ This also includes all
 }
 
 #q_ .q_item.lv-1 .q_left {
-    background:url('../img/q_v.gif') top right transparent no-repeat;
+    background:url('../../img/q_v.gif') top right transparent no-repeat;
     background-position: 66px 16px;
 }
 
@@ -357,7 +357,7 @@ This also includes all
 
 
 #q_ .q_item .q_qth {
-    background:url('../img/q_h.gif') top right transparent no-repeat;
+    background:url('../../img/q_h.gif') top right transparent no-repeat;
     background-position: 25px 2px;
 }
 
@@ -419,12 +419,12 @@ This also includes all
 }
 
 #q_ a.contribUI_Left {
-    background: url('../img/contribUI_buttons.gif');
+    background: url('../../img/contribUI_buttons.gif');
     background-position: 1px -84px; 
 }
 
 #q_ a.contribUI_Right {
-    background: url('../img/contribUI_buttons.gif');
+    background: url('../../img/contribUI_buttons.gif');
     background-position: -25px -84px; 
 }
 
@@ -470,7 +470,7 @@ This also includes all
 a.q_toggle.q_children,
 #q_overlay_content a.login span
 {
-    background: url("../img/q_sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("../../img/q_sprite.png") no-repeat scroll 0 0 transparent;
 }
 
 #q_ #q_socl .q_inr {
@@ -670,7 +670,7 @@ a.q_toggle.q_children,
 }
 
 #q_ div.flagAreaWrapper-outer {
-    background: url("../img/q_sprite.png") no-repeat scroll 0 0 transparent;
+    background: url("../../img/q_sprite.png") no-repeat scroll 0 0 transparent;
     background-position: -194px -267px;
 }
 
@@ -697,11 +697,11 @@ a.q_toggle.q_children,
 }
 
 #q_ .q_item.lv-1 .q_data {
-    background: #FFFFFF url(../img/q_gradient_top.jpg) repeat-x;
+    background: #FFFFFF url(../../img/q_gradient_top.jpg) repeat-x;
 }
 
 #q_ .q_item.c > .q_inr {
-    background: #FFFFFF url(../img/q_gradient_top_c.jpg) repeat-x;
+    background: #FFFFFF url(../../img/q_gradient_top_c.jpg) repeat-x;
 }
 
 #q_ .q_item.c.l > .q_inr {

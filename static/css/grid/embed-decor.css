@@ -19,8 +19,13 @@ This also includes all
 }
 
 #q_ .q_head_wrap .dyn {
-    background-color:#FFFFFF;
-    border:1px solid #9A9A9A;
+    background-color: #9A9A9A;
+    border: 1px solid #9A9A9A;
+    border-radius: 5px;
+}
+
+#q_ .q_head_wrap .dyn.textAreaWrap-inner {
+    background-color: #FFFFFF;
 }
 
 #q_ .q_item .dyn {
@@ -52,7 +57,7 @@ This also includes all
     background-color: #FFFFFF;
 }
 
-#q_ .textAreaWrap-inner {
+#XXXq_ .textAreaWrap-inner {
     border-radius: 5px;
     border: solid 1px #9A9A9A;
     background: #FFFFFF;
@@ -88,12 +93,6 @@ This also includes all
 }
 #q_ #topReplyFnxn ul.q_sort_list li a.disabled {
     color: #cdcdcd;
-}
-
-#q_ a.topic {
-    color: #666 !important;
-    border-radius: 3px 3px 3px 3px !important;
-    /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);*/
 }
 
 #q_ div.first > .q_inr {
@@ -138,8 +137,7 @@ This also includes all
 }
 
 #q_ a.do.x {
-    background-color: #D6D6D6;
-    color: #FEFEFE;
+    color: #FBA31B;
 }
 
 #q_ .q_head_wrap a.do.x {
@@ -177,29 +175,40 @@ This also includes all
     background: linear-gradient(top,  #E9E9E9 0%,#E9E9E9 18%,#BFBFBF 93%,#BFBFBF 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#E9E9E9', endColorstr='#BFBFBF',GradientType=0 ); /* IE6-9 */
 }
+#q_overlay_content a.dialog, 
+#q_ #topReply a.do.makeForm, 
+#q_ a.view, 
+#q_ #q_top, 
+#q_ .q_r_usr, 
+#q_ .q_sort_wrap {
+    background: white;
+    background: -moz-linear-gradient(top, white 0%, white 18%, #E5E5E5 93%, #E5E5E5 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(18%,white), color-stop(93%,#E5E5E5), color-stop(100%,#E5E5E5));
+    background: -webkit-linear-gradient(top, white 0%,white 18%,#E5E5E5 93%,#E5E5E5 100%);
+    background: -o-linear-gradient(top, white 0%,white 18%,#E5E5E5 93%,#E5E5E5 100%);
+    background: -ms-linear-gradient(top, white 0%,white 18%,#E5E5E5 93%,#E5E5E5 100%);
+    background: linear-gradient(top, white 0%,white 18%,#E5E5E5 93%,#E5E5E5 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+}
 
 #q_ #q_top {
     border-radius:7px;
-}
-
-/* #q_ .q_item > .q_inr, */
-/* #q_ .q_item.lv-1 .q_data, */
-#q_ .getMoreChildren,
-#q_ .getMore {
-    background: #ffffff; /* Old browsers */
-    background: -moz-linear-gradient(top,  #e5e5e5 0%, #e5e5e5 18%, #ffffff 93%, #ffffff 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e5e5e5), color-stop(18%,#e5e5e5), color-stop(93%,#ffffff), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #e5e5e5 0%,#e5e5e5 18%,#ffffff 93%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #e5e5e5 0%,#e5e5e5 18%,#ffffff 93%,#ffffff 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #e5e5e5 0%,#e5e5e5 18%,#ffffff 93%,#ffffff 100%); /* IE10+ */
-    background: linear-gradient(top,  #e5e5e5 0%,#e5e5e5 18%,#ffffff 93%,#ffffff 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5e5e5', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 }
 
 #q_ .q_item.lv-1 {
     -webkit-box-shadow: 1px 1px 5px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    1px 1px 5px rgba(50, 50, 50, 0.75);
     box-shadow:         1px 1px 5px rgba(50, 50, 50, 0.75);
+}
+#XXXq_ .q_item.lv-1.active {
+    -webkit-box-shadow: 1px 1px 5px rgba(251, 163, 27, 0.75);
+    -moz-box-shadow:    1px 1px 5px rgba(251, 163, 27, 0.75);
+    box-shadow:         1px 1px 5px rgba(251, 163, 27, 0.75);
+}
+#q_ .q_item.lv-1.active {
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow:    1px 1px 5px rgba(0, 0, 0, 0.75);
+    box-shadow:         1px 1px 5px rgba(0, 0, 0, 0.75);
 }
 
 #q_ .q_item.c.l {
@@ -240,7 +249,11 @@ This also includes all
 #XXXq_ .getMoreChildren:hover {
     color: white;
 }
- 
+
+#q_ #topReply a.do.makeForm.replyComment {
+border-radius: 5px 0 0 5px;
+}
+
 #q_ a.do.flag,
 #q_overlay_content a.dialog,
 #q_ a.do.makeForm,
@@ -307,13 +320,18 @@ This also includes all
 #q_ a.do.action.shareItem span,
 #q_ a.do.action.addItem span {
     background-color: #FBA31B;
-    color: white;
+    color: #FFFFFF;
+}
+
+#q_ .q_head_wrap a.do.action.shareItem span,
+#q_ .q_head_wrap a.do.action.addItem span {
+    border-radius: 5px;
 }
 
 #q_ a.do.action.shareItem.disabled span,
 #q_ a.do.action.addItem.disabled span {
-    background-color: #F1F2ED;
-    color: #D3D3D3;
+    color: #F1F2ED;
+    background-color: #D3D3D3;
 }
 
 
@@ -346,14 +364,9 @@ This also includes all
 }
 
 
-#q_ .q_item.lv-1 > .q_inr,
-#q_ .getMoreChildren {
+#XXXq_ .q_item.lv-1 > .q_inr,
+#XXXq_ .getMoreChildren {
     border:1px solid #a7a7a7;
-}
-
-#q_ .getMoreChildren {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 #q_ .q_item.lv-1 > .q_inr {
@@ -368,10 +381,6 @@ This also includes all
 #q_ .q_item.lv-1 .q_inr {
     background:inherit;
     border-radius: inherit;
-}
-
-#q_ .getMore {
-    border: 1px solid #a7a7a7;
 }
 
 #q_ .reply .wrap {
@@ -653,9 +662,10 @@ a.q_toggle.q_children,
 #q_ .q_item.lv-1 {
     background-color: #FFFFFF;
 }
+#q_ .getMoreChildren,
 #q_ .q_item.c {
     background-color: #f1f2ed;
-    border-bottom: 2px solid #C4C5C0;
+    border-bottom: 1px solid #C4C5C0;
 }
 
 
@@ -695,6 +705,10 @@ a.q_toggle.q_children,
 }
 #q_ .downVote a {
     background:url('../../img/vote_bg.png') bottom left transparent no-repeat;
+}
+#q_ .upVote a.topic,
+#q_ .downVote a.topic {
+    background: none;
 }
 #q_ .dyn.active {
     background-color: #FBA31B;

@@ -6,10 +6,9 @@
                                 <div class="headerWrapper p">
                                     <a id="share_{{table}}-{{comment.id}}" href="#" class="do makeForm share {{table}}-{{comment.id}}"><span>+ Share</span></a>
                                     <a id="flag_{{table}}-{{comment.id}}" href="#" class="do makeForm flag {{table}}-{{comment.id}}"><span>Flag</span></a>
-                                    <div class="q_clear"></div>                                     
+                                    <div class="q_clear"></div>
                                 </div>
                             </div>
-
                             <div class="q_main_body">
                                 <div class="q_txt">
                                     {% for image in comment.images|default(comment_images) %}
@@ -19,9 +18,8 @@
                                     <h3 class="itemName title type-{{comment.type}}">{{comment.name}}</h3>
                                     {% endfor %}
                                 </div>
-                                <div class="q_clear"></div>                                
+                                <div class="q_clear"></div>
                             </div>
-
                             <div class="q_main_footer">
                                 <div class="q_main_user">
                                     <div class="q_thumbnail">
@@ -34,7 +32,6 @@
                                     <div class="q_clear"></div>
                                 </div>
                             </div>
-
                             <div class="q_bottom lv-1">
                                 <fieldset class="reply bottom">
                                     <legend>Reply</legend>
@@ -61,4 +58,3 @@
                 <div class="q_clear"></div>
             </div>
             <div class="q_clear"></div>
-

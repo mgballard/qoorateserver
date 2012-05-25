@@ -489,6 +489,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 context['has_more_contributions'] = self.has_more_contributions(
                     comments
                 )
+            logging.debug("CONTEXT: %s" % context)
             html = self.render_partial(self.preferences['THEME'] + '/comments.html', **context)
             logging.debug(html)
             self.add_to_payload('item', item)
@@ -498,6 +499,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
 
     def place_new_item_after_related(self, comments, item):
         """we want the new item to always be after related item"""
+        logging.debug("place_new_item_after_related")
         item_index = -1
         related_item_index = -1
         if len(comments) > 2:
@@ -519,15 +521,18 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             logging.debug("related_item_index: %s" % related_item_index)
             item = comments[item_index]
             del comments[item_index]
+
             if related_item_index == 0:
-                comments = comments[0] + [item] + comments[2:]
+                comments = [comments[0]] + [item] + comments[1:]
             elif related_item_index + 1 == len(comments):
-                comments = comments[0:related_item_index + 1] + [item]
+                comments += [item]
             else:
-                comments = "%s%s" % (
-                    comments[0:related_item_index + 1],
-                    [item] + comments[related_item_index + 2:]
-                )
+                comments = (comments[0:related_item_index + 1] +
+                           [item] + comments[related_item_index + 1:])
+            # fix our child sequence
+            for y in range(0, len(comments)):
+                comment = comments[y]
+                comment.child_sequence = y
         return comments
 
     @authenticated

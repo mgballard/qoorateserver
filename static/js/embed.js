@@ -84,7 +84,11 @@ $(document).ready(function() {
         try{
             var theme_func = eval(qoorateConfig.THEME + "_" + func_name);
             if (theme_func != 'undefined'){
-                theme_func.apply(this, args);
+                if(args){
+                    theme_func.apply(this, args);
+                }   else {
+                    theme_func.apply(this);
+                }
                 return true;
             }
         }catch(err){
@@ -176,13 +180,18 @@ $(document).ready(function() {
             $image.load(function () {
                 images_rescaled++;
                 $this = $(this);
-                var $thisParent = $this.parents('.q_item .q_main_body');
-                var $width = $thisParent.width();
-                if(col_width){
-                    $width = col_width;
+                var $thisParent = $this.parents('.q_item .q_main_body'),
+                    width = $thisParent.width();
+                
+                if(qoorateConfig.GRID_COLUMNS) {
+                    var cols = qoorateConfig.GRID_COLUMNS,
+                    col_trim = qoorateConfig.GRID_COLUMN_TRIM,
+                    col_width = width / cols - col_trim;
                 }
-                if($this.width() > $width - 30) {
-                    $this.css('width', $width - 30);
+
+
+                if($this.width() > width - 14) {
+                    $this.css('width', width - 14);
                 }
                 if(resize_job){
                     clearTimeout(resize_job);
@@ -787,7 +796,8 @@ $(document).ready(function() {
                         return;
                     } else {
                         if( data != null && data != '' ) {
-                            var $data = $(data);
+                            var $data = $(data),
+                                close_dyn_form = true;
                             if(_action == 'sort') {
                                 $('#q_cmnt').css('visibility', 'hidden');
                                 $('#q_cmnt_contents').children().remove();
@@ -806,7 +816,10 @@ $(document).ready(function() {
                                 // SM: added callback to scroll to item
                                 var item = data_object.item;
                                 var table = data_object.table;
-                                _block.slideUp('250',function() { scrollToItem(table, item); } );
+                                _block.slideUp('250',function() { 
+                                        position();
+                                        scrollToItem(table, item); 
+                                    } );
                                 return false;
                             }
 
@@ -814,8 +827,8 @@ $(document).ready(function() {
                                 $('.getMore').remove();
                                 var $comments = $('#q_cmnt_contents');
                                 $comments.append($data);
-                                position();
                                 addLastItemClassToChildren( $comments );
+                                position();
                                 return false;
                             }
     
@@ -835,40 +848,71 @@ $(document).ready(function() {
                             }
     
                             if ( !$('#'+_id).hasClass('lv-1') ) {
-                                //alert('THIS WORKS');
-                                _parent = $('#'+_id).prevAll('.lv-1')[0]; 
-                                $data = $data.slice(1);
-                                $('.co-' + getValueFromClasses('co', _block.attr('class'))).remove();
-                                $parent = $(_parent);
-                                $parent.after($data);//.fadeIn('fast');*/
+                                var p_id = getValueFromClasses('co', _block.attr('class'));
+                                $parent = $('#'+_id).parent('.lv-1');
+                                if($parent.length==0) {
+                                    $parent = $('#' + data_object.table + '-' + p_id);
+                                } else {
+                                    close_dyn_form = false;
+                                }
+                                $('.co-' + p_id).remove();
+
+                                if($parent.find('.q_item.c').length > 0 || $data.find('.q_item.c').length > 0){
+                                    $data = $data.find('.q_item.c');
+                                    child_embedded = 1;
+                                }else{
+                                    $data = $data.slice(1);
+                                }
+
+                                if(child_embedded>0) {
+                                    $parent.append($data);
+                                } else {
+                                    $parent.after($data);
+                                }
                             } else if ( $('#'+_id).hasClass('lv-1') ) {
                                 var tmp_child = _id.split('_');
                                 tmp_child[0] = 'p';
-                                var child_class = tmp_child.join('_'); 
-                                $data = $data.slice(1);
+                                var child_class = tmp_child.join('_'),
+                                    child_embedded = 0;
                                 $parent = $('#'+_id);
+                                if($parent.find('.q_item.c').length > 0 || $data.find('.q_item.c').length > 0){
+                                    $data = $data.find('.q_item.c');
+                                    child_embedded = 1;
+                                }else{
+                                    $data = $data.slice(1);
+                                }
                                 if ( $('.'+child_class) ) {
                                     $('.'+child_class).remove();
-                                    $parent.after($data);
+                                    if(child_embedded>0) {
+                                        $parent.append($data);
+                                        close_dyn_form = false;
+                                    } else {
+                                        $parent.after($data);
+                                    }
                                 } else {
                                     $parent.after($data);
                                 }
                             }
 
-                            position();
-                            // SM: 20110112 - make sure we are properly styled as a last child if needed
-                            addLastItemClassToChildren( $('#q_cmnt_contents') );
-
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
                             // SM: 20111214 - We need the slideUp now that we removed the "hover" slideup
-                            var $slide_up_block = _block.find( ".dyn");
-                            var item = data_object.item;
-                            var table = data_object.table;
-                            if ( item ) {
-                                $slide_up_block.slideUp('250', function() { scrollToItem( table, item ); } );
-                            }
+                            addLastItemClassToChildren( $('#q_cmnt_contents') );
+                            var $slide_up_block = _block.find( ".dyn"),
+                                item = data_object.item,
+                                table = data_object.table;
 
+                            if(close_dyn_form) {
+                                if ( item ) {
+                                    $slide_up_block.slideUp('250', function() {
+                                        position();
+                                        scrollToItem( table, item ); 
+                                        } );
+                                }
+                            } else {
+                                position();
+                                scrollToItem( table, item ); 
+                            }
                         }
                     }
 
@@ -1016,6 +1060,9 @@ $(document).ready(function() {
         // our default action, submit button label and state
         var actionType = 'addItem';
         var actionLabel = qoorateLang.POST_BUTTON;
+        if($this.parents().is('.q_head_wrap')) {
+            actionLabel = qoorateLang.PUBLISH_BUTTON;
+        }
         var disabled = ' disabled';
         if ( _form == 'replyLink' ) {
             form_html = formHtml(_form, _id, qoorateLang.LINK, commentTextarea);
@@ -1045,7 +1092,7 @@ $(document).ready(function() {
                           '</a>';
 
         if ( _form == 'flag' ) {
-            form_action = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
+            form_action = '<a class="do x" href="#">x</a>' +'<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
                         getFlagActions( _id ) +
                         '</div>';
             form_html = '';
@@ -1099,22 +1146,26 @@ $(document).ready(function() {
         else if( _form == 'share' )
             commText = qoorateLang.SHARE_COMMENT;
  
+ 
         // SM: 20111223 - Added display for remaining characters left before max reached
         var inputLength = '<span class="inputLength">' + qoorateConfig.POST_MAX_LEN + '</span>';
-        var commentTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' + 
+        var commentTextarea = '<div class="textAreaWrap-outer ' + _form + '">' + 
+                                '<div class="dynForm-header">' + commText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
-                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + commText + '</textarea>' +
+                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'"></textarea>' +
                                     inputLength + 
                                 '</div>' +
                               '</div>';
-        var topicTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' +
+        var topicTextarea = '<div class="textAreaWrap-outer ' + _form + '">' +
+                                '<div class="dynForm-header">' + topicText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
-                                    '<textarea name="replyTopic" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' +
+                                    '<textarea name="replyTopic" class="do action ' + _form + ' ' + _id + '"></textarea>' +
                                     inputLength +
                                 '</div>' +
                             '</div>';
         //var commentTextarea2 = '<div class="textAreaWrap-outer ' + _form + '"><div class="textAreaWrap-inner"><textarea name="replyComment" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' + inputLength + '</div></div>';
-        var imageTextarea = '<a class="do x" href="#">x</a><div class="textAreaWrap-outer ' + _form + '">' +
+        var imageTextarea = '<div class="textAreaWrap-outer ' + _form + '">' +
+                                '<div class="dynForm-header">' + commText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
                                     '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + imgText + '</textarea>' +
                                     inputLength +
@@ -1141,6 +1192,9 @@ $(document).ready(function() {
         // our default action, submit button label and state
         var actionType = 'addItem';
         var actionLabel = qoorateLang.POST_BUTTON;
+        if($this.parents().is('.q_head_wrap')) {
+            actionLabel = qoorateLang.PUBLISH_BUTTON;
+        }
         var disabled = ' disabled';
         if ( _form == 'replyLink' ) {
             form_html = formHtml(_form, _id, qoorateLang.LINK, commentTextarea);
@@ -1164,13 +1218,14 @@ $(document).ready(function() {
                                             '</noscript>' +
                                         '</div>';
         }
-        
+
         var form_action = '<a class="do action ' + actionType + ' '+ _id + ' submit' + disabled + '" href="#">' +
                           '<span>' + actionLabel + '</span>' +
                           '</a>';
 
         if ( _form == 'flag' ) {
-            form_action = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
+            form_action = '<div class="dynForm-header"><a class="do x" href="#">x</a></div>' + 
+                        '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
                         getFlagActions( _id ) +
                         '</div>';
             form_html = '';
@@ -1186,7 +1241,7 @@ $(document).ready(function() {
             // SM: 20111214 - Create link now defaults to disabled, and now has a var that can be changed
             // SM: 20120104 - Cancel button now lives outside the div so it can be positioned with float only
             var form = form_html + 
-                        '<div class="dynFormFooter">' + postTo + 
+                        '<div class="dynFormFooter ' + _form + '">' + postTo + 
                         form_action + 
                         '<br class="q_clear" />' + 
                         '</div>' +
@@ -1199,6 +1254,7 @@ $(document).ready(function() {
                                           '<input id="replyPhoto" name="replyPhoto" type="hidden" value="" />');
                 }
                 scrollToObject($dynForm);
+                $dynForm.find('textarea').focus();
             });
 
         } else {
@@ -1215,13 +1271,7 @@ $(document).ready(function() {
         $rb.parent().addClass('active');
 
         if(!is_active){
-            var $attached_item = $this.parents('.q_item:first'),
-                is_child = $attached_item.hasClass('c');
-            if(is_child) {
-              grid_move_beneath($pi, $dynForm.height());
-            }else{
-              grid_move_beneath($pi, $pi.height() - $dynForm.position().top);
-            }
+            position();
         }        
 
     };
@@ -1893,18 +1943,21 @@ $(document).ready(function() {
         if (qoorateConfig.AUTO_SCROLL > 0) {
             $document.scroll( function(e) {
                 // see if we need to load more items
-                var $more_link = $(".more_link_all"),
-                    moreTop = $more_link.offset().top,
-                    scrollY = Math.max( (window.scrollY?window.scrollY:0), 
-                                        (document.body.scrollTop?document.body.scrollTop:0), 
-                                        (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) ),
-                    w_height = window.innerHeight,
-                    scroll_diff = (moreTop - scrollY - w_height);
-    
-                console.log("scroll:" + scroll_diff);
-    
-                if (scroll_diff < 1000) {
-                    $more_link.find('a').click();
+                var $more_link = $(".more_link_all");
+                if($more_link.length > 0) {
+
+                    var moreTop = $more_link.offset().top,
+                        scrollY = Math.max( (window.scrollY?window.scrollY:0), 
+                                            (document.body.scrollTop?document.body.scrollTop:0), 
+                                            (document.body.parentNode.scrollTop?document.body.parentNode.scrollTop:0) ),
+                        w_height = window.innerHeight,
+                        scroll_diff = (moreTop - scrollY - w_height);
+        
+                    console.log("scroll:" + scroll_diff);
+        
+                    if (scroll_diff < 1000) {
+                        $more_link.find('a').click();
+                    }
                 }
             });
         }    
@@ -2055,11 +2108,9 @@ $(document).ready(function() {
                   var $dynForm = $this.parents('.dyn:first'),
                     $p = $dynForm.parent(),
                     $rb = $p.find('.active'),
-                    $pi = $dynForm.closest('.q_item.lv-1'),
-                    h = $pi.height() - $dynForm.position().top;
-
+                    $pi = $dynForm.closest('.q_item.lv-1');
+                    
                   if(is_child) {
-                    h = $dynForm.height();
                     $dynForm.hide();
                     $p.removeClass('active');
                     $rb.removeClass('active');
@@ -2085,7 +2136,7 @@ $(document).ready(function() {
                     });
     
                   }
-                  grid_move_beneath($pi, h * (-1))
+                  position();
                   return false;
                 }
 
@@ -2247,23 +2298,6 @@ $(document).ready(function() {
         rescaleImages();
         return ret;
     };
-    
-    var grid_move_beneath = function($item, dist) {
-        var k = $item.attr('class');
-        var col = k.match(/\bcol-[0-9]+\b/)[0].match(/[0-9]+/)[0],
-            row = k.match(/\brow-[0-9]+\b/)[0].match(/[0-9]+/)[0],
-            o = $('#q_cmnt_contents .q_item.lv-1.col-' + col),
-            o_top = 0;
-        jQuery.each(o, function(i, val) {
-                if(i > row) {
-                    val = $(val);
-                    var coord = val.position();
-                    o_top = coord.top + dist;
-                    val.css("top", o_top + "px");
-                }
-        
-        });
-    };
 
     var col_width = 600;
     var grid_position = function() {
@@ -2275,30 +2309,17 @@ $(document).ready(function() {
             row_trim = qoorateConfig.GRID_ROW_TRIM,
             col = 0,
             row = 0,
-            o_top_start = 0,
-            o_left_start = 0,
+            c_coord = $('#q_cmnt_contents').position(),
+            o_top_start = c_coord.top + 15,
+            o_left_start = c_coord.left,
             o_top = 0,
             o_left = 0,
-            lastrowheights;
+            lastrowheights = new Array(cols),
+            col_width = width / cols - col_trim;
         
-        lastrowheights = new Array(cols);
-        col_width = width / cols - col_trim;
-        
-        jQuery.each(o, function(i, val) {
+            
+            jQuery.each(o, function(i, val) {
                 val = $(val);
-
-                var coord = val.position();
-                if ( i == 0 ) {
-                    console.log("first item!");
-                    o_top_start = coord.top;
-                    o_left_start = coord.left;
-                    o_top = o_top_start;
-                    o_left = o_left_start;
-                    console.log(o_top_start);
-                    console.log(o_left_start);
-                    console.log(o_top);
-                    console.log(o_left);
-                }
                 if (row > 0) {
                     o_top = lastrowheights[col][0] + lastrowheights[col][1];
                 }
@@ -2313,7 +2334,7 @@ $(document).ready(function() {
                 if (col >= cols) {
                     col = 0;
                     row++;
-                    o_left = o_left_start;
+                    o_left = 0;
                 } else {
                     o_left += (col_width + col_trim);
                 }
@@ -2333,7 +2354,7 @@ $(document).ready(function() {
             o_top = bottom;
             val = $(".more_link_all")
             val.css("top", o_top + "px");
-            val.css("left", o_left_start + "px");
+            val.css("left", "0px");
             val.css("width", ((col_width * cols) + (col_trim * cols)) + "px");
             val.css("position", "absolute");
             return;
