@@ -136,8 +136,8 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                         FROM (
                             # this just makes sure our groups are grouped in parent child order
                             SELECT * from %(table)s o WHERE o.location = '%(location)s' ORDER BY
-                             if( o.parentId = 0, o.id, o.parentId),
-                             if( o.parentId = 0, 0, o.id )
+                             if( o.relatedId = 0, o.id, o.relatedId),
+                             if( o.relatedId = 0, 0, o.id )
                             ) r,
                         ( SELECT @parentVoteNumber := 0 ) pvn,
                         ( SELECT @parentVoteCount  := 0 ) pvc,
