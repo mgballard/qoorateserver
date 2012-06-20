@@ -526,9 +526,19 @@ class FlagQueryset(MySqlApiQueryset):
             LEFT JOIN `user` `ui` on `ui`.`id`=`i`.`userId`
             LEFT JOIN `flag_type` `ft` on `ft`.`id`=`f`.`flagTypeId`
             WHERE `f`.`id`= %s
-            """ % table_name
+            """ % (table_name, id )
 
         return self.fetch(sql, [id]);
+
+    def get_flag_by_refTableitemIduserId(self, refTable, itemId, userId):
+        """returns a row containing enough flag info to generate an email alert to the admin"""
+        # first get our reftable
+        sql = "SELECT * FROM `flag` WHERE refTable = %s and itemId = %s and userId = %s"
+        row = self.fetch(sql, [refTable, itemId, userId]);
+        if row == None:
+            return None
+
+        return row
 
     def get_flag_counts_by_item_id(self, id, comment_table):
         """returns the number of times an item has been flagged"""

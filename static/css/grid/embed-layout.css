@@ -1174,3 +1174,8 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .dynForm-header {
     padding: 1em 0;
 }
+#q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span.replycount {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}

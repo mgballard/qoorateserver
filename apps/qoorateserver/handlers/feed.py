@@ -719,6 +719,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             item = Comment(**result)
             flag = self._flag(item)
             item = self.update_flag_count(item)
+            flag = self.flag_queryset.get_flag_by_refTableitemIduserId(self.table, item.id, self.current_user.id)
             self.send_flag_alert(item, flag)
             logging.debug("perform_flag adding to payload")
             self.add_to_payload('flagCount', str(item.flagCount))
@@ -769,23 +770,28 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             flag = Flag(**data)
         result = self.flag_queryset.create_one(flag)
         if result == None:
+            logging.debug("result == None")
             return flag
+            logging.debug("NOT result == None")
         return result[1]
 
     def send_flag_alert(self, item, flag):
         """send an email alert about a flag action"""
-        logging.debug("sendFlagAlert %s" % (item));
-        flag_info = self.flag_queryset.get_flag_email_alert_info_by_id(flag.id)
+        #logging.debug("sendFlagAlert item:%s" % (item));
+        #logging.debug("sendFlagAlert flag flagTypeId: %s" % (flag.flagTypeId));
+        #logging.debug("sendFlagAlert flag id: %s" % (flag.id));
+        flag_info = self.flag_queryset.get_flag_email_alert_info_by_id(flag['id'])
         # send our email
-        subject            = "QOORATE FLAG: %s" % flag_info['flagType']
+        settings = self.application.settings;
+        subject            = "QOORATE FLAG: %s" % flag_info['flagTypeId']
         to_address         = flag_info['adminEmail']
-        cc_address         = self.settings.app["ADMIN_EMAIL_ADDRESS"]
+        cc_address         = settings.app["ADMIN_EMAIL_ADDRESS"]
         username           = flag_info['username']
         adminUsername      = flag_info['adminUsername']
         flagType           = flag_info['flagType']
         itemName           = flag_info['name']
-        from_address       = self.settings.app["FROM_EMAIL_ADDRESS"]
-        from_name          = self.settings.app["FROM_NAME"]
+        from_address       = settings.app["FROM_EMAIL_ADDRESS"]
+        from_name          = settings.app["FROM_NAME"]
         flaggerUsername    = self.current_user.username;
         
         self._referer = self.referer.split("#")[0];

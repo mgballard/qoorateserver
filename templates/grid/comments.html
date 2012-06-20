@@ -28,6 +28,7 @@
         {% endif %}
     {% endif%}
 {% else %}
+    <div class="q_clear"></div>
     <!-- no comments -->
 {% endfor %}
 </div>
@@ -35,3 +36,4 @@
     {% set comment = comments[comments|length-1] %}
     {% include "grid/more-contributions.html" %}
 {% endif %}
+<div class="q_clear"></div>

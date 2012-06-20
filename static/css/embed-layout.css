@@ -1099,3 +1099,8 @@ This contains CSS for margins, padding, display, float, etc ...
 {
     padding: 5px 10px !important;
 }
+#q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span.replycount {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}

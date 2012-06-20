@@ -156,8 +156,12 @@ class EmbedHandler(Jinja2Rendering, EmbedMixin, QoorateMixin):
         logging.debug('get EmbedHandler')
         action = self.get_argument('action', None)
         logging.debug("action: %s " % action)
-        logging.debug("qoorate preferences: %s" % self.qoorate.preferences)
-        logging.debug("preferences EMBED_CONF_JS: %s" % self.preferences['EMBED_CONF_JS'])
+        if self.qoorate:
+            logging.debug("qoorate preferences: %s" % self.qoorate.preferences)
+            logging.debug("preferences EMBED_CONF_JS: %s" % self.preferences['EMBED_CONF_JS'])
+        else:
+            logging.debug("qoorate missing")
+            
         if action == 'embed_head':
             logging.debug('embed_head called')
             head_resources = self.get_head_resources(self.settings['QOORATE_API_URI'])

@@ -239,15 +239,29 @@ class QoorateMixin(object):
         return self.preferences['THEME']
 
     def set_table(self):
+        logging.debug("set_table")
         """get the table from api if needed"""
         if not self.q_api_key == None and not self.q_api_secret == None:
+            logging.debug("set_table has key/secret")
             if self.keypair_queryset.authenticate(self.q_api_key, self.q_api_secret):
+                logging.debug("set_table authenticated")
                 qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
                 if not qoorate == None and not qoorate.refTable == None:
                     self._table = qoorate.refTable
                     logging.debug('set_table: %s' % self._table)
+                else:
+                    logging.debug("set_table no table")
         else:
-            logging.debug('unable to set_table')
+            if not self.q_short_name == None:
+                logging.debug("set_table has q_short_name")
+                qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
+                if not qoorate == None and not qoorate.refTable == None:
+                    self._table = qoorate.refTable
+                    logging.debug('set_table: %s' % self._table)
+                else:
+                    logging.debug("set_table no table")
+            else:
+                logging.debug('unable to set_table')
 
 
     def has_more_contributions(self, comments):

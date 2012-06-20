@@ -572,7 +572,7 @@ $(document).ready(function() {
     // SM: 20110106 - Our error message overlay
     var showErrorOverlay = function(error, message, onCloseCallback) {
         var $html = $('<div class="overlayContent error">' + 
-                        '<div class="contentMessage">[ ' + error + '] ' + message + '</div>' +
+                        '<div class="contentMessage"><span class="error" style="display: none;">[ ' + error + ']</span> ' + message + '</div>' +
                         '<div class="contentButtons">' + 
                             '<a class="dialog ok"><span>' + qoorateLang.OK + '</span></a>' + 
                         '</div>' +
@@ -1233,6 +1233,7 @@ $(document).ready(function() {
         }
 
         var $dynForm = $('.dyn.'+_id);
+        $dynForm.html("");
         if ( $dynForm.html() == '' ||
              $dynForm.parents().is('.q_head_wrap') ||
              $dynForm.find("." + actionType).length ==0 
@@ -1278,27 +1279,36 @@ $(document).ready(function() {
 
     var formHtml = function(formType, id, value, textAreaType) {
 
-        var fhtml = '<div class="dynReplyWrap">' +
+        var $fhtml = '';
+
+        if( formType == 'replyLink' ) {
+            var ld= '<div class="inputAreaWrap-outer ' + formType + '">' +
+                        '<div class="inputAreaWrap-inner">' +
+                            '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
+                        '</div>' +
+                    '</div>'; 
+
+            $fhtml = $('<div><div class="dynReplyWrap">' +
+                            textAreaType + 
+                        '</div></div>');
+            $fhtml.find('.textAreaWrap-outer.replyLink').after(ld)
+            // moved attach button after url input
+            //$fhtml.find('div.inputAreaWrap-outer').before('<a href="#" class="do action attachLink '+id+'">attach</a>');
+            $fhtml.find('#q_' + formType).after('<a href="#" class="do action attachLink ' + id + ' disabled" >Add Thumbnail</a>' +
+                                                '<div class="q_clear"></div>');
+
+        } else {
+            $fhtml = $('<div class="dynReplyWrap">' +
                         '<div class="inputAreaWrap-outer ' + formType + '">' +
                             '<div class="inputAreaWrap-inner">' +
                                 '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
                             '</div>' +
                         '</div>' + 
                         textAreaType + 
-                    '</div>';
-
-        if( formType == 'replyLink' ) {
-            fhtml = '<div>' + fhtml + '</div>';
-            $fhtml = $(fhtml);
-            // moved attach button after url input
-            //$fhtml.find('div.inputAreaWrap-outer').before('<a href="#" class="do action attachLink '+id+'">attach</a>');
-            $fhtml.find('#q_' + formType).after('<a href="#" class="do action attachLink ' + id + ' disabled" >Add Thumbnail</a>' +
-                                                '<div class="q_clear"></div>');
-
-            fhtml = $fhtml.html();
+                    '</div>');
         }
 
-        return fhtml;
+        return $fhtml.html();
 
     };
 
@@ -1775,15 +1785,18 @@ $(document).ready(function() {
 
 
     var updateContributions = function(contrib_count) {
-         if(contrib_count == 0) return;
-         $elem = $("#q_cntr .ttl");
-         $lbl = contrib_count;
-         if(contrib_count == 1) {
-             $lbl += " " + qoorateLang.CONTRIBUTION;
+         if (typeof(contrib_count)=='number'&&parseInt(contrib_count)==contrib_count &&contrib_count > 0) {
+             $elem = $("#q_cntr .ttl");
+             $lbl = contrib_count;
+             if(contrib_count == 1) {
+                 $lbl += " " + qoorateLang.CONTRIBUTION;
+             }else{
+                 $lbl += " " + qoorateLang.CONTRIBUTIONS;
+             }
+             $elem.text($lbl);
          }else{
-             $lbl += " " + qoorateLang.CONTRIBUTIONS;
+            // do nothing
          }
-         $elem.text($lbl);
     };
 
 
@@ -1849,7 +1862,7 @@ $(document).ready(function() {
                                             $('#q_ .dyn').html('');
                                             });
 
-                if( data_object != null && data_object.error == 0 ) {
+                if( data_object != null && data_object.error == 0 && 'oAuthProvider' in data_object) {
                     var oAuthProvider = data_object.oAuthProvider;
                     var $qSocl = $('#q_socl');
                     $qSocl.find('.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
@@ -2296,13 +2309,16 @@ $(document).ready(function() {
     var position = function() {
         var ret = call_theme_function('position') 
         rescaleImages();
+        grid_height();        
         return ret;
     };
 
     var col_width = 600;
+
     var grid_position = function() {
 
-        var o = $('#q_cmnt_contents .q_item.lv-1'),
+        var c = $('#q_cmnt_contents'),
+            o = $('#q_cmnt_contents .q_item.lv-1'),
             width = 600,
             cols = qoorateConfig.GRID_COLUMNS,
             col_trim = qoorateConfig.GRID_COLUMN_TRIM,
@@ -2327,6 +2343,17 @@ $(document).ready(function() {
                 val.css("left", o_left + "px");
                 val.css("width", col_width + "px");
                 val.css("position", "absolute");
+
+                // remove our row and col indexes
+                val.removeClass (function (index, css) {
+                    return (css.match (/\bcol-\S+/g) || []).join(' ');
+                });
+                
+                val.removeClass (function (index, css) {
+                    return (css.match (/\brow-\S+/g) || []).join(' ');
+                });
+
+                // re-create our row/column indexes
                 val.addClass("col-" + col);
                 val.addClass("row-" + row);
                 lastrowheights[col] = [o_top, val.height() + row_trim];
@@ -2337,10 +2364,11 @@ $(document).ready(function() {
                     o_left = 0;
                 } else {
                     o_left += (col_width + col_trim);
-                }
-        
+                }        
             });
-            
+
+            grid_height();
+
             // position our more link
             // get our last row and find the item that goes to the end
             var bottom = 0, b=0;
@@ -2359,6 +2387,19 @@ $(document).ready(function() {
             val.css("position", "absolute");
             return;
     }; // end grid_position
+
+    var grid_height = function() {
+        var c = $('#q_cmnt_contents'),
+            o = $('#q_cmnt_contents .q_item.lv-1.col-0'),
+            myheight = 0;
+
+        jQuery.each(o, function(i, val) { 
+            myheight = myheight + ($(val).height() + 15); 
+            console.log(i + ". myheight now: " + myheight);
+        });
+        console.log("myheight final: " + myheight);
+        c.height(myheight);
+    };
 
     /*!
     * jQuery OAuth via popup window plugin
