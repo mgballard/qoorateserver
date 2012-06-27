@@ -1660,7 +1660,7 @@ $(document).ready(function() {
                 // $replyLink.addClass('disabled');
                 // $dynForm.find('a.attachLink').addClass('disabled');
             }
-            var $loading = $('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_URI + '/q/img/load.gif" /></div></div></div>');
+            var $loading = $('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_API_URI + '/img/load.gif" /></div></div></div>');
 
             // SM: 20120104 - Moved loading image
             //$('div.' + _id).prepend(loading_html);
@@ -1807,7 +1807,7 @@ $(document).ready(function() {
             debug: true,
             onComplete: function(id, fileName, responseJSON) { 
                                                                 if( $('.q_qq-upload-success').length > 0 ) { 
-                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/q/uploader/images/' + responseJSON.hash + '">'
+                                                                    var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/uploader/images/' + responseJSON.hash + '">'
                                                                     $('.q_qq-upload-success').prepend('<span class="q_qq-upload-file-preview">' + preImg + '</span>');
                                                                     var $replyPhoto = $('.do.action.replyPhoto');
                                                                     var preVal = $replyPhoto.data("preVal");
@@ -1842,7 +1842,7 @@ $(document).ready(function() {
                 }
             }
 
-            var url = qoorateConfig.QOORATE_API_URI + '/q/oauth/' + provider_full + '/login'
+            var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login'
             $.oauthpopup({
                 path: url + '?QOOID=' + $.cookie('QOOID'),
                 callback: getCallback(callback),
@@ -2398,7 +2398,9 @@ $(document).ready(function() {
             console.log(i + ". myheight now: " + myheight);
         });
         console.log("myheight final: " + myheight);
-        c.height(myheight);
+        if(myheight > 0){
+            c.height(myheight);
+        }
     };
 
     /*!
