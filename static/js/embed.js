@@ -1092,7 +1092,7 @@ $(document).ready(function() {
                           '</a>';
 
         if ( _form == 'flag' ) {
-            form_action = '<a class="do x" href="#">x</a>' +'<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
+            form_action = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
                         getFlagActions( _id ) +
                         '</div>';
             form_html = '';
