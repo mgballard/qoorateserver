@@ -1282,21 +1282,17 @@ $(document).ready(function() {
         var $fhtml = '';
 
         if( formType == 'replyLink' ) {
-            var ld= '<div class="inputAreaWrap-outer ' + formType + '">' +
-                        '<div class="inputAreaWrap-inner">' +
-                            '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
-                        '</div>' +
-                    '</div>'; 
-
             $fhtml = $('<div><div class="dynReplyWrap">' +
-                            textAreaType + 
-                        '</div></div>');
-            $fhtml.find('.textAreaWrap-outer.replyLink').after(ld)
-            // moved attach button after url input
-            //$fhtml.find('div.inputAreaWrap-outer').before('<a href="#" class="do action attachLink '+id+'">attach</a>');
-            $fhtml.find('#q_' + formType).after('<a href="#" class="do action attachLink ' + id + ' disabled" >Add Thumbnail</a>' +
-                                                '<div class="q_clear"></div>');
-
+                        '<div class="inputAreaWrap-outer ' + formType + '">' +
+                            '<div class="inputAreaWrap-inner">' +
+                                '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
+                            '</div>' +
+                        '</div>' + 
+                        textAreaType + 
+                    '</div></div>');
+             // moved attach button after url input
+             $fhtml.find('#q_' + formType).after('<a href="#" class="do action attachLink ' + id + ' disabled" >Add Thumbnail</a>' +
+                                                 '<div class="q_clear"></div>');
         } else {
             $fhtml = $('<div class="dynReplyWrap">' +
                         '<div class="inputAreaWrap-outer ' + formType + '">' +
