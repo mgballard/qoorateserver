@@ -1877,7 +1877,7 @@ $(document).ready(function() {
            success: getCallback(callback),
            error: function (xhr, error) { 
                     errorMsg(0, error);
-                    $replyLink.removeClass('disabled');
+                    //$replyLink.removeClass('disabled');
            }
         });
         
