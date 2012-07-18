@@ -2,11 +2,10 @@
 This contains all font styles except color
 */
 
-#q_, #q_ textarea {
+#q_, #q_ textarea, #q_ input {
     font-family:helvetica;
-    font-size:12px;
+    font-size:14px;
 }
-
 
 #q_ .q_sort_list {
     text-align: center;

@@ -1150,22 +1150,19 @@ $(document).ready(function() {
         // SM: 20111223 - Added display for remaining characters left before max reached
         var inputLength = '<span class="inputLength">' + qoorateConfig.POST_MAX_LEN + '</span>';
         var commentTextarea = '<div class="textAreaWrap-outer ' + _form + '">' + 
-                                '<div class="dynForm-header">' + commText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
-                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'"></textarea>' +
+                                    '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + commText + '</textarea>' +
                                     inputLength + 
                                 '</div>' +
                               '</div>';
         var topicTextarea = '<div class="textAreaWrap-outer ' + _form + '">' +
-                                '<div class="dynForm-header">' + topicText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
-                                    '<textarea name="replyTopic" class="do action ' + _form + ' ' + _id + '"></textarea>' +
+                                    '<textarea name="replyTopic" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' +
                                     inputLength +
                                 '</div>' +
                             '</div>';
         //var commentTextarea2 = '<div class="textAreaWrap-outer ' + _form + '"><div class="textAreaWrap-inner"><textarea name="replyComment" class="do action ' + _form + ' ' + _id + '">' + topicText + '</textarea>' + inputLength + '</div></div>';
         var imageTextarea = '<div class="textAreaWrap-outer ' + _form + '">' +
-                                '<div class="dynForm-header">' + commText + '<a class="do x" href="#">x</a></div>' + 
                                 '<div class="textAreaWrap-inner">' +
                                     '<textarea name="replyComment" class="do action ' + _form+' '+_id+'">' + imgText + '</textarea>' +
                                     inputLength +
