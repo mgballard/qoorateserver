@@ -2,7 +2,7 @@
 This contains all font styles except color
 */
 
-#q_, #q_ textarea {
+#q_, #q_ textarea, #q_replyLink input {
     font-family:helvetica;
     font-size:14px;
 }
