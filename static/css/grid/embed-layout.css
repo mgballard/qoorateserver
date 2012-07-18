@@ -48,7 +48,7 @@ This contains CSS for margins, padding, display, float, etc ...
     padding: 20px !important;
 }
 #q_ .textAreaWrap-outer {
-    padding: 0 15px 15px 15px !important;
+    padding: 21px !important;
 }
 
 #q_ .textAreaWrap-outer.replyPhoto {
