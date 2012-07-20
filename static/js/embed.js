@@ -1739,6 +1739,8 @@ $(document).ready(function() {
         console.log(allInputs);
         var _query = allInputs.serializeArray();
             _query.push({ "name":"action",    "value":"authentication"});
+            _query.push({ "name":"QOOID",    "value":$.cookie('QOOID')});
+            _query.push({ "name":"QOOTID",    "value":$.cookie('QOOTID')});
 
         $.post(qoorateConfig.PROXY_URI, _query, function(data) {
                     console.log(data);
@@ -1878,7 +1880,7 @@ $(document).ready(function() {
         $.ajax( {
            type: 'POST',
            url: qoorateConfig.PROXY_URI,
-           data: 'action=validateLogin',
+           data: 'action=validateLogin&QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID'),
            success: getCallback(callback),
            error: function (xhr, error) { 
                     errorMsg(0, error);
