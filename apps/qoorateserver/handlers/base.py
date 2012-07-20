@@ -50,19 +50,27 @@ class QoorateMixin(object):
     def qooid(self):
         """get our QOOID cookie
         this is our session cookie
+        if we do not find a cookie, we will look for it in the request vars
         we mainly just use this for our authentication
         IMPORTANT: This is the clients responsibility to set this 
         and forward along with the proxied request
         """
-        return self.get_cookie('QOOID', None)
+        qooid = self.get_cookie('QOOID', None)
+        if qooid == None:
+            qooid = self.get_argument('QOOID', None)
+        return qooid
 
     @lazyprop
     def qootid(self):
         """get our QOOTID cookie
         this is our longer lasting tracking cookie
+        if we do not find a cookie, we will look for it in the request vars
         we mainly just use this for anonymous users
         """
-        return self.get_cookie('QOOTID', None)
+        qootid = self.get_cookie('QOOTID', None)
+        if qootid == None:
+            qootid = self.get_argument('QOOTID', None)
+        return qooid
 
     ##
     ## These are the typical query parameters from the PHP proxy
