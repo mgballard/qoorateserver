@@ -74,7 +74,9 @@ $(document).ready(function() {
         // Attach error to anything, we will just display a message
         // this is needed when using $.post
         $( "#q_" ).ajaxError(function(e, jqxhr, settings, exception) {
-          errorMsg(jqxhr.status, jqxhr.responseText);
+          if(jqxhr.responseText.length > 0) {
+            errorMsg(jqxhr.status, jqxhr.responseText);
+          }
         });
         call_theme_function('ready')        
     }
@@ -224,9 +226,11 @@ $(document).ready(function() {
 
     // A wrapper for scrollToObject
     var scrollToItem = function(table, item) {
-        var $item = $( "#" + table + "-" + item.id );
-        if ( $item.length > 0 )
-            scrollToObject($item);
+        if(item) {
+            var $item = $( "#" + table + "-" + item.id );        
+            if ( $item.length > 0 )
+                scrollToObject($item);
+        }
     }
 
 
@@ -1596,6 +1600,10 @@ $(document).ready(function() {
         _query.push({ "name":"location",    "value":_location});
         _query.push({ "name":"referer", "value":window.location.href}); // SM: we need this to ('replyTopic')post a link on social shares
         _query.push({ "name":"table",    "value":_table});
+        _query.push({ "name":"QOOID",    "value":$.cookie('QOOID')});
+        _query.push({ "name":"QOOTID",    "value":$.cookie('QOOTID')});
+
+        
 
         if ( _action=='flag' ) {
             var flagTypeId = getValueFromClasses( 'value', $source_object.attr( 'class' ) );
