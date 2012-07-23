@@ -37,7 +37,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
 
 
-    def load_comments_by_table_and_location(self, table, location=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC'):
+    def load_comments_by_table_and_location(self, table, location=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC', flagType=None):
         """Loads comment"""
         self.init_db_conn()
 
@@ -51,6 +51,13 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
         if dateOrder == None:
             dateOrder = 'ASC'
+
+        if flagType == None:
+            flag_join_sql = ''
+            flag_group_by_clause = ''
+        else:
+            flag_join_sql = "JOIN flag fl on fl.itemId=s0.id and fl.flagTypeId=%s" % flagType
+            flag_group_by_clause = " GROUP BY s0.id"
 
         # if we only want the parent, return all, we may not know the real offset
         if parentId != None:
@@ -72,25 +79,25 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
         if sortOrder == 'voteNumber':
             groupOrder = """
-                groupVoteNumber %(voteOrder)s,
-                groupVoteCount %(voteOrder)s,
-                groupCreateDate %(dateOrder)s,
+                s0.groupVoteNumber %(voteOrder)s,
+                s0.groupVoteCount %(voteOrder)s,
+                s0.groupCreateDate %(dateOrder)s,
                 """ % order
             childOrder = """
-                voteNumber %(voteOrder)s,
-                voteCount %(voteOrder)s,
-                createDate %(dateOrder)s
+                s0.voteNumber %(voteOrder)s,
+                s0.voteCount %(voteOrder)s,
+                s0.createDate %(dateOrder)s
                 """ % order
         elif sortOrder == 'createDate':
             groupOrder = """
-                groupCreateDate %(dateOrder)s,
-                groupVoteNumber %(voteOrder)s,
-                groupVoteCount %(voteOrder)s,
+                s0.groupCreateDate %(dateOrder)s,
+                s0.groupVoteNumber %(voteOrder)s,
+                s0.groupVoteCount %(voteOrder)s,
                 """ % order
             childOrder = """
-                createDate %(dateOrder)s,
-                voteNumber %(voteOrder)s,
-                voteCount %(voteOrder)s
+                s0.createDate %(dateOrder)s,
+                s0.voteNumber %(voteOrder)s,
+                s0.voteCount %(voteOrder)s
                 """ % order
 
         params_dict = {
@@ -102,6 +109,8 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
             'childOffset': childOffset,
             'childRangeTop': childRangeTop,
             'parent_where_clause': parent_where_clause,
+            'flag_join_sql': flag_join_sql,
+            'flag_group_by_clause': flag_group_by_clause,
             'groupOrder': groupOrder,
             'childOrder': childOrder,
         }
@@ -120,7 +129,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                 @lastparent := if( parentId=0, id, parentId ) AS dummy_used_for_last_parent
                 FROM
                     # QUERY 2: this query sorts the results properly
-                    (SELECT * FROM
+                    (SELECT s0.* FROM
                         # QUERY 1: This query gets the results we need with calculated fields to sort by
                         # We should probably have these fields in the database so they are indexed
                         (SELECT
@@ -144,6 +153,8 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                         ( SELECT @parentCreateDate := 0 ) pcd
                         WHERE location = '%(location)s' %(parent_where_clause)s
                     ) s0
+                    %(flag_join_sql)s
+                    %(flag_group_by_clause)s
                     ORDER BY
                     %(groupOrder)s 
                     groupId  ASC, # first order by group
@@ -229,12 +240,22 @@ class CommentQueryset(MySqlApiQueryset):
             return row['relatedId']
 
 
-    def get_count_by_table_and_location(self, table, location):
+    def get_count_by_table_and_location(self, table, location, flagType=None):
         """Get the number of contributions for a page"""
 
+        if flagType == None:
+            flag_join_sql = ''
+            flag_group_by_clause = ''
+        else:
+            flag_join_sql = "JOIN flag fl on fl.itemId=t.id and fl.flagTypeId=%s" % flagType
+            flag_group_by_clause = " GROUP BY t.id"
+
         sql = """
-            SELECT count(*) as recordCount FROM `%s` WHERE `location` = %%s
-        """ % table
+            SELECT count(*) as recordCount FROM `%s` t 
+            %s
+            WHERE `t`.`location` = %%s                    
+            %s
+        """ % (table,flag_join_sql,flag_group_by_clause)
 
         row = self.fetch(sql, [location])
 
