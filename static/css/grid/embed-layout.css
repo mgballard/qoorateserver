@@ -863,7 +863,7 @@ This contains CSS for margins, padding, display, float, etc ...
     padding: 0;
     width: auto;
     height: auto;
-    display: inline;
+    display: block;
 }
 #q_ .downVote.wrap.topic .inner,
 #q_ .upVote.wrap.topic .inner {

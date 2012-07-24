@@ -850,12 +850,14 @@ $(document).ready(function() {
     
                                return false;
                             }
-    
+
+                            var table_name = data_object.table, p_id = 0;
+
                             if ( !$('#'+_id).hasClass('lv-1') ) {
-                                var p_id = getValueFromClasses('co', _block.attr('class'));
                                 $parent = $('#'+_id).parent('.lv-1');
+                                p_id = getValueFromClasses('co', _block.attr('class'));
                                 if($parent.length==0) {
-                                    $parent = $('#' + data_object.table + '-' + p_id);
+                                    $parent = $('#' + table_name + '-' + p_id);
                                 } else {
                                     close_dyn_form = false;
                                 }
@@ -875,6 +877,7 @@ $(document).ready(function() {
                                 }
                             } else if ( $('#'+_id).hasClass('lv-1') ) {
                                 var tmp_child = _id.split('_');
+                                p_id = _id.split('-')[1];
                                 tmp_child[0] = 'p';
                                 var child_class = tmp_child.join('_'),
                                     child_embedded = 0;
@@ -897,7 +900,9 @@ $(document).ready(function() {
                                     $parent.after($data);
                                 }
                             }
-
+                            
+                            // update our parents reply count if we have it
+                            $('#' + table_name + '-' + p_id + ' .replycount').html(data_object.replycount);
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
                             // SM: 20111214 - We need the slideUp now that we removed the "hover" slideup

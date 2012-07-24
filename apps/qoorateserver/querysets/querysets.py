@@ -120,7 +120,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                 f.`parentId` , f.`userId` , `u`.`username`, u.`thumbnailLarge` as userThumbnailLarge,
                 ur.`username` as relatedUsername, ur.`thumbnailLarge` as relatedUserThumbnailLarge, f.`type`,
                 f.`name` , f.`location` ,f.`description`,
-                f.`voteCount` , f.`voteNumber` , f.`votesUp` ,f.`votesDown` , f.`flagCount`, f.`sortOrder` , f.`status`,
+                f.`voteCount` , f.`voteNumber` , f.`votesUp` ,f.`votesDown` , f.`flagCount`,  f.`childCount`, f.`sortOrder` , f.`status`,
                 f.`thumbnailSmall` ,f.`thumbnailLarge` , f.`changeDate` , f.`createDate`
             FROM (
                 # this query adds the sequence fields to filter by for paging
@@ -284,6 +284,23 @@ class CommentQueryset(MySqlApiQueryset):
         else:
             logging.debug("Number of contributions %d" % row['recordCount'])
             return row['recordCount']
+
+    def get_child_count_by_item_id(self, comment_table, id):
+        """returns the number of children for an item"""
+    
+        sql = """
+            SELECT count(*) as `childCount`
+            FROM `%s` `f`
+            WHERE `f`.`parentId`= %%s
+            """ % comment_table
+
+        row = self.fetch(sql, [id]);
+        
+        if row == None:
+            return 0
+        
+        return row['childCount']
+
 
 class UserQueryset(MySqlApiQueryset):
 
@@ -561,7 +578,7 @@ class FlagQueryset(MySqlApiQueryset):
 
         return row
 
-    def get_flag_counts_by_item_id(self, id, comment_table):
+    def get_flag_count_by_item_id(self, id, comment_table):
         """returns the number of times an item has been flagged"""
     
         sql = """

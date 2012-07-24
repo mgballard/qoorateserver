@@ -23,7 +23,7 @@ from brubeckoauth.models import OAuthRequest
 
 
 from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
-from qoorateserver.handlers.base import QoorateMixin
+from qoorateserver.handlers.base import QoorateMixin, admin_role
 from qoorateserver.models.models import (
     CommentItem,
     User,
@@ -50,6 +50,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
        but it is a port of the original PHP code.
        In an ideal world the calls would be a bit more RESTfull.
     """
+
     ##
     ## Lazy parameters, needed by most function, but not all
     ##
@@ -183,7 +184,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         image_table = None
         if self.table == None:
             self.set_table()
-
+        setattr(self, 'replycount', 0)
         if self.table != None:
             """it's ok if we don't get here.
             We may be a request that doesn't deal with comment items
@@ -300,6 +301,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         self.add_to_payload('contributions', self.get_contribution_count())
         self.add_to_payload('table', self.table)
         self.add_to_payload('location', self.location)
+        self.add_to_payload('replycount', self.replycount)
         self.add_to_payload('error', 0)
         self.set_status(200)
         return self.render()
@@ -419,6 +421,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'votesUp':          0,
             'votesDown':        0,
             'flagCount':        0,
+            'childCount':       0,
             'sortOrder':        0,
             'status':           '',
             'description':      self.description,
@@ -432,6 +435,9 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         result = self.comment_queryset.create_one(item, table_name=self.table)
         if self.comment_queryset.MSG_CREATED == result[0]:
             item = result[1]
+            parent_item = self.update_child_count(item)
+            if parent_item != None and parent_item.childCount != None:
+                self.replycount = parent_item.childCount
             if comment_image != None:
                 comment_image.itemId = item.id
                 comment_image = self.image_queryset.create_one(
@@ -540,8 +546,22 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         raise NotImplementedError
 
     @authenticated
+    @admin_role
     def perform_delete_item(self):
-        raise NotImplementedError
+        """ delete a single item and all related content """
+        result = self.comment_queryset.read_one(self.itemId)[1]
+        if result != None:
+            item = Comment(**result)
+            # remove any related image records (including removing images from S3?)
+            # remove any related flags
+            # remove any related votes
+            # remove comment item itself
+            result = self.comment_queryset.destroy_one(self.itemId)
+            parent_item = self.update_child_count(item)
+            if parent_item != None and parent_item.childCount != None:
+                self.replycount = parent_item.childCount
+            
+        return
 
     @authenticated
     def perform_add_tag(self):
@@ -733,7 +753,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         """Updates the vote count for the item"""
         logging.debug("update_flag_count(%s)" % item)
         logging.debug(item.to_json())
-        flags = self.flag_queryset.get_flag_counts_by_item_id(
+        flags = self.flag_queryset.get_flag_count_by_item_id(
             item.id, self.table
         )
         logging.debug(flags)
@@ -1249,3 +1269,27 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         # just send back our provider.
         self.add_to_payload('oAuthProvider', self.current_user.oauth_provider)
         return
+
+    def update_child_count(self, item):
+        """Updates the vote count for the item. if the item is a child, the parent is updated"""
+        logging.debug("update_child_count(%s)" % item)
+        if item.parentId > 0:
+            result = self.comment_queryset.read_one(item.parentId)[1]
+            if result != None:
+                item = Comment(**result)
+                logging.debug("update_child_count fetched parent: %s" % item)
+            else:
+                logging.debug("update_child_count parent not found: %s" % item.parentId)
+        logging.debug(item.to_json())
+        child_count = self.comment_queryset.get_child_count_by_item_id(
+            self.table, item.id
+        )
+        logging.debug("child_count: %s" % child_count)
+        # update our item with new child count
+        item.childCount = child_count
+        result = self.comment_queryset.create_one(
+            item, table_name=self.table
+        )
+        if result == None:
+            return item
+        return result[1]

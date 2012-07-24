@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import functools
 import json
 import logging
 from brubeck.request_handling import MessageHandler
@@ -285,3 +286,17 @@ class QoorateMixin(object):
             if comment.parentId == 0:
                 parent_count += 1
         return parent_count > self.parentCount - 1
+
+########################
+## security decorators
+########################
+def admin_role(method):
+    """Decorate request handler methods with this to require that the user be
+    logged in and admin (role==1).
+    """
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if not self.current_user.role==1:
+            return self.render_error(self._AUTH_FAILURE)
+        return method(self, *args, **kwargs)
+    return wrapper

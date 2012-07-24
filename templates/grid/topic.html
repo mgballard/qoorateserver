@@ -13,8 +13,8 @@
                                 <div class="q_txt">
                                     <p class="itemName caption type-{{type}}">{{comment.name}}</p>
                                 </div>
-                                <div class="upVote wrap topic"><a href="#" class="do action upVote {{table}}-{{comment.id}} topic">yes</a> (<span class="voted">{{comment.votesUp}}</span>)</div>
-                                <div class="downVote wrap topic"><a href="#" class="do action downVote {{table}}-{{comment.id}} topic">no</a> (<span class="voted">{{comment.votesDown}}</span>)</div>
+                                <div class="upVote wrap topic"><a href="#" class="do action upVote {{table}}-{{comment.id}} topic">yes (<span class="voted">{{comment.votesUp}}</span>)</a></div>
+                                <div class="downVote wrap topic"><a href="#" class="do action downVote {{table}}-{{comment.id}} topic">no (<span class="voted">{{comment.votesDown}}</span>)</a></div>
                                 <div class="q_clear"></div>
                             </div>
                             <div class="q_main_footer">
@@ -35,8 +35,8 @@
                                     <legend>Reply</legend>
                                     <div class="replyWrapper">
                                         <div class="inner">
-                                            <a id="reply_{{table}}-{{comment.id}}" href="#" class="do makeForm replyComment {{table}}-{{comment.id}} reply"><span>Reply (<span class="replycount">0</span>)</span></a>
-                                            <div class="q_clear"></div>                                     
+                                            <a id="reply_{{table}}-{{comment.id}}" href="#" class="do makeForm replyComment {{table}}-{{comment.id}} reply"><span>Reply (<span class="replycount">{{comment.childCount}}</span>)</span></a>
+                                            <div class="q_clear"></div>
                                         </div>
                                     </div>
                                     <div class="vote wrapper topic">
