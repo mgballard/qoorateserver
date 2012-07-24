@@ -696,9 +696,11 @@ a.q_toggle.q_children,
     border: solid 2px red;
 }
 
+/*
 #q_ .q_item.lv-1 .q_data {
     background: #FFFFFF url(../../img/q_gradient_top.jpg) repeat-x;
 }
+*/
 
 #q_ .q_item.c > .q_inr {
     background: #FFFFFF url(../../img/q_gradient_top_c.jpg) repeat-x;

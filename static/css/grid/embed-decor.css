@@ -196,19 +196,19 @@ This also includes all
 }
 
 #q_ .q_item.lv-1 {
-    -webkit-box-shadow: 1px 1px 5px rgba(50, 50, 50, 0.75);
-    -moz-box-shadow:    1px 1px 5px rgba(50, 50, 50, 0.75);
-    box-shadow:         1px 1px 5px rgba(50, 50, 50, 0.75);
+    -webkit-box-shadow: 1px 1px 5px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    1px 1px 5px rgba(50, 50, 50, 0.5);
+    box-shadow:         1px 1px 5px rgba(50, 50, 50, 0.5);
 }
 #XXXq_ .q_item.lv-1.active {
-    -webkit-box-shadow: 1px 1px 5px rgba(251, 163, 27, 0.75);
-    -moz-box-shadow:    1px 1px 5px rgba(251, 163, 27, 0.75);
-    box-shadow:         1px 1px 5px rgba(251, 163, 27, 0.75);
+    -webkit-box-shadow: 1px 1px 5px rgba(251, 163, 27, 0.5);
+    -moz-box-shadow:    1px 1px 5px rgba(251, 163, 27, 0.5);
+    box-shadow:         1px 1px 5px rgba(251, 163, 27, 0.5);
 }
 #q_ .q_item.lv-1.active {
-    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow:    1px 1px 5px rgba(0, 0, 0, 0.75);
-    box-shadow:         1px 1px 5px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow:    1px 1px 5px rgba(0, 0, 0, 0.5);
+    box-shadow:         1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 
 #q_ .q_item.c.l {
@@ -703,9 +703,11 @@ a.q_toggle.q_children,
 #q_ .upVote a {
     background:url('../../img/vote_bg.png') top right transparent no-repeat;
 }
+
 #q_ .downVote a {
     background:url('../../img/vote_bg.png') bottom left transparent no-repeat;
 }
+
 #q_ .upVote a.topic,
 #q_ .downVote a.topic {
     background: none;

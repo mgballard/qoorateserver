@@ -848,6 +848,8 @@ This contains CSS for margins, padding, display, float, etc ...
     line-height: 1em;
     font-weight: normal;
     font-size: .8em;
+    padding: .25em;
+    border-radius: .5em;
 }
 
 #q_ .downVote.wrap.topic a,
