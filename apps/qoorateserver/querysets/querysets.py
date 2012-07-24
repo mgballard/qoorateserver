@@ -441,7 +441,7 @@ class VoteQueryset(MySqlApiQueryset):
             
         return self.dictListToDictShieldList(rows)
 
-    def get_by_item_id_and_qootid(self, ref_table, id, user_id):
+    def get_by_item_id_and_qootid(self, ref_table, id, qootid):
         """get a users vote on an item"""
         if id == None:
             return None

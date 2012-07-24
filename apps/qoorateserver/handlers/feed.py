@@ -675,7 +675,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             )
         else:
             vote = self.vote_queryset.get_by_item_id_and_qootid(
-                self.table, item.id, qootid
+                self.table, item.id, self.qootid
             )
         if vote != None and len(vote) > 0:
             vote = vote[0]
