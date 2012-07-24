@@ -70,7 +70,7 @@ class QoorateMixin(object):
         qootid = self.get_cookie('QOOTID', None)
         if qootid == None:
             qootid = self.get_argument('QOOTID', None)
-        return qooid
+        return qootid
 
     ##
     ## These are the typical query parameters from the PHP proxy
