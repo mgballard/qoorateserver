@@ -287,7 +287,7 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 #q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span {
-    padding:5px 14px;
+    padding:7px 10px;
 }
 #q_overlay_content a.dialog span {
     padding: 5px 14px;
@@ -992,6 +992,11 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 0px;
 }
 
+#q_ .gp .postTo {
+    display: none;
+}
+
+
 #q_ .postTo {
     float: left;
     margin: 0 0 5px 0;
@@ -1130,6 +1135,7 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 #q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply {
     height: 27px;
+    float: left;
 }
 #q_ .q_main_body .itemName {
     margin: 0;
@@ -1184,4 +1190,13 @@ This contains CSS for margins, padding, display, float, etc ...
     display: inline;
     padding: 0;
     margin: 0;
+}
+#q_ .toggleReply {
+    float: right;
+    padding-top: 12px;
+    padding-right: 3px;
+}
+#q_ .toggleReply.expand {
+}
+#q_ .toggleReply.contract {
 }

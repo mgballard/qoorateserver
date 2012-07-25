@@ -839,6 +839,7 @@ $(document).ready(function() {
                             if (_action == 'logoffUser') {
                                 // re-enable our logoff buttons
                                 $('.q_inr.logged-in').attr('class', 'q_inr');
+                                $('#q_cmnt').attr('class', 'anon');
                              //   $('#q_fllw').html('<div class="q_inr"><span class="ttl">+ Follow</span></div>'); 
                                 $('#q_socl .ttl.signin').html(qoorateLang.SIGNIN);
                                 $('#q_socl .ttl.logoff').html('');
@@ -892,7 +893,7 @@ $(document).ready(function() {
                                     $('.'+child_class).remove();
                                     if(child_embedded>0) {
                                         $parent.append($data);
-                                        close_dyn_form = false;
+                                        // close_dyn_form = false;
                                     } else {
                                         $parent.after($data);
                                     }
@@ -913,6 +914,12 @@ $(document).ready(function() {
 
                             if(close_dyn_form) {
                                 if ( item ) {
+                                    if (child_embedded) {
+                                        // we need to un-pretty up our reply button
+                                        var $replyWrapper =$parent.find('.replyWrapper');
+                                        $replyWrapper.find('.inner.active').removeClass('active')
+                                        $replyWrapper.find('.reply.active').removeClass('active')
+                                    }
                                     $slide_up_block.slideUp('250', function() {
                                         position();
                                         scrollToItem( table, item ); 
@@ -1276,6 +1283,14 @@ $(document).ready(function() {
         $pi.addClass('active');
         $rb.addClass('active');
         $rb.parent().addClass('active');
+        
+        var $toggleReply = $('.toggleReply');
+        if($toggleReply.hasClass('expand')){
+            is_active = false;
+        }
+        $toggleReply.removeClass('expand');
+        $toggleReply.addClass('contract');
+        $toggleReply.find('span').html(qoorateLang.TOGGLE_OFF);
 
         if(!is_active){
             position();
@@ -1873,6 +1888,7 @@ $(document).ready(function() {
                 if( data_object != null && data_object.error == 0 && 'oAuthProvider' in data_object) {
                     var oAuthProvider = data_object.oAuthProvider;
                     var $qSocl = $('#q_socl');
+                    $('#q_cmnt').attr('class', oAuthProvider);
                     $qSocl.find('.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
                     $qSocl.find('.ttl.signin').html(qoorateLang.SIGNEDIN);
                     $qSocl.find('.ttl.logoff').html('<a href="#" id="q_logoff" class="do action logoffUser">' + qoorateLang.LOGOUT + '</a>');
@@ -2106,9 +2122,26 @@ $(document).ready(function() {
 
             // Show sort drop down
             if ( $this.hasClass('q_sort_button') ) {
-              $('#q_sort_list').css('visibility', 'visible');
-              scrollToObject($('#q_sort_list'));
-              return false;
+                $('#q_sort_list').css('visibility', 'visible');
+                scrollToObject($('#q_sort_list'));
+                return false;
+            }
+
+            // Toggle our comments (grid theme only right now)
+            if ( $this.hasClass('toggleReply') ) {
+                if ( $this.hasClass('expand') ) {
+                    $this.closest('.q_item.lv-1').addClass('active');
+                    $this.removeClass('expand');
+                    $this.addClass('contract');
+                    $this.find('span').html(qoorateLang.TOGGLE_OFF);
+                } else {
+                    $this.closest('.q_item.lv-1').removeClass('active');
+                    $this.removeClass('contract');
+                    $this.addClass('expand');
+                    $this.find('span').html(qoorateLang.TOGGLE_ON);
+                }
+                position();
+                return false;
             }
 
            //GD: 20111218 check if its the
