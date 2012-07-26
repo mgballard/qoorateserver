@@ -255,6 +255,7 @@ border-radius: 5px 0 0 5px;
 }
 
 #q_ a.do.flag,
+#q_ a.do.deleteItem,
 #q_overlay_content a.dialog,
 #q_ a.do.makeForm,
 #q_ a.view {
@@ -600,16 +601,19 @@ a.q_toggle.q_children,
 #q_ .headerWrapper.c .do.makeForm.reply,
 #q_ .do.makeForm.share,
 #q_ .do.makeForm.flag,
+#q_ .do.action.deleteItem,
 #q_ .headerWrapper.c .do.makeForm.reply span,
 #q_ .do.makeForm.share span,
-#q_ .do.makeForm.flag span {
+#q_ .do.makeForm.flag span,
+#q_ .do.action.deleteItem span {
     border: none;
     background: none;
 }
 
 #q_ .headerWrapper.c .do.makeForm.reply,
 #q_ .do.makeForm.share,
-#q_ .do.makeForm.flag {
+#q_ .do.makeForm.flag,
+#q_ .do.action.deleteItem {
     color: #999999;
 }
 
@@ -628,6 +632,9 @@ a.q_toggle.q_children,
 #q_ a.do.makeForm.flag:hover,
 #q_ a.do.makeForm.flag:active,
 #q_ a.do.makeForm.flag:focus,
+#q_ a.do.action.deleteItem:hover,
+#q_ a.do.action.deleteItem:active,
+#q_ a.do.action.deleteItem:focus,
 #q_ .flagAreaWrapper-outer a.do.flag:hover,
 #q_ .flagAreaWrapper-outer a.do.flag:active,
 #q_ .flagAreaWrapper-outer a.do.flag:focus {

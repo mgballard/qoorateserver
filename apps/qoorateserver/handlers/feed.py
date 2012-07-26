@@ -10,6 +10,7 @@ import json
 import datetime
 import re
 import md5
+import gevent
 from urlparse import urlparse
 
 import magic
@@ -40,6 +41,16 @@ from qoorateserver.querysets.querysets import (
     VoteQueryset,
     FlagQueryset
 )
+#######################
+## Methods used by gevent.spawn
+#######################
+uploader = None
+def upload_to_S3(settings, image_path):
+    logging.debug("upload_to_S3 : %s" % image_path)
+    global uploader
+    if uploader is None:
+        uploader = Uploader(settings) 
+    uploader.upload_to_S3(image_path)
 
 ##
 ## Our feed handler class definitions
@@ -396,7 +407,24 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             # should be replyLink (or just send the type)
             if type != 2:
                 type = 1
-            if (self.uploader.upload_to_S3(self.thumbnailLarge)):
+
+            # do us async now, temp image will be displayed to user
+            # we still need to deal with failure
+            
+            spawned = self.settings["BACKGROUND_S3_UPLOAD"]
+            uploaded = False
+            if spawned:
+                logging.debug("spawning upload")
+                gevent.joinall([
+                    gevent.spawn(upload_to_S3, self.application.get_settings('uploader'), self.thumbnailLarge)
+                    ])
+                uploaded = True
+                logging.debug("spawned upload")
+            else:
+                logging.debug("blocking upload start")
+                uploaded = self.uploader.upload_to_S3(self.thumbnailLarge)
+                logging.debug("blocking upload done")
+            if uploaded:
                 image_data = {
                     'id': None,
                     'itemId': None,
@@ -428,7 +456,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'thumbnailLarge':   self.thumbnailLarge,
             'referer':          self.referer,
             'changeDate':       now,
-            'createDate':       now
+            'createDate':       now,
         }
         item = Comment(**data)
         logging.debug(item.to_json())
@@ -460,6 +488,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 'childCount': self.childCount,
                 'moreIndex': self.moreIndex,
                 'has_more_contributions': False,
+                'is_admin': self.is_admin,
             }
             # share us if we have been asked to
             if not self.post_to is None:
@@ -1026,6 +1055,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'childCount': self.childCount,
             'moreIndex': self.moreIndex,
             'has_more_contributions': self.has_more_contributions(comments),
+            'is_admin': self.is_admin,
         }
         return context
 

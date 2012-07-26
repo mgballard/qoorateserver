@@ -13,7 +13,8 @@
                                 <div class="q_txt">
                                     {% for image in comment.images|default(comment_images) %}
                                     <div class="q_img">
-                                        <img src="{{app["S3_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}_m.jpg"  onerror="ImgError(this, 'http://qrate.co/img/blank.gif')">
+                                        <img src="{{app["S3_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}_m.jpg" 
+                                                onerror="ImgError(this, '{{app["QOORATE_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}','{{app["BROKEN_IMG_URI"]}}')">
                                     </div>
                                     <h3 class="itemName title type-{{comment.type}}">{{comment.name}}</h3>
                                     {% endfor %}
@@ -23,7 +24,7 @@
                             <div class="q_main_footer">
                                 <div class="q_main_user">
                                     <div class="q_thumbnail">
-                                        <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
+                                        <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, {{app["BROKEN_IMG_URI"]}})" />
                                     </div>
                                     <div class="q_user_info">
                                         <span class="q_usr">{{comment.username|default(current_user.username)}}</span>

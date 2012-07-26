@@ -24,9 +24,13 @@ function get_class_element(elem, pos) {
 // SM: 20111214 - to make sure broken images are not displayed
 // for an img tag to use it you must add the attribute: onerror="ImgError(this, '/images/none.gif');"
 // This must be done server side, by the time you set it i jquery, it is too late
-function ImgError( source, url ) {
-    source.src = url;
-    source.onerror = "";
+function ImgError( source, url1, url2 ) {
+    source.src = url1;
+    if(url2) {
+        source.onerror = "ImgError(this, '" + url2 + "')";
+    } else {
+        source.onerror = "";
+    }
     return true;
 }
 
@@ -268,7 +272,10 @@ $(document).ready(function() {
 
     // SM: 20111219 - needed now that content is being passed in JSON field
     var urldecode = function( str ) {
-        return decodeURIComponent( ( str + '' ).replace( /\+/g, '%20' ) );
+        // was messed up by comic book swear #$%@!!
+        // so now we escape, then unescape content too
+        //return decodeURIComponent( ( str + '' ).replace( /\+/g, '%20' ) );
+        return unescape(decodeURIComponent( escape(( str + '' ).replace( /\+/g, '%20' )) ));
     }
 
     // SM: 20111223 - Check the length of an input and display status
@@ -776,7 +783,7 @@ $(document).ready(function() {
                             }
                         }
                         $source_object.removeClass('disabled');
-                    } else if ( _action == 'flag' ) {                    
+                    } else if ( _action == 'flag' ) {
                         // just restore our flag options back to the icon
                         // restoreContent( $( $source_object.parent(), 495 ) );
                         // we are in dynForm now
@@ -787,6 +794,9 @@ $(document).ready(function() {
                           }else{
                             getHideDynamicForm( _block, 250 ).call();
                           }
+
+                    } else if ( _action == 'deleteItem' ) {
+                        // put a message in the items place, and give us a message
 
                     } else if ( _action == 'shareItem' ) {
 
@@ -1628,6 +1638,10 @@ $(document).ready(function() {
         if ( _action=='flag' ) {
             var flagTypeId = getValueFromClasses( 'value', $source_object.attr( 'class' ) );
             _query.push({"name":"flagTypeId","value":flagTypeId });
+            _query.push({"name":"itemId", "value":_item });
+        }
+
+        if ( _action=='deleteItem' ) {
             _query.push({"name":"itemId", "value":_item });
         }
 

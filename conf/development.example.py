@@ -14,6 +14,9 @@ app = {
     ## Amazon info for linking
     "S3_IMG_PATH": "https://s3.amazonaws.com/yourbucket/",
 
+    ## Initial location for images before upload to S3
+    "QOORATE_IMG_PATH": "http://qoorate.sethmurphy.com/q/uploader/images/",
+
     ## Amazon info needed to insert image into table
     ## not really used right now
     "AMAZON_BUCKET": '[YOUR BUCKET NAME]',
@@ -59,6 +62,14 @@ oauth = {
     ## Do not really do auth, fake it
     "OAUTH_TEST": False, # NOT SUPPORTED YET
 
+    ## inclusion of this key will use Redis 
+    ## as the temporary persistence storeduring an oauth request
+    ## if not included the default in memory DictShield queryset is used
+    "REDIS": {
+        "HOST": "127.0.0.1",
+        "PORT": 6379,
+    },
+    
     # Configuration of supported providers
     "PROVIDERS": {
         "facebook": {

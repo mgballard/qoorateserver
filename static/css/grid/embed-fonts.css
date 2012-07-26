@@ -75,6 +75,7 @@ This contains all font styles except color
 }
 
 #q_ a.do.flag,
+#q_ a.do.deleteItem,
 #q_overlay_content a.dialog,
 #q_ a.q_sort_button,
 #q_ a.do.makeForm {
