@@ -1298,6 +1298,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         # If we got this far, we are logged in, 
         # just send back our provider.
         self.add_to_payload('oAuthProvider', self.current_user.oauth_provider)
+        self.add_to_payload('is_admin', self.is_admin)
         return
 
     def update_child_count(self, item):

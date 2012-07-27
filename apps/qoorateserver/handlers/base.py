@@ -42,11 +42,15 @@ class QoorateMixin(object):
         return self.user_queryset.get_by_qooid(self.qooid)
 
     def is_admin(self):
-        """this is required for Brubeck authentication decorator to work
+        """Check if we are an admin for the current qoorate
         """
         is_admin = False
-        if not self.current_user == None and self.current_user.role == 1:
+        if (self.current_user != None
+            and self.admin_role_qoorates != None
+            and self.qoorate.id in self.admin_role_qoorates.split(',')
+            ):
             is_admin = True
+        logging.debug("is_admin: %s" % is_admin);
         return is_admin
     ##
     ## These are our cookies

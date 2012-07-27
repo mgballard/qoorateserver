@@ -126,9 +126,6 @@ class EmbedMixin(object):
         elif contributions > 1:
             contribution_text = "%d Contributions" % contributions
         parent_tag = 'p' + self.table[1:]
-        is_admin = False
-        if not self.current_user == None and self.current_user.role == 1:
-            is_admin = True
         context = {
             'app': self.application.get_settings('app'),
             'location': self.location,
@@ -146,7 +143,7 @@ class EmbedMixin(object):
             'has_more_contributions': self.has_more_contributions(comments),
             'confjs': self.preferences['EMBED_CONF_JS'],
             'theme': self.preferences['THEME'],
-            'is_admin': is_admin,
+            'is_admin': self.is_admin,
         }
         return context;
 

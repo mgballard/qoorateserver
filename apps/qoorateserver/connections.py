@@ -5,8 +5,11 @@ import re
 import logging
 import Cookie
 
-from request import to_bytes, to_unicode, parse_netstring, Request
-from request_handling import http_response
+from brubeck.connections import Connection
+from brubeck.connections import load_zmq
+from brubeck.connections import load_zmq_ctx
+from brubeckrequest import to_bytes, to_unicode, parse_netstring, Request
+from brubeck.request_handling import http_response
 
 ###
 ### Brubeck instance connection 
@@ -33,7 +36,7 @@ class BrubeckConnection(Connection):
         in_sock = ctx.socket(zmq.PULL)
         out_sock = ctx.socket(zmq.PUB)
 
-        super(Mongrel2Connection, self).__init__(in_sock, out_sock)
+        super(BrubeckConnection, self).__init__(in_sock, out_sock)
         self.in_addr = pull_addr
         self.out_addr = pub_addr
 

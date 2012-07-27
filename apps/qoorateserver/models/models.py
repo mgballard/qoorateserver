@@ -39,7 +39,8 @@ class User(Document):
     thumbnailLarge = fields.StringField(required=True, max_length=255)
     oauth_session_id = fields.StringField(required=True, max_length=128)
     oauth_access_token = fields.StringField(required=True, max_length=4096)
-    oauth_data = fields.StringField(required=True, max_length=5000)    
+    oauth_data = fields.StringField(required=True, max_length=5000)
+    admin_role_qoorates = fields.StringField(required=True, max_length=255)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)

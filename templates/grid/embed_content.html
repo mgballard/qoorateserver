@@ -60,7 +60,7 @@
         </div><!-- end topReply -->
         <div class="dyn {{table}}"></div>
     </div><!-- end q_head_wrap -->
-    <div id="q_cmnt" class="{{current_user.oauth_provider|default('anon')}}">
+    <div id="q_cmnt" class="{{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <div id="q_cmnt_contents">
             {% include "grid/comments.html" %}
         </div><!-- end q_cmnt_contents -->

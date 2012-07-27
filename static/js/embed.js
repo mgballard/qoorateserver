@@ -1900,9 +1900,16 @@ $(document).ready(function() {
                                             });
 
                 if( data_object != null && data_object.error == 0 && 'oAuthProvider' in data_object) {
-                    var oAuthProvider = data_object.oAuthProvider;
-                    var $qSocl = $('#q_socl');
-                    $('#q_cmnt').attr('class', oAuthProvider);
+                    var oAuthProvider = data_object.oAuthProvider,
+                        is_admin = data_object.is_admin,
+                        $qSocl = $('#q_socl'),
+                        $q_cmnt = $('#q_cmnt');
+                    
+                    $qSocl.attr('class', oAuthProvider);
+                    $q_cmnt.attr('class', oAuthProvider);
+                    if(is_admin){
+                        $q_cmnt.addClass(' admin');
+                    }
                     $qSocl.find('.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
                     $qSocl.find('.ttl.signin').html(qoorateLang.SIGNEDIN);
                     $qSocl.find('.ttl.logoff').html('<a href="#" id="q_logoff" class="do action logoffUser">' + qoorateLang.LOGOUT + '</a>');
