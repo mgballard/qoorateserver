@@ -404,9 +404,10 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             self._childCount = 0; 
         comment_image = None
         if self.replyLink != None:
-            self._thumbnailLarge = self.uploader.download_image_from_url(
-                self.thumbnailLarge
-            )
+            if self.thumbnailLarge != None and self.thumbnailLarge != '':
+                self._thumbnailLarge = self.uploader.download_image_from_url(
+                    self.thumbnailLarge
+                )
             self._description = self.replyLink
         if self.thumbnailLarge != None and self.thumbnailLarge != '':
             # we are a photo, or a replyLink
