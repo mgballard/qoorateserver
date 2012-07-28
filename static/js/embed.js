@@ -1285,6 +1285,7 @@ $(document).ready(function() {
                 }
                 scrollToObject($dynForm);
                 $dynForm.find('textarea').focus();
+                $dynForm.find('#q_replyLink').focus(); 
             });
 
         } else {
