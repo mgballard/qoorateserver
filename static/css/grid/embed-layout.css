@@ -259,7 +259,7 @@ This contains CSS for margins, padding, display, float, etc ...
     display:inline;
 }
 
-#q_ #q_cmnt.admin a.do.deleteItem,
+#q_ .admin a.do.deleteItem,
 #q_ a.do.flag,
 #q_overlay_content a.dialog,
 #q_ a.do.makeForm,
@@ -1020,11 +1020,11 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .headerWrapper.c .do.makeForm.reply,
 #q_ .do.makeForm.share,
 #q_ .do.makeForm.flag,
-#q_ #q_cmnt.admin .do.makeForm.deleteItem,
+#q_ .admin .do.makeForm.deleteItem,
 #q_ .headerWrapper.c .do.makeForm.reply span,
 #q_ .do.makeForm.share span,
 #q_ .do.makeForm.flag span,
-#q_ #q_cmnt.admin .do.action.deleteItem span {
+#q_ .admin .do.action.deleteItem span {
     margin: 0;
     padding: 0;
     position: relative;
@@ -1034,21 +1034,21 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .headerWrapper.c .do.makeForm.reply,
 #q_ .do.makeForm.share,
 #q_ .do.makeForm.flag,
-#q_ #q_cmnt.admin .do.action.deleteItem {
+#q_ .admin .do.action.deleteItem {
     padding: 3px;
     float: left;
     margin: 3px;
 }
 
 #q_ .q_item.lv-1 .do.makeForm.share {
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
 
 
 
 #q_ .flagAreaWrapper-outer,
 #q_ .headerWrapper.c .do.makeForm.reply,
-#q_ #q_cmnt.admin .do.action.deleteItem,
+#q_ .admin .do.action.deleteItem,
 #q_ .do.makeForm.flag,
 #q_ .c .do.makeForm.share {
     margin-left: 0;
@@ -1153,29 +1153,29 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_item .q_inr.p .do.makeForm.share,
 #q_ .q_item .q_inr.p .do.makeForm.flag,
 #q_ .q_item .q_inr.p .do.action.deleteItem,
-#q_ #q_cmnt.admin .q_item .q_inr.p .do.action.deleteItem {
+#q_ .admin .q_item .q_inr.p .do.action.deleteItem {
     display: none;
 }
 #q_ .q_item .q_inr.p:hover .do.makeForm.share, 
 #q_ .q_item .q_inr.p:hover .do.makeForm.flag,
-#q_ #q_cmnt.admin .q_item .q_inr.p:hover .do.action.deleteItem {
+#q_ .admin .q_item .q_inr.p:hover .do.action.deleteItem {
     display: inline;
 }
 
 #q_ .q_item.c .do.makeForm.reply,
 #q_ .q_item.c .do.makeForm.share,
 #q_ .q_item.c .do.makeForm.flag,
-#q_ .q_item.c .do.action.deleteItem {
+#q_ .admin .q_item.c .do.action.deleteItem {
     display: none;
 }
 #q_ .q_item.c:hover .do.makeForm.reply, 
 #q_ .q_item.c:hover .do.makeForm.share, 
 #q_ .q_item.c:hover .do.makeForm.flag,
-#q_ #q_cmnt.admin .q_item.c:hover .do.action.deleteItem,
-#q_ .q_item.c .headerWrapper.active .do.makeForm.reply, 
-#q_ .q_item.c .headerWrapper.active .do.makeForm.share, 
-#q_ .q_item.c .headerWrapper.active .do.makeForm.flag,
-#q_ #q_cmnt.admin .q_item.c .headerWrapper.active .do.action.deleteItem {
+#q_ .admin .q_item.c:hover .do.action.deleteItem,
+#q_ .q_item.c:active .do.makeForm.reply, 
+#q_ .q_item.c:active .do.makeForm.share, 
+#q_ .q_item.c:active .do.makeForm.flag,
+#q_ .admin .q_item.c:active .do.action.deleteItem {
     display: inline;
 }
 
@@ -1211,3 +1211,6 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 #q_ .toggleReply.contract {
 }
+#q_ .ui-resizable { position: relative;}
+#q_ .ui-resizable-handle { position: absolute;font-size: 0.1px; display: block; background-image: url(../../img/222222_256x240_icons_icons.png); background-position: -64px -224px; right: 1px; bottom: 1px; width: 16px; height: 16px;}
+#q_ .ui-resizable-disabled .ui-resizable-handle, #q_ .ui-resizable-autohide .ui-resizable-handle { display: none; }

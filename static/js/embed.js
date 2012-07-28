@@ -745,8 +745,14 @@ $(document).ready(function() {
         return function(){
             if( ! _block.hasClass( 'dyn' ) ) {
                 _block = _block.find( '.dyn' );
-                _block.slideUp( interval );
+                _block.slideUp( interval, getPositionCallback() );
             }
+        };
+    };
+
+    var getPositionCallback = function( ) {
+        return function(){
+            position();
         };
     };
  
@@ -1287,14 +1293,22 @@ $(document).ready(function() {
             });
         }
         $dynForm.show();
+
+        $(".q_item textarea").resizable({
+            resize: function(event, ui) {
+                    position(); 
+                },
+            handles: "s"
+        });        
         var $pi = $dynForm.closest('.q_item.lv-1'),
             $rb = $pi.find('#reply_' + _id),
-            is_active = $rb.hasClass('active');
+            is_active = $rb.hasClass('active'),
+            $p = $rb.parent(),
+            $toggleReply = $p.find('.toggleReply');
         $pi.addClass('active');
         $rb.addClass('active');
-        $rb.parent().addClass('active');
+        $p.addClass('active');
         
-        var $toggleReply = $('.toggleReply');
         if($toggleReply.hasClass('expand')){
             is_active = false;
         }

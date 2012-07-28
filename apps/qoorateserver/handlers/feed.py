@@ -41,16 +41,25 @@ from qoorateserver.querysets.querysets import (
     VoteQueryset,
     FlagQueryset
 )
-#######################
+################################
 ## Methods used by gevent.spawn
-#######################
+################################
 uploader = None
 def upload_to_S3(settings, image_path):
+    # parts of this (image crunching) are still blocking
+    # we really need a seperate process here, gevent is not magic
     logging.debug("upload_to_S3 : %s" % image_path)
     global uploader
     if uploader is None:
         uploader = Uploader(settings) 
     uploader.upload_to_S3(image_path)
+
+def delete_from_S3(settings, image_path):
+    logging.debug("delete_from_S3 : %s" % image_path)
+    global uploader
+    if uploader is None:
+        uploader = Uploader(settings) 
+    uploader.delete_from_S3(image_path)
 
 ##
 ## Our feed handler class definitions
@@ -578,12 +587,37 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
     @admin_role
     def perform_delete_item(self):
         """ delete a single item and all related content """
+        logging.debug("perform_delete_item()")
         result = self.comment_queryset.read_one(self.itemId)[1]
         if result != None:
             item = Comment(**result)
             # remove any related image records (including removing images from S3?)
+            # right now we fire and forget, deleting the image record no matter what
+            if item.type == 1:
+                spawned = self.settings["BACKGROUND_S3_UPLOAD"]
+                deleted = False
+                if spawned:
+                    logging.debug("spawning delete")
+                    gevent.joinall([
+                        gevent.spawn(delete_from_S3, self.application.get_settings('uploader'), self.thumbnailLarge)
+                        ])
+                    uploaded = True
+                    logging.debug("spawned delete")
+                else:
+                    logging.debug("blocking delete start")
+                    uploaded = self.uploader.delete_from_S3(self.thumbnailLarge)
+                    logging.debug("blocking delete done")
+            self.image_queryset.delete_by_item_id(self.table, item.id)
             # remove any related flags
+            self.flag_queryset.delete_by_item_id(item.id)
             # remove any related votes
+            self.vote_queryset.delete_by_item_id(item.id)
+            # remove any related comments
+            if item.parentId == 0:
+                self.comment_queryset.delete_by_parent_id(self.table, item.id)
+            else:                
+                self.comment_queryset.delete_by_related_id(self.table, item.id)
+
             # remove comment item itself
             result = self.comment_queryset.destroy_one(self.itemId)
             parent_item = self.update_child_count(item)

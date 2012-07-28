@@ -57,6 +57,7 @@ class EmbedMixin(object):
                     ('type', "text/css"),
                 )
             ),
+            
             # This is inline now
             #( "jsconf", (
             #        ('src', "%s/js/embed.conf.js" % qoorate_base_uri),
@@ -64,7 +65,7 @@ class EmbedMixin(object):
             #    )
             #),
             ( "script", (
-                    ('src', "%s/js/jquery-1.4.4.min.js" % qoorate_base_uri),
+                    ('src', "%s/js/jquery-1.7.2.min.js" % qoorate_base_uri),
                     ('type', "text/javascript"),
                 )
             ),
@@ -80,6 +81,11 @@ class EmbedMixin(object):
             ),
             ( "script", (
                     ('src', "%s/js/jquery.cookie.js" % qoorate_base_uri),
+                    ('type', "text/javascript"),
+                )
+            ),
+            ( "script", (
+                    ('src', "%s/js/jquery-ui-1.8.22.custom.min.js" % qoorate_base_uri),
                     ('type', "text/javascript"),
                 )
             ),
