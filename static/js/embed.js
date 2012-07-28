@@ -25,6 +25,20 @@ function get_class_element(elem, pos) {
 // for an img tag to use it you must add the attribute: onerror="ImgError(this, '/images/none.gif');"
 // This must be done server side, by the time you set it i jquery, it is too late
 function ImgError( source, url1, url2 ) {
+    $(source).load(function () {
+        $this = $(this);
+        var $thisParent = $this.parents('.q_item .q_main_body'),
+            width = $thisParent.width();
+        if(qoorateConfig.GRID_COLUMNS) {
+            var cols = qoorateConfig.GRID_COLUMNS,
+            col_trim = qoorateConfig.GRID_COLUMN_TRIM,
+            col_width = width / cols - col_trim;
+        }
+        if($this.width() > width - 14) {
+            $this.css('width', width - 14);
+        }
+    });
+
     source.src = url1;
     if(url2) {
         source.onerror = "ImgError(this, '" + url2 + "')";
