@@ -2423,7 +2423,7 @@ $(document).ready(function() {
             o_left = 0,
             c_top = 0,
             lastrowheights = new Array(cols),
-            col_width = width / cols - col_trim;
+            col_width = (width / cols) - col_trim + (col_trim/cols);
         
             
             jQuery.each(o, function(i, val) {
