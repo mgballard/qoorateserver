@@ -1214,9 +1214,9 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .ui-resizable { position: relative;}
 #q_ .ui-resizable-handle { position: absolute;font-size: 0.1px; display: block; background-image: url(../../img/222222_256x240_icons_icons.png); background-position: -64px -224px; right: 1px; bottom: 1px; width: 16px; height: 16px;}
 #q_ .ui-resizable-disabled .ui-resizable-handle, #q_ .ui-resizable-autohide .ui-resizable-handle { display: none; }
-.q_text {
+.q_txt {
     width: 100%;
 }
-.q_text p {
+.q_txt p {
     word-wrap: break-word;
 }
