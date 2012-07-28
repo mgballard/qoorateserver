@@ -2407,15 +2407,30 @@ $(document).ready(function() {
             o_left_start = c_coord.left,
             o_top = 0,
             o_left = 0,
+            c_top = 0,
             lastrowheights = new Array(cols),
             col_width = width / cols - col_trim;
         
             
             jQuery.each(o, function(i, val) {
                 val = $(val);
-                if (row > 0) {
-                    o_top = lastrowheights[col][0] + lastrowheights[col][1];
+                if (i > cols - 1) {
+                    // changed to always place in shortest column
+                    //o_top = lastrowheights[col][0] + lastrowheights[col][1];
+                    o_top = 0;
+                    o_left = 0;
+                    col = 0;
+                    for (var x = 0; x < cols; x++) {
+                        c_top = lastrowheights[x][0] + lastrowheights[x][1];  
+                        if( o_top == 0 || o_top >= c_top){
+                            col = x;
+                            o_top = c_top;
+                        }
+                    }
+                } else {
+                    col = i;
                 }
+                o_left = col * (col_width + col_trim);
                 val.css("top", o_top + "px");
                 val.css("left", o_left + "px");
                 val.css("width", col_width + "px");
@@ -2426,31 +2441,31 @@ $(document).ready(function() {
                     return (css.match (/\bcol-\S+/g) || []).join(' ');
                 });
                 
-                val.removeClass (function (index, css) {
-                    return (css.match (/\brow-\S+/g) || []).join(' ');
-                });
+                //val.removeClass (function (index, css) {
+                //    return (css.match (/\brow-\S+/g) || []).join(' ');
+                //});
 
                 // re-create our row/column indexes
                 val.addClass("col-" + col);
-                val.addClass("row-" + row);
+                //val.addClass("row-" + row);
                 lastrowheights[col] = [o_top, val.height() + row_trim];
-                col++;
-                if (col >= cols) {
-                    col = 0;
-                    row++;
-                    o_left = 0;
-                } else {
-                    o_left += (col_width + col_trim);
-                }        
+                //col++;
+                //if (col >= cols) {
+                //    col = 0;
+                //    row++;
+                //    o_left = 0;
+                //} else {
+                //    o_left += (col_width + col_trim);
+                //}        
             });
 
-            grid_height();
+            //grid_height();
 
             // position our more link
             // get our last row and find the item that goes to the end
             var bottom = 0, b=0;
-            for(var i=0; i<cols; i++){
-                var o = lastrowheights[lastrowheights.length - i - 1];
+            for(var y=0; i<cols; i++){
+                var o = lastrowheights[lastrowheights.length - y - 1];
                 b = o[0] + o[1];
                 if(b > bottom) {
                     bottom = b;
