@@ -1284,7 +1284,7 @@ $(document).ready(function() {
 
             // SM: 20111214 - Create link now defaults to disabled, and now has a var that can be changed
             // SM: 20120104 - Cancel button now lives outside the div so it can be positioned with float only
-            var form = form_html + 
+            var form = '<a class="do x" href="#">x</a>' + form_html + 
                         '<div class="dynFormFooter ' + _form + '">' + postTo + 
                         form_action + 
                         '<br class="q_clear" />' + 
@@ -2221,7 +2221,8 @@ $(document).ready(function() {
                     $rb.parent().removeClass('active');
                   }else{
                     $dynForm.hide();
-                    $pi.removeClass('active');
+                    // No longer hide children on form close
+                    //$pi.removeClass('active');
                     $p.removeClass('active');
                     $rb.removeClass('active');
                     $rb.parent().removeClass('active');
