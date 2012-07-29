@@ -1320,16 +1320,18 @@ $(document).ready(function() {
             is_active = $rb.hasClass('active'),
             $p = $rb.parent(),
             $toggleReply = $p.find('.toggleReply');
-        $pi.addClass('active');
+        // No longer show children with reply
+        //$pi.addClass('active');
         $rb.addClass('active');
         $p.addClass('active');
-        
-        if($toggleReply.hasClass('expand')){
-            is_active = false;
-        }
-        $toggleReply.removeClass('expand');
-        $toggleReply.addClass('contract');
-        $toggleReply.find('span').html(qoorateLang.TOGGLE_OFF);
+
+        // No longer show children with reply
+        //if($toggleReply.hasClass('expand')){
+        //    is_active = false;
+        //}
+        //$toggleReply.removeClass('expand');
+        //$toggleReply.addClass('contract');
+        //$toggleReply.find('span').html(qoorateLang.TOGGLE_OFF);
 
         if(!is_active){
             position();
