@@ -860,6 +860,7 @@ $(document).ready(function() {
                             if(_action == 'getMore') {
                                 $('.getMore').remove();
                                 var $comments = $('#q_cmnt_contents');
+                                childToggleControls($data);
                                 $comments.append($data);
                                 addLastItemClassToChildren( $comments );
                                 position();
@@ -931,9 +932,11 @@ $(document).ready(function() {
                                     $parent.after($data);
                                 }
                             }
-                            
                             // update our parents reply count if we have it
                             $('#' + table_name + '-' + p_id + ' .replycount').html(data_object.replycount);
+                            // and show our toggle if there was none
+                            childToggleControls($parent.find('.replyWrapper'));
+                            
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
                             // SM: 20111214 - We need the slideUp now that we removed the "hover" slideup
@@ -2394,8 +2397,19 @@ $(document).ready(function() {
     }; // end skyscraper_ready
 
     var grid_ready = function() {
+        childToggleControls($('#q_ .q_item'));
     }; // end grid_ready
 
+    var childToggleControls = function($scope){
+        var $replycount = $scope.find(".replycount");
+        $replycount.each(function(){
+                $this = $(this);
+                if ($this.html() > 0){
+                    $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_ON);
+                }
+            }
+        );
+    };
     var grid_dynamicResize_pre = function() {
         return grid_position()
     }; // end grid_dynamicResize_pre
