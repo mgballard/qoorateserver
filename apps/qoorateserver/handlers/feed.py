@@ -620,11 +620,14 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 self.comment_queryset.delete_by_related_id(self.table, item.id)
 
             # remove comment item itself
+            logging.debug('perform_delete_item: removing requested item (%s)' % self.itemId)
             result = self.comment_queryset.destroy_one(self.itemId)
             parent_item = self.update_child_count(item)
             if parent_item != None and parent_item.childCount != None:
                 self.replycount = parent_item.childCount
-            
+        else:
+            logging.debug('perform_delete_item: item not found (%s)' % self.itemId)
+
         return
 
     @authenticated

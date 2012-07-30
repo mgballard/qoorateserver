@@ -41,16 +41,18 @@ class QoorateMixin(object):
         """
         return self.user_queryset.get_by_qooid(self.qooid)
 
+    @lazyprop
     def is_admin(self):
         """Check if we are an admin for the current qoorate
         """
         is_admin = False
+
         if (self.current_user != None
-            and self.admin_role_qoorates != None
-            and self.qoorate.id in self.admin_role_qoorates.split(',')
+            and self.qoorate != None
+            and self.current_user.admin_role_qoorates != None
             ):
-            is_admin = True
-        logging.debug("is_admin: %s" % is_admin);
+            if str(self.qoorate.id) in self.current_user.admin_role_qoorates.split(','):
+                is_admin = True
         return is_admin
     ##
     ## These are our cookies

@@ -871,6 +871,7 @@ $(document).ready(function() {
                                 // re-enable our logoff buttons
                                 $('.q_inr.logged-in').attr('class', 'q_inr');
                                 $('#q_cmnt').attr('class', 'anon');
+                                $('#q_ .q_head_wrap').attr('class', 'q_head_wrap');
                              //   $('#q_fllw').html('<div class="q_inr"><span class="ttl">+ Follow</span></div>'); 
                                 $('#q_socl .ttl.signin').html(qoorateLang.SIGNIN);
                                 $('#q_socl .ttl.logoff').html('');
@@ -1270,8 +1271,7 @@ $(document).ready(function() {
                           '</a>';
 
         if ( _form == 'flag' ) {
-            form_action = '<div class="dynForm-header"><a class="do x" href="#">x</a></div>' + 
-                        '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
+            form_action = '<div id="flag_' + _id + '" class="flagAreaWrapper-outer ' + _id + '">' +
                         getFlagActions( _id ) +
                         '</div>';
             form_html = '';
@@ -1913,9 +1913,10 @@ $(document).ready(function() {
                 }
             }
 
-            var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login'
+            var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login',
+                table_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class'));
             $.oauthpopup({
-                path: url + '?QOOID=' + $.cookie('QOOID'),
+                path: url + '?QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID') + '&q_short_name=' + table_name,
                 callback: getCallback(callback),
                 windowOptions: 'location=0,status=0,width=800,height=400,outerWidth=800,outerHeight=400'
             });
@@ -1937,14 +1938,17 @@ $(document).ready(function() {
                     var oAuthProvider = data_object.oAuthProvider,
                         is_admin = data_object.is_admin,
                         $qSocl = $('#q_socl'),
-                        $q_cmnt = $('#q_cmnt');
-                    
+                        $q_cmnt = $('#q_cmnt'),
+                        $q_head_wrap = $('#q_ .q_head_wrap');
+
                     $qSocl.attr('class', oAuthProvider);
                     $q_cmnt.attr('class', oAuthProvider);
                     if(is_admin){
                         $q_cmnt.addClass(' admin');
+                        $q_head_wrap.addClass('admin');
                     }
                     $qSocl.find('.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
+                    $q_head_wrap.addClass(oAuthProvider);
                     $qSocl.find('.ttl.signin').html(qoorateLang.SIGNEDIN);
                     $qSocl.find('.ttl.logoff').html('<a href="#" id="q_logoff" class="do action logoffUser">' + qoorateLang.LOGOUT + '</a>');
                     if ( callback != null )
@@ -1952,11 +1956,13 @@ $(document).ready(function() {
                 }
             };
         };
-        
+
+        var q_short_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class'));
+
         $.ajax( {
            type: 'POST',
            url: qoorateConfig.PROXY_URI,
-           data: 'action=validateLogin&QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID'),
+           data: 'action=validateLogin&QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID') + '&q_short_name=' + q_short_name,
            success: getCallback(callback),
            error: function (xhr, error) { 
                     errorMsg(0, error);

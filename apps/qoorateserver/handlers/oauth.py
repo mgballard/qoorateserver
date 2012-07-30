@@ -13,7 +13,7 @@ import logging
 ##
 class QoorateOAuthHandler(Jinja2Rendering, OAuthMixin, QoorateMixin):
     """our qoorate specific oAuth handler"""
-    
+
     ## Define these if you do not want to use redis to persist data thoughout the oauth request"""
     #datahandler = {
     #    "default": (MyOAuthQueries, oAuthModel),
@@ -35,9 +35,13 @@ class QoorateOAuthHandler(Jinja2Rendering, OAuthMixin, QoorateMixin):
         """
         # first try to get our user based on aouth_id and oauth_provider
         oauth_data = json.loads(oauth_request_model.data)
+        initial_request_args = json.loads(oauth_request_model.initial_request_args)
         username = (oauth_data["username"] if "username" in oauth_data and oauth_data["username"] != '' else
             oauth_data["name"] if "name" in oauth_data and oauth_data["name"] != '' else
             oauth_data["fullname"] if "fullname" in oauth_data and oauth_data["fullname"] != '' else None)
+
+        # now set our table since we already failed before
+        self.set_table();
         
         if username == None:
             raise Exception("No UserName found in oauth_data 'username','name' or 'fullname' fields.")            
@@ -53,15 +57,22 @@ class QoorateOAuthHandler(Jinja2Rendering, OAuthMixin, QoorateMixin):
             "thumbnailLarge": oauth_data["thumbnailLarge"],
             "oauth_access_token": oauth_data["oauth_access_token"],
             "oauth_data": json.dumps(oauth_data),
-            "createDate": now, 
-            "changeDate": now, 
+            "createDate": now,
+            "changeDate": now,
         }
 
         logging.debug("User authenticated -> \n %s" % data)
+        logging.debug("initial_request_args:%s" % initial_request_args)
         # just in case, clear any login for session
         self.user_queryset.logout_by_qooid(oauth_request_model.session_id)
 
         result = self.user_queryset.create_one(User(**data))
+
+        # Invalidate any lazy props we may have set based on changing logins
+        # Mostly current user and roles
+        # this is needed mainly for permission needed by hte template
+        self._is_admin = None
+        self._current_user = None
 
         logging.debug( 'User persisted %s -> %s' %(result[0], result[1]) )
         context = {
