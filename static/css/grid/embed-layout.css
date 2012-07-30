@@ -1220,3 +1220,7 @@ This contains CSS for margins, padding, display, float, etc ...
 .q_txt p {
     word-wrap: break-word;
 }
+
+#q_ #q_cmnt.gp .do.makeForm.share {
+    display: none;
+}

@@ -35,7 +35,7 @@
         </div>
     </div><!-- end q_top -->
     <div class="q_clear"></div>
-    <div id="{{table}}" class="q_head_wrap">
+    <div id="{{table}}" class="q_head_wrap {{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <div id="topReply">
             <div id="topReplyText"><span>Want to Contribute?</span></div>
             <div id="topReplyFnxn">
