@@ -309,7 +309,7 @@ def admin_role(method):
     """
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
-        if not self.current_user.role==1:
+        if not self.is_admin:
             return self.render_error(self._AUTH_FAILURE)
         return method(self, *args, **kwargs)
     return wrapper

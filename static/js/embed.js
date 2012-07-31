@@ -764,6 +764,22 @@ $(document).ready(function() {
         };
     };
 
+    var getRemoveBlock = function( _block, interval ) {
+        return function(){
+            if( ! _block.hasClass( 'headerMessage' ) ) {
+                _block = _block.find( '.headerMessage' );
+            }
+            _block.slideUp( interval, getRemoveCallback(_block) );
+        };
+    };
+
+    var getRemoveCallback = function( _block ) {
+        return function(){
+            _block.remove();
+            position();
+        };
+    };
+
     var getPositionCallback = function( ) {
         return function(){
             position();
@@ -816,16 +832,23 @@ $(document).ready(function() {
                           }
 
                     } else if ( _action == 'deleteItem' ) {
-                        // put a message in the items place, and give us a message
-
+                        // put a message in the header, and give us a message
+                        var $header_wrapper = _block.find( '.headerWrapper' );
+                        if( data_object.error == 0 ) {
+                            $header_wrapper.append( '<span class="headerMessage">' + qoorateLang.DELETE_SUCCESS + '</span>' );
+                            setTimeout( getRemoveBlock($header_wrapper,  250 ), 2000 );
+                        }
                     } else if ( _action == 'shareItem' ) {
 
                         if( ! _block.hasClass('dyn') )
                             _block = _block.find('.dyn');
-
-                        _block.slideUp('250');
-
                         restorePrevals(_block);
+
+                        var $message_wrapper = _block.find( '.dynFormFooter' );
+                        if( data_object.error == 0 ) {
+                            $message_wrapper.append( '<span class="headerMessage">' + qoorateLang.SHARE_SUCCESS + '</span>' );
+                            setTimeout( getRemoveBlock($message_wrapper, 250 ), 2000 );
+                        }
 
                         return;
                     } else {
@@ -1636,7 +1659,7 @@ $(document).ready(function() {
 
 
     // SM: 20111229 - added source object as first parameter
-    var doPost = function($source_object, _table,_item,_id,_action,_block,_location) {
+    var doPost = function($source_object, _table, _item, _id, _action, _block, _location) {
         //    console.log("table:"+_table);
         //    console.log("item:"+_item);
         //    console.log("id:"+_id);
@@ -1971,6 +1994,78 @@ $(document).ready(function() {
         });
         
     }
+
+
+    // Allows comments to be requested and returned as JSON items
+    // Verbose debuging for development now
+    var queryComments = function(callback, parentOffset, parentCount, childCount,
+                                    sortOrder, dateOrder, voteOrder,
+                                    flagTypeId) {
+
+        var getCallback = function(callback) {
+            return function(data) {
+                var data_object = parseJSONresponse(data)[0];
+                console.log(data_object.comments);
+                console.log(data_object.query);
+
+                if ( callback != null )
+                    callback.call();
+
+            };
+        };
+
+        var q_short_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class')),
+            location = $('#q_').attr('class');
+
+
+        var _query = Array();
+        _query.push({ "name":"action",
+                        "value":"queryComments"});
+        _query.push({ "name":"QOOID",
+                        "value":$.cookie('QOOID')});
+        _query.push({ "name":"QOOTID",
+                        "value":$.cookie('QOOTID')});
+        _query.push({ "name":"q_short_name",
+                        "value": q_short_name});
+        _query.push({ "name":"location",
+                        "value": location});
+        if (parentOffset)
+            _query.push({ "name":"parentOffset",
+                            "value": parentOffset});
+        if (parentCount)
+            _query.push({ "name":"parentCount",
+                            "value": parentCount});
+        if (childCount)
+            _query.push({ "name":"childCount",
+                            "value": childCount});
+        if (sortOrder)
+            _query.push({ "name":"sortOrder",
+                            "value": sortOrder});
+        if (dateOrder)
+            _query.push({ "name":"dateOrder",
+                            "value": dateOrder});
+        if (voteOrder)
+            _query.push({ "name":"voteOrder",
+                            "value": voteOrder});
+        if (flagTypeId)
+            _query.push({ "name":"flagTypeId",
+                            "value": flagTypeId});
+
+        $.ajax( {
+           type: 'POST',
+           url: qoorateConfig.PROXY_URI,
+           data: _query,
+           success: getCallback(callback),
+           error: function (xhr, error) { 
+                    errorMsg(0, error);
+           }
+        });
+        
+    }
+    // uncomment to see values returned
+    // 1 = flagType in this example
+    // queryComments(null, null, null, null, null, null, null, 1);
+    // queryComments();
 
     // SM: 20120109 - This really should be more robust, but we do have server side checks too
     var isLoggedIn = function() {

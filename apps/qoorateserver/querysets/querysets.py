@@ -37,7 +37,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
 
 
-    def load_comments_by_table_and_location(self, table, location=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC', flagType=None):
+    def load_comments_by_table_and_location(self, table, location=None, parentOffset=1, parentCount=0, childOffset=1, childCount=0, parentId=None, sortOrder = 'voteNumber', dateOrder = 'ASC', voteOrder = 'DESC', flagTypeId=None):
         """Loads comment"""
         self.init_db_conn()
 
@@ -52,11 +52,11 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
         if dateOrder == None:
             dateOrder = 'ASC'
 
-        if flagType == None:
+        if flagTypeId == None:
             flag_join_sql = ''
             flag_group_by_clause = ''
         else:
-            flag_join_sql = "JOIN flag fl on fl.itemId=s0.id and fl.flagTypeId=%s" % flagType
+            flag_join_sql = "JOIN flag fl on fl.itemId=s0.id and fl.flagTypeId=%s" % flagTypeId
             flag_group_by_clause = " GROUP BY s0.id"
 
         # if we only want the parent, return all, we may not know the real offset
@@ -285,6 +285,27 @@ class CommentQueryset(MySqlApiQueryset):
             logging.debug("Number of contributions %d" % row['recordCount'])
             return row['recordCount']
 
+    def get_ids_by_parent_id(self, table, parent_id):
+        """Get a list of the ids of the children of a parent"""
+        self.init_db_conn()
+
+        ids = []
+
+        sql = """
+            SELECT id FROM `%s` WHERE `parentId` = %%s
+        """ % table
+
+        rows = self.query (sql, [parent_id])
+
+        if rows is None:
+            logging.debug("No children ids for parent(%s)" % parent_id)
+        else:
+            for row in rows:
+                ids.append(row['id'])
+
+        logging.debug('returning %s child ids' % len(ids))
+        return ids;
+
     def get_child_count_by_item_id(self, comment_table, id):
         """returns the number of children for an item"""
     
@@ -300,6 +321,27 @@ class CommentQueryset(MySqlApiQueryset):
             return 0
         
         return row['childCount']
+
+    def get_related_ids_by_item_id(self, table, item_id):
+        """Get a list of the ids of the children of a parent"""
+        self.init_db_conn()
+
+        ids = []
+
+        sql = """
+            SELECT id FROM `%s` WHERE `relatedId` = %%s
+        """ % table
+
+        rows = self.query (sql, [item_id])
+
+        if rows is None:
+            logging.debug("No related ids for parent(%s)" % item_id)
+        else:
+            for row in rows:
+                ids.append(row['id'])
+
+        logging.debug('returning %s related ids' % len(ids))
+        return ids;
 
 
 class UserQueryset(MySqlApiQueryset):
@@ -396,16 +438,38 @@ class ImageQueryset(MySqlApiQueryset):
     ### Our special queries that have filters
     ###
 
-    def load_images_by_item_id(self, itemTable, itemId):
+    def load_images_by_item_id(self, item_table, item_id):
         """Loads images for a comment"""
-        if itemId == None:
+        if item_id == None:
             return None
 
         sql = """
             SELECT %s FROM `%s` WHERE `itemId` = %%s
-        """ % (self.get_fields_list(), itemTable + "_images")
+        """ % (self.get_fields_list(), item_table + "_images")
 
-        return self.dictListToDictShieldList(self.query(sql, [itemId]))
+        return self.dictListToDictShieldList(self.query(sql, [item_id]))
+
+    def delete_by_item_id(self, item_table, item_id):
+        """delete all flags for an item"""
+    
+        if isinstance( item_id, ( int, long ) ):
+            sql = """
+                DELETE
+                FROM `%s`
+                WHERE `itemId`= %%s
+                """ % (item_table + "_images")
+    
+            items_affected = self.execute(sql, [item_id]);
+            
+            if items_affected == 0:
+                logging.debug("No images deletes ('%s',%s)" % (item_table, item_id))
+                return False
+            else:
+                logging.debug("%s images deletes ('%s',%s)" % (items_affected, item_table, item_id))
+                return True
+        else:
+            raise Exception('Invalid item_id(%s), must be a number' % item_id)
+
 
 class VoteQueryset(MySqlApiQueryset):
     """ This is a simple, completely standard one to one mapping to the DB
@@ -511,6 +575,31 @@ class VoteQueryset(MySqlApiQueryset):
 
         return self.query(sql, args)
 
+    def delete_by_item(self, item):
+        """delete all votes for an item"""
+    
+        item_id = item.id
+        vote_count = item.voteCount
+
+        if vote_count > 0:
+            sql = """
+                DELETE
+                FROM `%s`
+                WHERE `itemId`= %%s limit %s
+                """ % (self.table_name, vote_count)
+    
+            items_affected = self.execute(sql, [item_id]);
+            
+            if items_affected != vote_count:
+                logging.debug("WARNING: Votes deleted (%s) not equal to voteCount(%s)" % (items_affected, vote_count))
+                return False
+            else:
+                logging.debug("Votes deleted (%s) equals to voteCount(%s)" % (items_affected, vote_count))
+                return True
+        else:
+            logging.debug("No votes deleted, voteCount(%s)" % (vote_count))
+            return True
+
 class FlagQueryset(MySqlApiQueryset):
     """ This is a simple, completely standard one to one mapping to the DB
         Only dict are returned, if you want a DictShield item 
@@ -568,11 +657,11 @@ class FlagQueryset(MySqlApiQueryset):
 
         return self.fetch(sql, [id]);
 
-    def get_flag_by_refTableitemIduserId(self, refTable, itemId, userId):
+    def get_flag_by_refTableitemIduserId(self, ref_table, item_id, user_id):
         """returns a row containing enough flag info to generate an email alert to the admin"""
         # first get our reftable
         sql = "SELECT * FROM `flag` WHERE refTable = %s and itemId = %s and userId = %s"
-        row = self.fetch(sql, [refTable, itemId, userId]);
+        row = self.fetch(sql, [item_table, item_id, user_id]);
         if row == None:
             return None
 
@@ -593,6 +682,31 @@ class FlagQueryset(MySqlApiQueryset):
             return 0
         
         return row['flagCount']
+
+    def delete_by_item(self, item):
+        """delete all flags for an item"""
+    
+        item_id = item.id
+        flag_count = item.flagCount
+
+        if flag_count > 0:
+            sql = """
+                DELETE
+                FROM `%s`
+                WHERE `itemId`= %%s limit %s
+                """ % (self.table_name, flag_count)
+    
+            items_affected = self.execute(sql, [item_id]);
+            
+            if items_affected != flag_count:
+                logging.debug("WARNING: Flags deleted (%s) not equal to flagCount(%s)" % (items_affected, flag_count))
+                return False
+            else:
+                logging.debug("Flags deleted (%s) equals to flagCount(%s)" % (items_affected, flag_count))
+                return True
+        else:
+            logging.debug("No flags deleted, flagCount(%s)" % (flag_count))
+            return True
 
 
 class KeypairQueryset(MySqlApiQueryset):

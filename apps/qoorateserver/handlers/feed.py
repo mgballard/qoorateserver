@@ -54,13 +54,12 @@ def upload_to_S3(settings, image_path):
         uploader = Uploader(settings) 
     uploader.upload_to_S3(image_path)
 
-def delete_from_S3(settings, image_path):
-    logging.debug("delete_from_S3 : %s" % image_path)
+def delete_from_S3(settings, image_name):
+    logging.debug("delete_from_S3 : %s" % image_name)
     global uploader
     if uploader is None:
         uploader = Uploader(settings) 
-    uploader.delete_from_S3(image_path)
-
+    uploader.delete_from_S3(image_name)
 ##
 ## Our feed handler class definitions
 ##
@@ -307,6 +306,8 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 self.perform_sort()
             elif self.action == 'validateLogin':
                 self.perform_validate_login()
+            elif self.action == 'queryComments':
+                self.perform_query_comments()
             else:
                 raise Exception("Unsupported action: %s" % self.action)
         except Exception as e:
@@ -590,45 +591,81 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         """ delete a single item and all related content """
         logging.debug("perform_delete_item()")
         result = self.comment_queryset.read_one(self.itemId)[1]
+        deleted_item_ids = []
         if result != None:
             item = Comment(**result)
             # remove any related image records (including removing images from S3?)
             # right now we fire and forget, deleting the image record no matter what
             if item.type == 1:
+                logging.debug("perform_delete_item, removing images.")
                 spawned = self.settings["BACKGROUND_S3_UPLOAD"]
                 deleted = False
                 if spawned:
                     logging.debug("spawning delete")
                     gevent.joinall([
-                        gevent.spawn(delete_from_S3, self.application.get_settings('uploader'), self.thumbnailLarge)
+                        gevent.spawn(delete_from_S3, self.application.get_settings('uploader'), item.thumbnailLarge)
                         ])
                     uploaded = True
                     logging.debug("spawned delete")
                 else:
                     logging.debug("blocking delete start")
-                    uploaded = self.uploader.delete_from_S3(self.thumbnailLarge)
+                    uploaded = self.uploader.delete_from_S3(item.thumbnailLarge)
                     logging.debug("blocking delete done")
-            self.image_queryset.delete_by_item_id(self.table, item.id)
+                self.image_queryset.delete_by_item_id(self.table, item.id)
+
             # remove any related flags
-            self.flag_queryset.delete_by_item_id(item.id)
+            self.flag_queryset.delete_by_item(item)
             # remove any related votes
-            self.vote_queryset.delete_by_item_id(item.id)
+            self.vote_queryset.delete_by_item(item)
             # remove any related comments
             if item.parentId == 0:
-                self.comment_queryset.delete_by_parent_id(self.table, item.id)
-            else:                
-                self.comment_queryset.delete_by_related_id(self.table, item.id)
-
+                # we need to loop through child items to remove all flags and votes too
+                child_item_ids = self.comment_queryset.get_ids_by_parent_id(self.table, item.id)
+                for child_item_id in child_item_ids:
+                    child_item_result = self.comment_queryset.read_one(child_item_id)[1]
+                    if child_item_result != None:
+                        child_item = Comment(**child_item_result)
+                        # remove any related child item flags
+                        self.flag_queryset.delete_by_item(child_item)
+                        # remove any related child item votes
+                        self.vote_queryset.delete_by_item(child_item)
+                        # remove our child item
+                        result = self.comment_queryset.destroy_one(child_item.id)
+                        deleted_item_ids.append(child_item.id)
+            else:
+                deleted_item_ids.append(self.delete_related_items(item, deleted_item_ids))
             # remove comment item itself
             logging.debug('perform_delete_item: removing requested item (%s)' % self.itemId)
             result = self.comment_queryset.destroy_one(self.itemId)
-            parent_item = self.update_child_count(item)
-            if parent_item != None and parent_item.childCount != None:
+            if item.parentId > 0:
+                parent_item = self.update_child_count(item)
                 self.replycount = parent_item.childCount
         else:
             logging.debug('perform_delete_item: item not found (%s)' % self.itemId)
 
+        self.add_to_payload('item_id', item.id)
+        self.add_to_payload('deleted_item_ids', json.dumps(deleted_item_ids))
         return
+
+    @authenticated
+    @admin_role
+    def delete_related_items(self, item, deleted_item_ids):
+        # we need to loop through related items to remove all flags and votes too
+        # this is called recursively
+        related_item_ids = self.comment_queryset.get_related_ids_by_item_id(self.table, item.id)
+        if len(item_ids) > 0:
+            for related_item_id in related_item_ids:
+                related_item_result = self.comment_queryset.read_one(related_item_id)[1]
+                if related_item_result != None:
+                    related_item = Comment(**related_item_result)
+                    # remove any related item flags
+                    self.flag_queryset.delete_by_item(related_item)
+                    # remove any related item votes
+                    self.vote_queryset.delete_by_item(related_item)
+                    # remove our related item
+                    result = self.comment_queryset.destroy_one(related_item.id)
+                    deleted_item_ids.append(related_item.id)
+                    delete_related_items(self, related_item)
 
     @authenticated
     def perform_add_tag(self):
@@ -1130,6 +1167,37 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 **context
             )
         )
+        return
+
+    def perform_query_comments(self):
+        """get more contributions"""
+        self._get_sort_parameters()
+        comments = self.comment_item_queryset.load_comments_by_table_and_location(
+            self.table, 
+            self.location, 
+            parentOffset = self.moreIndex, 
+            parentCount=self.parentCount, 
+            childCount=self.childCount, 
+            sortOrder=self.sortOrder, 
+            dateOrder=self.dateOrder, 
+            voteOrder=self.voteOrder,
+            flagTypeId=self.flagTypeId, 
+        )
+        query = {
+            "table": self.table, 
+            "location": self.location, 
+            "parentOffset": self.moreIndex, 
+            "parentCount": self.parentCount, 
+            "childCount": self.childCount, 
+            "sortOrder": self.sortOrder, 
+            "dateOrder": self.dateOrder, 
+            "voteOrder": self.voteOrder,
+            "flagTypeId": self.flagTypeId, 
+        }
+        # return our comments as json items
+        self.add_to_payload("comments", comments)
+        # return our query parameters used to request items
+        self.add_to_payload("query", query)
         return
 
     def perform_more_children(self):
