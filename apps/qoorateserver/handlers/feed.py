@@ -1298,6 +1298,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         if self._share(item, oauth_request_model, provider_settings):
             # success
             self.add_to_payload("shareItem", "complete")
+            self.add_to_payload("item", item)
             return
         else:
             # failure

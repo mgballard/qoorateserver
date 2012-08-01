@@ -759,15 +759,15 @@ $(document).ready(function() {
         };
     };
 
-    var getRemoveBlock = function( _block, interval ) {
+    var getRemoveBlock = function( _target, interval ) {
         return function(){
-            _block.slideUp( interval, getRemoveCallback(_block) );
+            _target.slideUp( interval, getRemoveCallback(_target) );
         };
     };
 
-    var getRemoveCallback = function( _block ) {
+    var getRemoveCallback = function( _remove_target ) {
         return function(){
-            _block.remove();
+            _remove_target.remove();
             position();
         };
     };
@@ -816,18 +816,18 @@ $(document).ready(function() {
                         // restoreContent( $( $source_object.parent(), 495 ) );
                         // we are in dynForm now
                         if( ! _block.hasClass('dyn') )
-                            _block = _block.find('.dyn');
+                            _block = _block.find('.dyn:first');
 
                         restorePrevals(_block);
 
-                        _block.hide();
                         
-                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.FLAG_SUCCESS + '</div>');
+                        var $message =$('<div class="footerMessage">' + qoorateLang.FLAG_SUCCESS + '</div>');
 
                         if( data_object.error == 0 ) {
-                            _block.after( $message );
+                            _block.before( $message );
                             setTimeout( getRemoveBlock($message, 250 ), 2000 );
                         }
+                        _block.hide();
                         position();
                         return;
 
@@ -851,19 +851,24 @@ $(document).ready(function() {
                         return;
                     } else if ( _action == 'shareItem' ) {
 
+                        $reply_button = $('.' + data_object.q_short_name + '-' + data_object.item.id + '.do.makeForm.reply span:first');
+                        $reply_button.html(qoorateLang.REPLY_BUTTON)
+                        childToggleControls($reply_button);
+
+
                         if( ! _block.hasClass('dyn') )
-                            _block = _block.find('.dyn');
+                            _block = _block.find('.dyn:first');
 
                         restorePrevals(_block);
 
-                        _block.hide();
                         
-                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.SHARE_SUCCESS + '</div>');
+                        var $message =$('<div class="footerMessage">' + qoorateLang.SHARE_SUCCESS + '</div>');
 
                         if( data_object.error == 0 ) {
-                            _block.after( $message );
+                            _block.before( $message );
                             setTimeout( getRemoveBlock($message, 250 ), 2000 );
                         }
+                        _block.hide();
                         position();
                         return;
                     } else {
@@ -1239,11 +1244,16 @@ $(document).ready(function() {
         var commText = qoorateLang.COMMENT;
         var imgText = qoorateLang.IMAGE_COMMENT;
 
-        if(_form == 'replyLink')
+        $reply_button = $('.' + _q_short_name + '-' + _item + '.do.makeForm.reply span:first');
+        if(_form == 'replyLink') {
             commText = qoorateLang.REPLY_LINK_COMMENT;
-        else if( _form == 'share' )
+            $reply_button.html(qoorateLang.REPLY_BUTTON)
+            childToggleControls($reply_button);
+        } else if( _form == 'share' ) {
             commText = qoorateLang.SHARE_COMMENT;
- 
+            qoorateLang.REPLY_BUTTON = $reply_button.html();
+            $reply_button.html(qoorateLang.SHARE_BUTTON);
+        }
  
         // SM: 20111223 - Added display for remaining characters left before max reached
         var inputLength = '<span class="inputLength">' + qoorateConfig.POST_MAX_LEN + '</span>';
@@ -2354,6 +2364,10 @@ $(document).ready(function() {
                     $rb.parent().removeClass('active');
                   }else{
                     $dynForm.hide();
+                    var item_id = $dynForm.attr('class').split(' ')[1];
+                    $reply_button = $('.' + item_id + '.do.makeForm.reply span:first');
+                    $reply_button.html(qoorateLang.REPLY_BUTTON)
+                    childToggleControls($reply_button);
                     // No longer hide children on form close
                     //$pi.removeClass('active');
                     $p.removeClass('active');
