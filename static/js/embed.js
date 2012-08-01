@@ -27,13 +27,8 @@ function get_class_element(elem, pos) {
 function ImgError( source, url1, url2 ) {
     $(source).load(function () {
         $this = $(this);
-        var $thisParent = $this.parents('.q_item .q_main_body'),
+        var $thisParent = $this.parents('.q_item .q_main_body .q_txt'),
             width = $thisParent.width();
-        if(qoorateConfig.GRID_COLUMNS) {
-            var cols = qoorateConfig.GRID_COLUMNS,
-            col_trim = qoorateConfig.GRID_COLUMN_TRIM,
-            col_width = width / cols - col_trim;
-        }
         if($this.width() > width - 14) {
             $this.css('width', width - 14);
         }
@@ -877,6 +872,19 @@ $(document).ready(function() {
                                         position();
                                         scrollToItem(q_short_name, item); 
                                     } );
+                                // See if we are an img and need to be resized
+                                var item = data_object.item;
+                                if(item.type==1){
+                                    $('#' + data_object.q_short_name + '-' + item.id + ' .q_img' + ' img').load(function () {
+                                        $this = $(this);
+                                        var $thisParent = $this.parents('.q_item .q_main_body .q_txt'),
+                                            width = $thisParent.width();
+                                        if($this.width() > width - 14) {
+                                            $this.css('width', width - 14);
+                                        }
+                                    });
+                                }
+
                                 return false;
                             }
 
