@@ -761,9 +761,6 @@ $(document).ready(function() {
 
     var getRemoveBlock = function( _block, interval ) {
         return function(){
-            if( ! _block.hasClass( 'headerMessage' ) ) {
-                _block = _block.find( '.headerMessage' );
-            }
             _block.slideUp( interval, getRemoveCallback(_block) );
         };
     };
@@ -818,33 +815,56 @@ $(document).ready(function() {
                         // just restore our flag options back to the icon
                         // restoreContent( $( $source_object.parent(), 495 ) );
                         // we are in dynForm now
-                        var $flag_content = _block.find( '.flagAreaWrapper-outer' );
+                        if( ! _block.hasClass('dyn') )
+                            _block = _block.find('.dyn');
+
+                        restorePrevals(_block);
+
+                        _block.hide();
+                        
+                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.FLAG_SUCCESS + '</div>');
+
                         if( data_object.error == 0 ) {
-                            $flag_content.html( qoorateLang.FLAG_SUCCESS );
-                            setTimeout( getHideDynamicForm( _block, 250 ), 2000 );
-                          }else{
-                            getHideDynamicForm( _block, 250 ).call();
-                          }
+                            _block.after( $message );
+                            setTimeout( getRemoveBlock($message, 250 ), 2000 );
+                        }
+                        position();
+                        return;
 
                     } else if ( _action == 'deleteItem' ) {
                         // put a message in the header, and give us a message
-                        var $header_wrapper = _block.find( '.headerWrapper' );
+                        _block = $('#' + data_object.q_short_name + '-' + data_object.item.id);
+                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.DELETE_SUCCESS + '</div>');
+
                         if( data_object.error == 0 ) {
-                            $header_wrapper.append( '<span class="headerMessage">' + qoorateLang.DELETE_SUCCESS + '</span>' );
-                            setTimeout( getRemoveBlock($header_wrapper,  250 ), 2000 );
+                            _block.after( $message );
+                            setTimeout( getRemoveBlock($message, 250 ), 2000 );
                         }
+                        _block.remove();
+                        var deleted_related_item_ids = eval(data_object.deleted_related_item_ids);
+                        for (var i=0; i < deleted_related_item_ids.length; i++){
+                            related_item_id = deleted_related_item_ids[i];
+                            $('#' + data_object.q_short_name + '-' + related_item_id).remove();
+                        }
+                        // now remove all our children
+                        position();
+                        return;
                     } else if ( _action == 'shareItem' ) {
 
                         if( ! _block.hasClass('dyn') )
                             _block = _block.find('.dyn');
+
                         restorePrevals(_block);
 
-                        var $message_wrapper = _block.find( '.dynFormFooter' );
-                        if( data_object.error == 0 ) {
-                            $message_wrapper.append( '<span class="headerMessage">' + qoorateLang.SHARE_SUCCESS + '</span>' );
-                            setTimeout( getRemoveBlock($message_wrapper, 250 ), 2000 );
-                        }
+                        _block.hide();
+                        
+                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.SHARE_SUCCESS + '</div>');
 
+                        if( data_object.error == 0 ) {
+                            _block.after( $message );
+                            setTimeout( getRemoveBlock($message, 250 ), 2000 );
+                        }
+                        position();
                         return;
                     } else {
                         if( data != null && data != '' ) {
@@ -940,10 +960,7 @@ $(document).ready(function() {
                                     $parent.after($data);
                                 }
                             } else if ( $('#'+_id).hasClass('lv-1') ) {
-                                var tmp_child = _id.split('_');
-                                p_id = _id.split('-')[1];
-                                tmp_child[0] = 'p';
-                                var child_class = tmp_child.join('_'),
+                                var child_class = 'p_' + _id,
                                     child_embedded = 0;
                                 $parent = $('#'+_id);
                                 if($parent.find('.q_item.c').length > 0 || $data.find('.q_item.c').length > 0){
@@ -1367,9 +1384,9 @@ $(document).ready(function() {
         //$toggleReply.addClass('contract');
         //$toggleReply.find('span').html(qoorateLang.TOGGLE_OFF);
 
-        if(!is_active){
-            position();
-        }        
+        //if(!is_active){
+        position();
+        //}        
 
     };
 
@@ -2308,7 +2325,7 @@ $(document).ready(function() {
                 return false;
             }
 
-           //GD: 20111218 check if its the
+            //GD: 20111218 check if its the
             var allClasses = $this.attr('class');
             var allClassesArray = allClasses.split(" ");
             var block_class = ($this.parents('.q_item:first').length > 0) ? $this.parents('.q_item:first') : $this.parents('.dyn');
@@ -2514,7 +2531,15 @@ $(document).ready(function() {
         $replycount.each(function(){
                 $this = $(this);
                 if ($this.html() > 0){
-                    $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_ON);
+                    if($replycount.parents('.q_item').find('.c').is(':visible')){
+                        $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_OFF);
+                        $this.removeClass('expand');
+                        $this.addClass('contract');
+                    } else {
+                        $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_ON);
+                        $this.removeClass('contract');
+                        $this.addClass('expand');
+                    }
                 }
             }
         );

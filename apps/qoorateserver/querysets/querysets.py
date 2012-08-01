@@ -661,7 +661,7 @@ class FlagQueryset(MySqlApiQueryset):
         """returns a row containing enough flag info to generate an email alert to the admin"""
         # first get our reftable
         sql = "SELECT * FROM `flag` WHERE refTable = %s and itemId = %s and userId = %s"
-        row = self.fetch(sql, [item_table, item_id, user_id]);
+        row = self.fetch(sql, [ref_table, item_id, user_id]);
         if row == None:
             return None
 

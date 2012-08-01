@@ -643,8 +643,8 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         else:
             logging.debug('perform_delete_item: item not found (%s)' % self.itemId)
 
-        self.add_to_payload('item_id', item.id)
-        self.add_to_payload('deleted_item_ids', json.dumps(deleted_item_ids))
+        self.add_to_payload('item', item)
+        self.add_to_payload('deleted_related_item_ids', json.dumps(deleted_item_ids))
         return
 
     @authenticated
