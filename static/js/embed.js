@@ -243,9 +243,9 @@ $(document).ready(function() {
     }
 
     // A wrapper for scrollToObject
-    var scrollToItem = function(table, item) {
+    var scrollToItem = function(q_short_name, item) {
         if(item) {
-            var $item = $( "#" + table + "-" + item.id );        
+            var $item = $( "#" + q_short_name + "-" + item.id );        
             if ( $item.length > 0 )
                 scrollToObject($item);
         }
@@ -788,7 +788,7 @@ $(document).ready(function() {
  
     // SM: 20111228 - Moved from doPost
     // GD: 20110102 - Moved from a click function for availability in sort onchange
-    var handleResponse = function( $source_object, _table,_item,_id,_action,_block,_location ) {
+    var handleResponse = function( $source_object, _q_short_name,_item,_id,_action,_block,_location ) {
         return function(data) {
             if(data) {
                 // SM: 20120107 - Moved parsing message to new function
@@ -815,7 +815,7 @@ $(document).ready(function() {
                             var parent_votes = data_object.parent_votes;
 
                             if(parent_votes) { // SM: 20111220 - Update our parent vote count too
-                                changeVote( parent_votes, $( "#" + parent_votes.table + "-" + parent_votes.id ) );
+                                changeVote( parent_votes, $( "#" + parent_votes.q_short_name + "-" + parent_votes.id ) );
                             }
                         }
                         $source_object.removeClass('disabled');
@@ -872,10 +872,10 @@ $(document).ready(function() {
                                 $('#q_cmnt_contents').prepend($data);
                                 // SM: added callback to scroll to item
                                 var item = data_object.item;
-                                var table = data_object.table;
+                                var q_short_name = data_object.q_short_name;
                                 _block.slideUp('250',function() { 
                                         position();
-                                        scrollToItem(table, item); 
+                                        scrollToItem(q_short_name, item); 
                                     } );
                                 return false;
                             }
@@ -907,13 +907,13 @@ $(document).ready(function() {
                                return false;
                             }
 
-                            var table_name = data_object.table, p_id = 0;
+                            var q_short_name = data_object.q_short_name, p_id = 0;
 
                             if ( !$('#'+_id).hasClass('lv-1') ) {
                                 $parent = $('#'+_id).parent('.lv-1');
                                 p_id = getValueFromClasses('co', _block.attr('class'));
                                 if($parent.length==0) {
-                                    $parent = $('#' + table_name + '-' + p_id);
+                                    $parent = $('#' + q_short_name + '-' + p_id);
                                 } else {
                                     close_dyn_form = false;
                                 }
@@ -957,7 +957,7 @@ $(document).ready(function() {
                                 }
                             }
                             // update our parents reply count if we have it
-                            $('#' + table_name + '-' + p_id + ' .replycount').html(data_object.replycount);
+                            $('#' + q_short_name + '-' + p_id + ' .replycount').html(data_object.replycount);
                             // and show our toggle if there was none
                             childToggleControls($parent.find('.replyWrapper'));
                             
@@ -967,7 +967,7 @@ $(document).ready(function() {
                             addLastItemClassToChildren( $('#q_cmnt_contents') );
                             var $slide_up_block = _block.find( ".dyn"),
                                 item = data_object.item,
-                                table = data_object.table;
+                                q_short_name = data_object.q_short_name;
 
                             if(close_dyn_form) {
                                 if ( item ) {
@@ -979,12 +979,12 @@ $(document).ready(function() {
                                     }
                                     $slide_up_block.slideUp('250', function() {
                                         position();
-                                        scrollToItem( table, item ); 
+                                        scrollToItem( q_short_name, item ); 
                                         } );
                                 }
                             } else {
                                 position();
-                                scrollToItem( table, item ); 
+                                scrollToItem( q_short_name, item ); 
                             }
                         }
                     }
@@ -1013,10 +1013,10 @@ $(document).ready(function() {
     };
 
 
-    var doMakeForm = function(_table,_item,_id,_form) {
+    var doMakeForm = function(_q_short_name,_item,_id,_form) {
         console.log("doMakeForm");
         // we need this function to exist to build our form itself
-        call_theme_function('doMakeForm', [_table,_item,_id,_form])
+        call_theme_function('doMakeForm', [_q_short_name,_item,_id,_form])
 
         // SM: 20111214 - Attach our preVals to our inputs
         var $allInputs = $('.dyn.' + _id + ' :input');
@@ -1078,7 +1078,7 @@ $(document).ready(function() {
     };
 
 
-    var skyscraper_doMakeForm = function(_table,_item,_id,_form) {
+    var skyscraper_doMakeForm = function(_q_short_name,_item,_id,_form) {
         console.log("skyscraper_doMakeForm");
         var form_html = '';
 
@@ -1206,7 +1206,7 @@ $(document).ready(function() {
 
 
 
-    var grid_doMakeForm = function(_table,_item,_id,_form) {
+    var grid_doMakeForm = function(_q_short_name,_item,_id,_form) {
         console.log("grid_doMakeForm");
         var form_html = '';
 
@@ -1659,8 +1659,8 @@ $(document).ready(function() {
 
 
     // SM: 20111229 - added source object as first parameter
-    var doPost = function($source_object, _table, _item, _id, _action, _block, _location) {
-        //    console.log("table:"+_table);
+    var doPost = function($source_object, _q_short_name, _item, _id, _action, _block, _location) {
+        //    console.log("q_short_name:"+_q_short_name);
         //    console.log("item:"+_item);
         //    console.log("id:"+_id);
         //    console.log("action:"+_action);
@@ -1686,7 +1686,7 @@ $(document).ready(function() {
         _query.push({ "name":"action",    "value":_action});
         _query.push({ "name":"location",    "value":_location});
         _query.push({ "name":"referer", "value":window.location.href}); // SM: we need this to ('replyTopic')post a link on social shares
-        _query.push({ "name":"table",    "value":_table});
+        _query.push({ "name":"q_short_name",    "value":_q_short_name});
         _query.push({ "name":"QOOID",    "value":$.cookie('QOOID')});
         _query.push({ "name":"QOOTID",    "value":$.cookie('QOOTID')});
 
@@ -1785,7 +1785,7 @@ $(document).ready(function() {
         } else {
             //console.log(_block);
             //console.log("action:" + _action);
-            $.post(qoorateConfig.PROXY_URI, _query, handleResponse( $source_object, _table,_item, _id, _action, _block, _location ));
+            $.post(qoorateConfig.PROXY_URI, _query, handleResponse( $source_object, _q_short_name,_item, _id, _action, _block, _location ));
             //.complete( function() {
             //    $replyLink.removeClass('disabled');
             //}); 
@@ -1937,9 +1937,9 @@ $(document).ready(function() {
             }
 
             var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login',
-                table_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class'));
+                q_short_name = getValueFromClasses('shortName', $('div.q_sort_wrap').attr('class'));
             $.oauthpopup({
-                path: url + '?QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID') + '&q_short_name=' + table_name,
+                path: url + '?QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID') + '&q_short_name=' + q_short_name,
                 callback: getCallback(callback),
                 windowOptions: 'location=0,status=0,width=800,height=400,outerWidth=800,outerHeight=400'
             });
@@ -1980,7 +1980,7 @@ $(document).ready(function() {
             };
         };
 
-        var q_short_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class'));
+        var q_short_name = getValueFromClasses('shortName', $('div.q_sort_wrap').attr('class'));
 
         $.ajax( {
            type: 'POST',
@@ -2014,7 +2014,7 @@ $(document).ready(function() {
             };
         };
 
-        var q_short_name = getValueFromClasses('table', $('div.q_sort_wrap').attr('class')),
+        var q_short_name = getValueFromClasses('shortName', $('div.q_sort_wrap').attr('class')),
             location = $('#q_').attr('class');
 
 
@@ -2201,20 +2201,20 @@ $(document).ready(function() {
     
             var $sortCurrVal = $('.q_sort_select option:selected');
             var $sortInput = $('#q_sort_by');
-            var _table = getValueFromClasses('table', $('div.q_sort_wrap').attr('class'));
+            var _q_short_name = getValueFromClasses('q_short_name', $('div.q_sort_wrap').attr('class'));
             if ($sortCurrVal.val() != $sortInput.val()){
                 $sortInput.val($sortCurrVal.val());
                 $('.q_sort_select').attr('disabled', 'disabled');
                 var _query = $('#q_sort_by').serializeArray();
                 _query.push({ "name":"action",  "value":"sortContribs"});
                 _query.push({ "name":"page",    "value":page_md5});
-                _query.push({ "name":"table",    "value":_table});
+                _query.push({ "name":"q_short_name",    "value":_q_short_name});
     
                 $.ajax( {
                     type: 'POST',
                     url: qoorateConfig.PROXY_URI,
                     data: _query,
-                    success: handleResponse('', _table, '', '', 'sortContribs','', page_md5),
+                    success: handleResponse('', _q_short_name, '', '', 'sortContribs','', page_md5),
                     error: function (xhr, error) { 
                         errorMsg(0, error);
                         $('.q_sort_select').removeAttr('disabled');
@@ -2359,13 +2359,13 @@ $(document).ready(function() {
                     target_itemArray = target_id.split("-");
 
                 var target_item_parent = null;
-                var target_table = null;
+                var target_q_short_name = null;
 
                 if(target_itemArray.length > 1) { 
-                    target_table = target_itemArray[0];
+                    target_q_short_name = target_itemArray[0];
                     target_item = target_itemArray[1];
                 } else { 
-                    target_table = target_id;
+                    target_q_short_name = target_id;
                     target_item = null;
                 }
                   //GD 20111218 Handle Get More Children 
@@ -2378,18 +2378,18 @@ $(document).ready(function() {
                     // SM: 20120109 - Moved here so we can add the doPost as a callback for succesfull login
                     if ( !isLoggedIn() ) {
 
-                        var getDoMakeForm = function( target_table, target_item, target_id, form_type ,block_class ) {
+                        var getDoMakeForm = function( target_q_short_name, target_item, target_id, form_type ,block_class ) {
                             return function() {
-                                doMakeForm( target_table, target_item, target_id, form_type ,block_class);
+                                doMakeForm( target_q_short_name, target_item, target_id, form_type ,block_class);
                             }
                         };
 
-                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoMakeForm( target_table, target_item, target_id, form_type ,block_class ) );
+                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoMakeForm( target_q_short_name, target_item, target_id, form_type ,block_class ) );
 
                         return false;
                     }
 
-                    doMakeForm( target_table, target_item, target_id, form_type ,block_class );
+                    doMakeForm( target_q_short_name, target_item, target_id, form_type ,block_class );
                     //if( form_type == 'replyTopic' ) $('div.dyn').animate({'min-height' : 170 }, 'fast'); 
                     return false;
                 }
@@ -2400,7 +2400,7 @@ $(document).ready(function() {
                       var $parentNum = get_class_element($this, -1);
                       var parentId = $parentNum.split('-')[1];
                      target_item = parentId;
-                     target_id = target_table+'-'+parentId;
+                     target_id = target_q_short_name+'-'+parentId;
                     }
                     else if (target_function == 'getMore') {
                       target_id = get_class_element($this, -1);
@@ -2418,19 +2418,19 @@ $(document).ready(function() {
                           !$this.hasClass('getMoreChildren') && !$this.hasClass('upVote') && 
                           !$this.hasClass('downVote') && !isLoggedIn() 
                        ) {
-                        var getDoPost = function( $source, target_table, target_item, target_id, post_action, block_class, location_md5) {
+                        var getDoPost = function( $source, target_q_short_name, target_item, target_id, post_action, block_class, location_md5) {
                             return function() {
                                 $source.addClass('disabled');
-                                doPost( $source, target_table, target_item, target_id, post_action, block_class, location_md5 );
+                                doPost( $source, target_q_short_name, target_item, target_id, post_action, block_class, location_md5 );
                             }
                         };
-                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoPost( $this, target_table, target_item, target_id, post_action, block_class, location_md5 ) );
+                        authError( 401, qoorateLang.SIGNIN_TO_CONTRIBUTE, getDoPost( $this, target_q_short_name, target_item, target_id, post_action, block_class, location_md5 ) );
                         return false;
                     }
 
                     $this.addClass('disabled');
                     // SM: 20111229 - Added source as first parameter
-                    doPost($this, target_table,target_item,target_id,post_action,block_class,location_md5);
+                    doPost($this, target_q_short_name,target_item,target_id,post_action,block_class,location_md5);
                     return false;
                 }
     

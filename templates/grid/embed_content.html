@@ -35,22 +35,22 @@
         </div>
     </div><!-- end q_top -->
     <div class="q_clear"></div>
-    <div id="{{table}}" class="q_head_wrap {{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
+    <div id="{{q_short_name}}" class="q_head_wrap {{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <div id="topReply">
             <div id="topReplyText"><span>Want to Contribute?</span></div>
             <div id="topReplyFnxn">
                 <fieldset class="reply">
                     <legend>Reply</legend>
-                    <a href="#" class="do makeForm replyComment {{table}}"><span>Comment</span></a>
-                    <a href="#" class="do makeForm replyTopic {{table}}"><span>Topic</span></a>
-                    <a href="#" class="do makeForm replyPhoto {{table}}"><span>Image</span></a>
-                    <a href="#" class="do makeForm replyLink {{table}}"><span>Link</span></a>
-                    <div class="q_sort_wrap table-{{table}}">
+                    <a href="#" class="do makeForm replyComment {{q_short_name}}"><span>Comment</span></a>
+                    <a href="#" class="do makeForm replyTopic {{q_short_name}}"><span>Topic</span></a>
+                    <a href="#" class="do makeForm replyPhoto {{q_short_name}}"><span>Image</span></a>
+                    <a href="#" class="do makeForm replyLink {{q_short_name}}"><span>Link</span></a>
+                    <div class="q_sort_wrap shortName-{{q_short_name}}">
                         <a class="q_sort_button" href="#" role="button"><span>sort</span></a>
                         <ul id="q_sort_list" class="q_sort_list" style="visibility: hidden; ">
-                            <li><a href="#" class="do action sort {{table}} order-1 disabled">voting</a></li>
-                            <li><a href="#" class="do action sort {{table}} order-2">recent</a></li>
-                            <li><a href="#" class="do action sort {{table}} order-3">oldest</a></li>
+                            <li><a href="#" class="do action sort {{q_short_name}} order-1 disabled">voting</a></li>
+                            <li><a href="#" class="do action sort {{q_short_name}} order-2">recent</a></li>
+                            <li><a href="#" class="do action sort {{q_short_name}} order-3">oldest</a></li>
                         </ul>
                        <input type="hidden" id="q_sort_by" name="sort" value="voting">
                     </div>
@@ -58,7 +58,7 @@
             </div><!-- end topReplyFnxn -->
             <div class="q_clear"></div>
         </div><!-- end topReply -->
-        <div class="dyn {{table}}"></div>
+        <div class="dyn {{q_short_name}}"></div>
     </div><!-- end q_head_wrap -->
     <div id="q_cmnt" class="{{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <div id="q_cmnt_contents">

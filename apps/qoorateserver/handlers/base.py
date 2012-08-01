@@ -115,7 +115,8 @@ class QoorateMixin(object):
         we should get everything based on the api_key and api_secret
         No longer just passed parameter
         """
-        return self.get_argument('table', None)
+        table = self.set_table()
+        return table
 
     @lazyprop
     def location(self):
@@ -267,24 +268,26 @@ class QoorateMixin(object):
             logging.debug("set_table has key/secret")
             if self.keypair_queryset.authenticate(self.q_api_key, self.q_api_secret):
                 logging.debug("set_table authenticated")
+                logging.debug("getting qoorate by shortTitle: %s" % self.q_short_name)
                 qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
                 if not qoorate == None and not qoorate.refTable == None:
                     self._table = qoorate.refTable
                     logging.debug('set_table: %s' % self._table)
+                    return self._table
                 else:
                     logging.debug("set_table no table")
         else:
             if not self.q_short_name == None:
-                logging.debug("set_table has q_short_name")
+                logging.debug("set_table has q_short_name (%s)" % self.q_short_name)
                 qoorate = self.qoorate_queryset.get_by_short_title(self.q_short_name)
                 if not qoorate == None and not qoorate.refTable == None:
                     self._table = qoorate.refTable
                     logging.debug('set_table: %s' % self._table)
+                    return self._table
                 else:
                     logging.debug("set_table no table")
             else:
                 logging.debug('unable to set_table')
-
 
     def has_more_contributions(self, comments):
         """inspect a list of comment and let us know if we have more

@@ -320,7 +320,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         # Success
         # The client expects error = 0 to mean success
         self.add_to_payload('contributions', self.get_contribution_count())
-        self.add_to_payload('table', self.table)
+        self.add_to_payload('q_short_name', self.q_short_name)
         self.add_to_payload('location', self.location)
         self.add_to_payload('replycount', self.replycount)
         self.add_to_payload('error', 0)
@@ -489,7 +489,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                 'app': self.application.get_settings('app'),
                 'location': self.location,
                 'parent_tag': parent_tag,
-                'table': self.table,
+                'q_short_name': self.q_short_name,
                 'comments': [item],
                 'current_user': self.current_user,
                 'related_user': related_user,
@@ -1122,7 +1122,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'app': self.application.get_settings('app'),
             'location': self.location,
             'parent_tag': parent_tag,
-            'table': self.table,
+            'q_short_name': self.q_short_name,
             'comments': comments,
             'current_user': self.current_user,
             'related_user': None,
@@ -1241,7 +1241,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'app': self.application.get_settings('app'),
             'location': self.location,
             'parent_tag': parent_tag,
-            'table': self.table,
+            'q_short_name': self.q_short_name,
             'comments': comments,
             'current_user': self.current_user,
             'related_user': None,

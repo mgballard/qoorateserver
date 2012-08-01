@@ -4,9 +4,9 @@
                         <div class="q_inr">
                             <div class="q_top">
                                 <div class="headerWrapper p">
-                                    <a id="share_{{table}}-{{comment.id}}" href="#" class="do makeForm share {{table}}-{{comment.id}}"><span>+ Share</span></a>
-                                    <a id="flag_{{table}}-{{comment.id}}" href="#" class="do makeForm flag {{table}}-{{comment.id}}"><span>Flag</span></a>
-                                    <a id="delete_{{table}}-{{comment.id}}" href="#" class="do action deleteItem {{table}}-{{comment.id}}"><span>Delete</span></a>
+                                    <a id="share_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm share {{q_short_name}}-{{comment.id}}"><span>+ Share</span></a>
+                                    <a id="flag_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm flag {{q_short_name}}-{{comment.id}}"><span>Flag</span></a>
+                                    <a id="delete_{{q_short_name}}-{{comment.id}}" href="#" class="do action deleteItem {{q_short_name}}-{{comment.id}}"><span>Delete</span></a>
                                     <div class="q_clear"></div>
                                 </div>
                             </div>
@@ -39,20 +39,20 @@
                                     <legend>Reply</legend>
                                     <div class="replyWrapper">
                                         <div class="inner">
-                                            <a id="reply_{{table}}-{{comment.id}}" href="#" class="do makeForm replyComment {{table}}-{{comment.id}} reply"><span>Reply (<span class="replycount">{{comment.childCount}}</span>)</span></a>
-                                            <a id="toggle_{{table}}-{{comment.id}}" href="#" class="toggleReply tco-{{comment.id}} expand"><span></span></a>
+                                            <a id="reply_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm replyComment {{q_short_name}}-{{comment.id}} reply"><span>Reply (<span class="replycount">{{comment.childCount}}</span>)</span></a>
+                                            <a id="toggle_{{q_short_name}}-{{comment.id}}" href="#" class="toggleReply tco-{{comment.id}} expand"><span></span></a>
                                             <div class="q_clear"></div>
                                         </div>
                                     </div>
                                     <div class="vote wrapper">
                                         <div class="inner">
-                                            <div class="upVote wrap"><a href="#" class="do action upVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesUp}}</span></a></div>
-                                            <div class="downVote wrap"><a href="#" class="do action downVote {{table}}-{{comment.id}}"><span class="voted">{{comment.votesDown}}</span></a></div>
+                                            <div class="upVote wrap"><a href="#" class="do action upVote {{q_short_name}}-{{comment.id}}"><span class="voted">{{comment.votesUp}}</span></a></div>
+                                            <div class="downVote wrap"><a href="#" class="do action downVote {{q_short_name}}-{{comment.id}}"><span class="voted">{{comment.votesDown}}</span></a></div>
                                             <div class="q_clear"></div>
                                         </div>
                                     </div>
                                 </fieldset>
-                                <div class="dyn {{table}}-{{comment.id}}"></div>
+                                <div class="dyn {{q_short_name}}-{{comment.id}}"></div>
                             </div>
                             <div class="q_clear"></div>
                         </div>

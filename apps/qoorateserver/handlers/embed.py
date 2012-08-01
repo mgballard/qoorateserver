@@ -107,8 +107,9 @@ class EmbedMixin(object):
             logging.debug('QoorateQueryset preparing')
             logging.debug("q_short_name: %s" % self.q_short_name)
             self.qoorate_queryset = QoorateQueryset(self.application.get_settings('mysql'), self.application.db_conn)
+            self.set_table()
             table = self.qoorate.refTable
-            self._table = table
+            #self._table = table
             logging.debug('new table: %s' % self.table)
         self.comment_item_queryset = CommentItemQueryset(self.application.get_settings('mysql'), table, self.application.db_conn)
         self.comment_queryset = CommentQueryset(self.application.get_settings('mysql'), table, self.application.db_conn)
@@ -118,7 +119,7 @@ class EmbedMixin(object):
 
     def get_content_context(self):
         logging.debug("get_content_context")
-        self.set_table()
+        #self.set_table()
         logging.debug("table: %s" % self.table)
         comments = self.comment_item_queryset.load_comments_by_table_and_location(self.table, 
             self.location, 
@@ -137,7 +138,7 @@ class EmbedMixin(object):
             'location': self.location,
             'qoorate_url': self.qoorate_url,
             'parent_tag': parent_tag,
-            'table': self.table,
+            'q_short_name': self.q_short_name,
             'comments': comments,
             'contribution_text': contribution_text,
             'current_user': self.current_user,
