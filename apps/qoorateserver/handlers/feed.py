@@ -311,7 +311,6 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             else:
                 raise Exception("Unsupported action: %s" % self.action)
         except Exception as e:
-            raise
             self.set_status(500)
             self.add_to_payload('error', 1)
             self.add_to_payload('message', e.message)
@@ -964,15 +963,21 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         description = None
         images = []
         if replyLink != None:
-            response = urllib2.urlopen(replyLink)
-            the_page = response.read()
-            pool = BeautifulSoup(the_page)
-            title = self.get_link_title(pool)
-            description = self.get_link_description(pool)
-            images = self.get_link_images(pool, replyLink)
-        self.add_to_payload('title', title)
-        self.add_to_payload('description', description)
-        self.add_to_payload('images', images)
+            try:
+                response = urllib2.urlopen(replyLink)
+                the_page = response.read()
+                pool = BeautifulSoup(the_page)
+                title = self.get_link_title(pool)
+                description = self.get_link_description(pool)
+                images = self.get_link_images(pool, replyLink)
+                self.add_to_payload('title', title)
+                self.add_to_payload('description', description)
+                self.add_to_payload('images', images)
+            except Exception as e:
+                    raise Exception('Unable to fetch images for %s' % replyLink);
+        else:
+            raise Exception('replyLink not set for request');
+
         return
 
     def get_link_title(self, pool):

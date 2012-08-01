@@ -1502,22 +1502,24 @@ $(document).ready(function() {
             }
 
             $contribHTML.find('.contribUI_Summary p').append(summary);
-
-            if( data.images.length > 0 ) {
-                $contribHTML.find('.contribUI_Image').attr('id','slider');
-                $contribHTML.data('current', -1);
-                $contribHTML.data('count', 0);
-                imgsLoad(data.images, id, $contribHTML,$elem);
+            if(data.images) {
+                if( data.images.length > 0 ) {
+                    $contribHTML.find('.contribUI_Image').attr('id','slider');
+                    $contribHTML.data('current', -1);
+                    $contribHTML.data('count', 0);
+                    imgsLoad(data.images, id, $contribHTML,$elem);
+                }
+                // SM: 20121114 replace our text for the link input
+                // Then disable the attach button
+                var preVal = $replyLink.data("preVal");
+                $replyLink.val(preVal);
+                // SM: 20110105 - We now replace with loading instead of disable
+                // $replyLinkWrapper.removeClass('disabled');
+                // $replyLink.removeClass('disabled');
+                // $attachLink.addClass('disabled');
+            } else {
+                errorMsg(0, "Invalid URL!");
             }
-            // SM: 20121114 replace our text for the link input
-            // Then disable the attach button
-            var preVal = $replyLink.data("preVal");
-            $replyLink.val(preVal);
-            // SM: 20110105 - We now replace with loading instead of disable
-            // $replyLinkWrapper.removeClass('disabled');
-            // $replyLink.removeClass('disabled');
-            // $attachLink.addClass('disabled');
-
         }
     };
 
