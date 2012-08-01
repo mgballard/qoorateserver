@@ -302,7 +302,7 @@ $(document).ready(function() {
                         $inputLengthDisplay.addClass( "over" );
                     }
                 } else {
-                    $inputElement.removeClass( "over" );
+                    $inputLengthDisplay.removeClass( "over" );
                 }
                 $inputLengthDisplay.html( remainingCharacters );
             }
@@ -697,7 +697,7 @@ $(document).ready(function() {
            // MB: 20110103 - allow post w/out link thumbnail BEGIN
            var charCount = $thisParent.find('.inputLength').text();
            var maxLength = $thisParent.find('input.replyLink').data("maxLength");
-           if( (charCount < maxLength) && (!$attachLink.hasClass('disabled')) ) {
+           if( (charCount >= 0) && (!$attachLink.hasClass('disabled')) ) {
                $thisParent.find('a.addItem').removeClass('disabled');
            } else if ( $attachLink.length > 0 ) {
                $thisParent.find('a.addItem').addClass('disabled');
@@ -2215,7 +2215,7 @@ $(document).ready(function() {
     
             // MB: 20110103 - allow post w/out link thumbnail BEGIN
     
-            if(($inputVal != '') && ($inputVal != qoorateLang.LINK) && (charCount < maxLength) && (!$attachLink.hasClass('disabled'))) { 
+            if(($inputVal != '') && ($inputVal != qoorateLang.LINK) && (charCount >= 0) && (!$attachLink.hasClass('disabled'))) { 
                 $thisParent.find('a.addItem').removeClass('disabled');
             } else if ( $attachLink.length > 0 ) {
                 $thisParent.find('a.addItem').addClass('disabled');
