@@ -462,7 +462,7 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 #q_ .tp-1 .q_main_body .q_txt {
-    margin-left:7px;
+    /* margin-left:7px; */
     padding-bottom: .5em;
     text-align: center;
 }
