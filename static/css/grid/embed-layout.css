@@ -1165,7 +1165,7 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .q_item.c .do.makeForm.reply,
 #q_ .q_item.c .do.makeForm.share,
 #q_ .q_item.c .do.makeForm.flag,
-#q_ .admin .q_item.c .do.action.deleteItem {
+#q_ .q_item.c .do.action.deleteItem {
     display: none;
 }
 #q_ .q_item.c:hover .do.makeForm.reply, 

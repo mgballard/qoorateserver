@@ -832,22 +832,23 @@ $(document).ready(function() {
                         return;
 
                     } else if ( _action == 'deleteItem' ) {
-                        // put a message in the header, and give us a message
-                        _block = $('#' + data_object.q_short_name + '-' + data_object.item.id);
-                        var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.DELETE_SUCCESS + '</div>');
-
                         if( data_object.error == 0 ) {
                             _block.after( $message );
                             setTimeout( getRemoveBlock($message, 250 ), 2000 );
+                            
+                            // put a message in the header, and give us a message
+                            _block = $('#' + data_object.q_short_name + '-' + data_object.item.id);
+                            var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.DELETE_SUCCESS + '</div>');
+    
+                            _block.remove();
+                            var deleted_related_item_ids = eval(data_object.deleted_related_item_ids);
+                            for (var i=0; i < deleted_related_item_ids.length; i++){
+                                related_item_id = deleted_related_item_ids[i];
+                                $('#' + data_object.q_short_name + '-' + related_item_id).remove();
+                            }
+                            // now remove all our children
+                            position();
                         }
-                        _block.remove();
-                        var deleted_related_item_ids = eval(data_object.deleted_related_item_ids);
-                        for (var i=0; i < deleted_related_item_ids.length; i++){
-                            related_item_id = deleted_related_item_ids[i];
-                            $('#' + data_object.q_short_name + '-' + related_item_id).remove();
-                        }
-                        // now remove all our children
-                        position();
                         return;
                     } else if ( _action == 'shareItem' ) {
 
@@ -974,8 +975,9 @@ $(document).ready(function() {
                                 }else{
                                     $data = $data.slice(1);
                                 }
-                                if ( $('.'+child_class) ) {
-                                    $('.'+child_class).remove();
+                                $children = $('.' + child_class);
+                                if ( $children.length > 0 ) {
+                                    $children.remove();
                                     if(child_embedded>0) {
                                         $parent.append($data);
                                         // close_dyn_form = false;
@@ -983,7 +985,11 @@ $(document).ready(function() {
                                         $parent.after($data);
                                     }
                                 } else {
-                                    $parent.after($data);
+                                    if(child_embedded > 0) {
+                                        $parent.append($data);
+                                    } else {
+                                        $parent.after($data);
+                                    }
                                 }
                             }
                             // update our parents reply count if we have it
