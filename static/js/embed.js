@@ -993,10 +993,17 @@ $(document).ready(function() {
                                 }
                             }
                             // update our parents reply count if we have it
-                            $('#' + q_short_name + '-' + p_id + ' .replycount').html(data_object.replycount);
-                            // and show our toggle if there was none
-                            childToggleControls($parent.find('.replyWrapper'), data_object.replycount);
-                            
+                            $replycount = $('#' + q_short_name + '-' + p_id + ' .replycount');
+                            $replycount.html(data_object.replycount);
+                            $toggle = $parent.find('.replyWrapper:first');
+                            childToggleControls($toggle, data_object.replycount);
+                            if(_action == "addItem" && data_object.replycount > 0){
+                                //show our replies
+                                $toggleButton = $('#toggle_' + $parent.attr('id'));
+                                if($toggleButton.hasClass('expand')) {
+                                    $toggleButton.click()
+                                }
+                            }
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
                             // SM: 20111214 - We need the slideUp now that we removed the "hover" slideup
