@@ -592,6 +592,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         result = self.comment_queryset.read_one(self.itemId)[1]
         deleted_item_ids = []
         if result != None:
+            logging.debug("found item to delete")
             item = Comment(**result)
             # remove any related image records (including removing images from S3?)
             # right now we fire and forget, deleting the image record no matter what

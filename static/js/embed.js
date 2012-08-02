@@ -995,7 +995,7 @@ $(document).ready(function() {
                             // update our parents reply count if we have it
                             $('#' + q_short_name + '-' + p_id + ' .replycount').html(data_object.replycount);
                             // and show our toggle if there was none
-                            childToggleControls($parent.find('.replyWrapper'));
+                            childToggleControls($parent.find('.replyWrapper'), data_object.replycount);
                             
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
@@ -2548,10 +2548,12 @@ $(document).ready(function() {
         childToggleControls($('#q_ .q_item'));
     }; // end grid_ready
 
-    var childToggleControls = function($scope){
+    var childToggleControls = function($scope, $reply_count){
         var $replycount = $scope.find(".replycount");
         $replycount.each(function(){
                 $this = $(this);
+                if($reply_count)
+                    $this.html($reply_count)
                 if ($this.html() > 0){
                     if($replycount.parents('.q_item').find('.c').is(':visible')){
                         $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_OFF);
@@ -2561,6 +2563,12 @@ $(document).ready(function() {
                         $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_ON);
                         $this.removeClass('contract');
                         $this.addClass('expand');
+                    }
+                } else {
+                    if($replycount.parents('.q_item').find('.c').is(':visible')){
+                        $this.closest('.inner').find('.toggleReply span').html(qoorateLang.TOGGLE_OFF);
+                        $this.removeClass('expand');
+                        $this.addClass('contract');
                     }
                 }
             }
