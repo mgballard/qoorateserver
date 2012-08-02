@@ -291,6 +291,9 @@ $(document).ready(function() {
     var displayInputLength = function ( $inputElement, maxLength) {
         if( maxLength ) {
             var $inputLengthDisplay = $inputElement.parent().find( ".inputLength" );
+            // using jquery resizable adds extra parent, compensate
+            if ($inputLengthDisplay.length == 0)
+                $inputLengthDisplay = $inputElement.parent().parent().find( ".inputLength" );
             if( $inputLengthDisplay.length > 0 ) {
                 var preVal = $this.data( "preVal" );
                 var remainingCharacters = '';
