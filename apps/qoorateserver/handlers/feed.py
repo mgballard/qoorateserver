@@ -874,7 +874,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         """records a flag on an item"""
         logging.debug("_flag(%s)" % (item))
         # check for a record 
-        flag = self.vote_queryset.get_by_item_id_and_user_id(
+        flag = self.flag_queryset.get_by_item_id_and_user_id(
             self.table, item.id, self.current_user.id
         )
         if flag != None and len(flag) > 0:
