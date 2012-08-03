@@ -657,6 +657,39 @@ class FlagQueryset(MySqlApiQueryset):
 
         return self.fetch(sql, [id]);
 
+    def get_by_item_id_and_user_id(self, ref_table, id, user_id):
+        """get a users flag on an item"""
+        if id == None:
+            return None
+
+        sql = """
+            SELECT %s FROM `%s` WHERE `refTable` = %%s and `itemId` = %%s and `userId` = %%s
+        """ % (self.get_fields_list(), self.table_name) 
+
+        rows = self.query(sql, [ref_table, id, user_id])
+
+        if rows == None:
+            return None
+            
+        return self.dictListToDictShieldList(rows)
+
+    def get_by_item_id_and_qootid(self, ref_table, id, qootid):
+        """get a users flag on an item"""
+        if id == None:
+            return None
+
+        sql = """
+            SELECT %s FROM `%s` WHERE `refTable` = %%s and `itemId` = %%s and `qootid` = %%s
+        """ % (self.get_fields_list(), self.table_name) 
+
+        rows = self.query(sql, [ref_table, id, qootid])
+
+        if rows == None:
+            return None
+            
+        return self.dictListToDictShieldList(rows)
+
+
     def get_flag_by_refTableitemIduserId(self, ref_table, item_id, user_id):
         """returns a row containing enough flag info to generate an email alert to the admin"""
         # first get our reftable
