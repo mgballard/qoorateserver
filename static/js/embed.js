@@ -466,9 +466,10 @@ $(document).ready(function() {
         for ( var i = 0; i < flag_action_types.length ; i++ ) {
             value_type = flag_action_types[ i ][ 0 ];
             display_type = flag_action_types[ i ][ 1 ];
+            role_type = flag_action_types[ i ][ 2 ];
             machine_type = display_type.toLowerCase().replace( ' ', '_' );
             flag_actions_html += '<a href="#" id="' + machine_type + '-' + _id + '" ' +
-                                     'class="do action flag ' + _id + ' ' + machine_type + ' value-' + value_type + '">' +
+                                     'class="do action flag ' + _id + ' ' + machine_type + ' value-' + value_type + ' role-' + role_type + '">' +
                                 display_type +
                             '</a>';
         }

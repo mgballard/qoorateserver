@@ -1179,6 +1179,14 @@ This contains CSS for margins, padding, display, float, etc ...
     display: inline;
 }
 
+#q_ a.do.action.flag.role-1 {
+    display: none;
+}
+
+#q_ .admin a.do.action.flag.role-1 {
+    display: block;
+}
+
 #q_ .q_item .q_inr.p a.do.action.shareItem span{
     float: right;
 }
