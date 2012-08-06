@@ -1024,6 +1024,14 @@ This contains CSS for margins, padding, display, float, etc ...
     padding: 0 .5em;
 }
 
+#q_ a.do.action.flag.role-1 {
+    display: none;
+}
+
+#q_ .admin a.do.action.flag.role-1 {
+    display: block;
+}
+
 #q_ div.flagAreaWrapper-outer {
     float: left;
     padding: 6px 3px 7px 17px;
