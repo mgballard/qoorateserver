@@ -9,6 +9,7 @@ import random
 import json
 import datetime
 import re
+import traceback
 import md5
 import gevent
 from urlparse import urlparse
@@ -311,6 +312,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             else:
                 raise Exception("Unsupported action: %s" % self.action)
         except Exception as e:
+            logging.info("ERROR: (%s)%s" % (e.message, traceback.format_exc()));
             self.set_status(500)
             self.add_to_payload('error', 1)
             self.add_to_payload('message', e.message)
@@ -653,7 +655,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         # we need to loop through related items to remove all flags and votes too
         # this is called recursively
         related_item_ids = self.comment_queryset.get_related_ids_by_item_id(self.table, item.id)
-        if len(item_ids) > 0:
+        if len(related_item_ids) > 0:
             for related_item_id in related_item_ids:
                 related_item_result = self.comment_queryset.read_one(related_item_id)[1]
                 if related_item_result != None:
@@ -665,7 +667,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
                     # remove our related item
                     result = self.comment_queryset.destroy_one(related_item.id)
                     deleted_item_ids.append(related_item.id)
-                    delete_related_items(self, related_item)
+                    self.delete_related_items(related_item, deleted_item_ids)
 
     @authenticated
     def perform_add_tag(self):

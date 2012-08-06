@@ -35,7 +35,7 @@
         </div>
     </div><!-- end q_top -->
     <div class="q_clear"></div>
-    <div id="{{q_short_name}}" class="q_head_wrap">
+    <div id="{{q_short_name}}" class="q_head_wrap {{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <div id="topReply">
             <div id="topReplyText"><span>Want to Contribute?</span></div>
             <div id="topReplyFnxn">
@@ -60,7 +60,7 @@
         </div><!-- end topReply -->
         <div class="dyn {{q_short_name}}"></div>
     </div><!-- end q_head_wrap -->
-    <div id="q_cmnt">
+    <div id="q_cmnt" class="{{current_user.oauth_provider|default('anon')}}{{ ' admin' if is_admin }}">
         <ul id="q_cmnt_contents">
             {% include "skyscraper/comments.html" %}
         </ul><!-- end q_cmnt_contents -->

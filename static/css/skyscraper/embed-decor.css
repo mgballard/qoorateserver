@@ -190,7 +190,8 @@ This also includes all
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
 }
 #q_overlay_content a.dialog:hover,
-#q_ a.do.makeForm:hover {
+#q_ a.do.makeForm:hover,
+#q_ a.do.action.deleteItem:hover {
     background: #ffffff; /* Old browsers */
     background: -moz-linear-gradient(top,  #E9E9E9 0%, #E9E9E9 18%, #BFBFBF 93%, #BFBFBF 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(18%,#ffffff), color-stop(93%,#BFBFBF), color-stop(100%,#BFBFBF)); /* Chrome,Safari4+ */
@@ -261,6 +262,7 @@ This also includes all
     color: white;
 }
  
+#q_ .admin a.do.deleteItem,
 #q_ a.do.flag,
 #q_overlay_content a.dialog,
 #q_ a.do.makeForm,
@@ -638,14 +640,17 @@ a.q_toggle.q_children,
     background-image: linear-gradient(top, #969190 0%, #989898 100%);
 }
 
+#q_ .admin .do.action.deleteItem,
 #q_ .do.makeForm.share,
 #q_ .do.makeForm.flag,
+#q_ .admin .do.action.deleteItem span,
 #q_ .do.makeForm.share span,
 #q_ .do.makeForm.flag span {
     border: none;
     background: none;
 }
 
+#q_ .admin .do.action.deleteItem,
 #q_ .do.makeForm.share,
 #q_ .do.makeForm.flag {
     color: #999999;
@@ -657,6 +662,9 @@ a.q_toggle.q_children,
     color: #666666;
 }
 
+#q_ .admin a.do.action.deleteItem:hover,
+#q_ .admin a.do.action.deleteItem:active,
+#q_ .admin a.do.action.deleteItem:focus,
 #q_ a.do.makeForm.share:hover,
 #q_ a.do.makeForm.share:active,
 #q_ a.do.makeForm.share:focus,

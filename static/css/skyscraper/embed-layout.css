@@ -266,7 +266,7 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ img {
     display:block;
 }
-
+#q_ .admin a.do.deleteItem,
 #q_ a.do.flag,
 #q_overlay_content a.dialog,
 #q_ a.do.makeForm,
@@ -970,6 +970,10 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 0px;
 }
 
+#q_ .gp .postTo {
+    display: none;
+}
+
 #q_ .postTo {
     float: left;
     margin: 0;
@@ -990,9 +994,11 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 #q_ .do.makeForm.share,
+#q_ .admin .do.makeForm.deleteItem,
 #q_ .do.makeForm.flag,
 #q_ .do.makeForm.share span,
-#q_ .do.makeForm.flag span {
+#q_ .do.makeForm.flag span,
+#q_ .admin .do.action.deleteItem span {
     margin: 0;
     padding: 0;
     position: relative;
@@ -1000,7 +1006,8 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 #q_ .do.makeForm.share,
-#q_ .do.makeForm.flag {
+#q_ .do.makeForm.flag,
+#q_ .admin .do.action.deleteItem {
     padding: 3px;
     float: left;
     margin: 3px;
@@ -1012,9 +1019,14 @@ This contains CSS for margins, padding, display, float, etc ...
 
 
 
+#q_ .do.action.deleteItem {
+    display: none;
+}
+
 #q_ .flagAreaWrapper-outer,
 #q_ .do.makeForm.flag,
-#q_ .c .do.makeForm.share {
+#q_ .c .do.makeForm.share,
+#q_ .admin .do.action.deleteItem,
     margin-left: 0;
     display: inline;
 }
@@ -1106,4 +1118,7 @@ This contains CSS for margins, padding, display, float, etc ...
 #q_ .tp-10 a.topic 
 {
     padding: 5px 10px !important;
+}
+#q_ #q_cmnt.gp .do.makeForm.share {
+    display: none;
 }
