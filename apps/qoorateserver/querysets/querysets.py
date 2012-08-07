@@ -59,6 +59,17 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
             flag_join_sql = "JOIN flag fl on fl.itemId=s0.id and fl.flagTypeId=%s" % flagTypeId
             flag_group_by_clause = " GROUP BY s0.id"
 
+        location_query_1 = ""
+        location_query_2 = ""
+        if location != None and ',' in location:
+            location_query_1 = " WHERE o.location in (%s)" % location
+            location_query_2 = " WHERE location in (%s)" % location
+        elif location != None:
+            # we are a single location, just quote us
+            location_query_1 = " WHERE o.location = '%s'" % location
+            location_query_2 = " WHERE location = '%s'" % location
+            
+
         # if we only want the parent, return all, we may not know the real offset
         if parentId != None:
             parentCount = 0
@@ -102,6 +113,8 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
 
         params_dict = {
             'table': table,
+            'location_query_1': location_query_1,
+            'location_query_2': location_query_2,
             'location': location,
             'parentRangeTop': parentRangeTop,
             'parentOffset': parentOffset,
@@ -144,14 +157,14 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                         r.*
                         FROM (
                             # this just makes sure our groups are grouped in parent child order
-                            SELECT * from %(table)s o WHERE o.location = '%(location)s' ORDER BY
+                            SELECT * from %(table)s o %(location_query_1)s ORDER BY
                              if( o.relatedId = 0, o.id, o.relatedId),
                              if( o.relatedId = 0, 0, o.id )
                             ) r,
                         ( SELECT @parentVoteNumber := 0 ) pvn,
                         ( SELECT @parentVoteCount  := 0 ) pvc,
                         ( SELECT @parentCreateDate := 0 ) pcd
-                        WHERE location = '%(location)s' %(parent_where_clause)s
+                        %(location_query_2)s %(parent_where_clause)s
                     ) s0
                     %(flag_join_sql)s
                     %(flag_group_by_clause)s
@@ -250,14 +263,20 @@ class CommentQueryset(MySqlApiQueryset):
             flag_join_sql = "JOIN flag fl on fl.itemId=t.id and fl.flagTypeId=%s" % flagType
             flag_group_by_clause = " GROUP BY t.id"
 
+        location_clause = ""
+        if location != None and ',' in location:
+            location_clause = " WHERE `t`.`location` in(%s)" % location
+        elif location != None:
+            location_clause = " WHERE `t`.`location` = '%s'" % location
+            
         sql = """
             SELECT count(*) as recordCount FROM `%s` t 
             %s
-            WHERE `t`.`location` = %%s                    
             %s
-        """ % (table,flag_join_sql,flag_group_by_clause)
+            %s
+        """ % (table,flag_join_sql,location_clause,flag_group_by_clause)
 
-        row = self.fetch(sql, [location])
+        row = self.fetch(sql, [])
 
         if row is None:
             logging.debug("No contributions")
@@ -272,9 +291,15 @@ class CommentQueryset(MySqlApiQueryset):
 
         params_dict = dict()
 
+        location_clause = ""
+        if location != None and ',' in location:
+            location_clause = " WHERE `t`.`location` in (%s)" % location
+        elif location != None:
+            location_clause = " WHERE `t`.`location` = '%s'" % location
+
         sql = """
-            SELECT count(*) as recordCount FROM `%s` WHERE `location` = ?
-        """ % table
+            SELECT count(*) as recordCount FROM `%s` %s
+        """ % (table, location_clause)
 
         row = self.fetch (sql)
 

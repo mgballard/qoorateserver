@@ -123,7 +123,17 @@ class QoorateMixin(object):
     def location(self):
         """defines the page/location the comments are for
         """
-        return self.get_argument('location', None)
+        location = self.get_argument('location', None)
+        if location != None and ',' in location:
+            locs = location.split(',')
+            locations = ""
+            # build a quoted comma delimited string
+            for loc in locs:
+                if locations != "":
+                    locations += ","
+                locations += "'%s'" % loc
+            return locations
+        return location
 
     @lazyprop
     def referer(self):
