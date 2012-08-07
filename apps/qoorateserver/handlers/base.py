@@ -10,6 +10,7 @@ from qoorateserver.querysets.querysets import (
     CommentItemQueryset,
     KeypairQueryset,
     FlagQueryset,
+    FlagTypeQueryset,
     VoteQueryset,
 )
 from qoorateserver.modules.brooklyncodebrubeck.application import lazyprop
@@ -241,6 +242,13 @@ class QoorateMixin(object):
             self.application.get_settings('mysql'), self.application.db_conn
         )
 
+
+    @lazyprop
+    def flag_type_queryset(self):
+        """get the flag queryset"""
+        return  FlagTypeQueryset(
+            self.application.get_settings('mysql'), self.application.db_conn
+        )
 
     @lazyprop
     def qoorate(self):

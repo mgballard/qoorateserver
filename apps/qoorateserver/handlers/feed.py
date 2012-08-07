@@ -32,16 +32,15 @@ from qoorateserver.models.models import (
     Comment,
     Image,
     Vote,
-    Flag
+    Flag,
+    FlagType
 )
 from qoorateserver.querysets.querysets import (
     CommentItemQueryset,
-    UserQueryset,
     CommentQueryset,
     ImageQueryset,
-    VoteQueryset,
-    FlagQueryset
 )
+
 ################################
 ## Methods used by gevent.spawn
 ################################
@@ -875,7 +874,24 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
     def _flag(self, item):
         """records a flag on an item"""
         logging.debug("_flag(%s)" % (item))
-        # check for a record 
+
+        # Make sure we have a valid flag type
+        result = self.flag_type_queryset.read_one(
+                self.flagTypeId
+            )[1]
+        if result == None:
+            logging.debug("Unknown flag_type: %s" % self.flagTypeId)
+            raise Exception("Unknown flag type!")
+        else:
+            logging.debug("flag_type found: %s" % self.flagTypeId)
+        # Make sure we have permission to flag as this type
+        flag_type = FlagType(**result)
+        if flag_type.role == 1 and not self.is_admin:
+            logging.debug("flag_type is admin, you are not: %s" % self.current_user.id)
+            raise Exception("Unauthorized flag type!")
+        else:
+            logging.debug("flag_type is authorized: %s" % self.flagTypeId)
+        # check for an existing flag record for the user
         flag = self.flag_queryset.get_by_item_id_and_user_id(
             self.table, item.id, self.current_user.id
         )

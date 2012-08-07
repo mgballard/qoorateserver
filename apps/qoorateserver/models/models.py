@@ -176,6 +176,7 @@ class Vote(Document):
         super(Vote, self).__init__(*args, **kwargs)
         self.timestamp = int(time.time() * 1000)
 
+
 class Flag(Document):
     """A single flag
     Matches a row in MySQL table"""
@@ -193,6 +194,24 @@ class Flag(Document):
         super(Flag, self).__init__(*args, **kwargs)
         self.timestamp = int(time.time() * 1000)
 
+
+class FlagType(Document):
+    """A single flagtype
+    Matches a row in MySQL table"""
+
+    class Meta:
+        id_field = fields.LongField
+
+    name = fields.StringField(required=True, max_length=255)
+    description = fields.StringField(required=True, max_length=255)
+    role = fields.LongField()
+    createDate = fields.DateTimeField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(FlagType, self).__init__(*args, **kwargs)
+        self.timestamp = int(time.time() * 1000)
+
+
 class KeyPair(Document):
     """An API key pair (key, secret)
     Matches a row in MySQL table"""
@@ -206,6 +225,7 @@ class KeyPair(Document):
     def __init__(self, *args, **kwargs):
         super(KeyPair, self).__init__(*args, **kwargs)
         self.timestamp = int(time.time() * 1000)
+
 
 class Qoorate(Document):
     """A single flag
@@ -235,4 +255,3 @@ class Qoorate(Document):
     def __init__(self, *args, **kwargs):
         super(Qoorate, self).__init__(*args, **kwargs)
         self.timestamp = int(time.time() * 1000)
-

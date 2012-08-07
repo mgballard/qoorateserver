@@ -11,7 +11,7 @@ from dictshield.fields import mongo as MongoFields
 from dictshield.fields import compound as CompoundFields
 from brubeckmysql.querysets import MySqlQueryset, MySqlApiQueryset
 
-from qoorateserver.models.models import Comment, Image, User, Qoorate, CommentItem, Vote, Flag, KeyPair, Qoorate
+from qoorateserver.models.models import Comment, Image, User, Qoorate, CommentItem, Vote, Flag, FlagType, KeyPair, Qoorate
 
 ###
 ### All of our application specific data interaction with any data store happens in a Queryset object
@@ -740,6 +740,38 @@ class FlagQueryset(MySqlApiQueryset):
         else:
             logging.debug("No flags deleted, flagCount(%s)" % (flag_count))
             return True
+
+class FlagTypeQueryset(MySqlApiQueryset):
+    """ This is a simple, completely standard one to one mapping to the DB
+        Only dict are returned, if you want a DictShield item 
+        that is the callers responsibility to call dictListToDictShieldList
+    """
+
+    def __init__(self, settings, db_conn, **kw):
+        """We may want to resuse a db_conn, not sure yet
+           We need to pass the tablename since it may be different
+           based on the API key
+        """
+        """call our MySql __init__.
+           This will create a connection for us if we need it
+        """
+        super(FlagTypeQueryset, self).__init__(settings, db_conn, **kw)
+        
+        self.table_name = settings["TABLES"]["FLAG_TYPE"]["TABLE_NAME"]
+        self.fields = settings["TABLES"]["FLAG_TYPE"]["FIELDS"]
+        self.fields_muteable = settings["TABLES"]["FLAG_TYPE"]["FIELDS_MUTEABLE"]
+
+    def dictListToDictShieldList(self, dictList):
+        """utility function to convert a list of dict items to a list of DictShield items
+           think hard before you use this, you are probably wasting your time, and the computers CPU
+           TODO: This really is common functionality, probably should be abstracted a bit
+        """
+        items = []
+
+        for dictItem in dictList:
+            items.append(FlagType(**dictItem))
+
+        return items
 
 
 class KeypairQueryset(MySqlApiQueryset):
