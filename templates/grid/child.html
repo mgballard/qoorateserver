@@ -18,14 +18,14 @@
                                         <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
                                     </div>
                                     <div class="q_user_info">
-                                        <span class="q_usr">{{comment.username|default(current_user.username)}}</span>
+                                        <span class="q_usr">{{(comment.username|e)|default(current_user.username|e|e)}}</span>
                                         <span class="time">{{comment.getTimeAgo()}}</span>
                                     </div>
                                     <div class="q_clear"></div>
                                 </div>
                                 <div class="q_txt">
                                     <a class="q_parent disabled" href="#"><span class="q_r_usr">{{comment.relatedUsername|default(related_user|attr('username'))}}</span></a>
-                                    <p class="itemName caption type-{{comment.type}}">{{comment.name}}</p>
+                                    <p class="itemName caption type-{{comment.type}}">{{comment.name|e}}</p>
                                 </div>
                                 <div class="q_clear"></div>
                             </div>

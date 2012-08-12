@@ -6,7 +6,7 @@
                                 <div class="q_main_top">
                                     <div class="q_main_top_inr">
                                         <div class="q_top_info">
-                                            <span class="q_usr">{{comment.username|default(current_user.username)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
+                                            <span class="q_usr">{{(comment.username|e)|default(current_user.username|e)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
                                             <div class="q_clear"></div>
                                         </div>
                                         <div class="reply top">
@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="q_main_body">
                                     <div class="q_txt">
-                                        <p class="itemName caption type-{{comment.type}}">{{comment.name}}</p>
+                                        <p class="itemName caption type-{{comment.type}}">{{comment.name|e}}</p>
                                     </div>
                                 </div>
                                 <div class="q_bottom lv-1">

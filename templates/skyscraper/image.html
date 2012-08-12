@@ -8,7 +8,7 @@
                             <div class="q_main_top">
                                 <div class="q_main_top_inr">
                                     <div class="q_top_info">
-                                        <span class="q_usr">{{comment.username|default(current_user.username)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
+                                        <span class="q_usr">{{(comment.username|e)|default(current_user.username|e)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
                                         <div class="q_clear"></div>
                                     </div>
                                     <div class="reply top">
@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                             <div class="q_main_body">
-                                <h3 class="itemName title type-{{comment.type}}">{{comment.name}}</h3>
+                                <h3 class="itemName title type-{{comment.type}}">{{comment.name|e}}</h3>
                                 {% for image in comment.images|default(comment_images) %}
                                 <div class="q_img">
                                     <img src="{{app["S3_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}_t.jpg"  onerror="ImgError(this, 'http://qrate.co/img/blank.gif')">

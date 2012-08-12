@@ -12,7 +12,7 @@
                             </div>
                             <div class="q_main_body">
                                 <div class="q_txt">
-                                    <p class="itemName caption type-{{type}}">{{comment.name}}</p>
+                                    <p class="itemName caption type-{{type}}">{{comment.name|e}}</p>
                                 </div>
                                 <div class="upVote wrap topic"><a href="#" class="do action upVote {{q_short_name}}-{{comment.id}} topic">yes (<span class="voted">{{comment.votesUp}}</span>)</a></div>
                                 <div class="downVote wrap topic"><a href="#" class="do action downVote {{q_short_name}}-{{comment.id}} topic">no (<span class="voted">{{comment.votesDown}}</span>)</a></div>
@@ -24,7 +24,7 @@
                                         <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
                                     </div>
                                     <div class="q_user_info">
-                                        <span class="q_usr">{{comment.username|default(current_user.username)}}</span>
+                                        <span class="q_usr">{{(comment.username|e)|default(current_user.username|e|e)}}</span>
                                         <span class="time">{{comment.getTimeAgo()}}</span>
                                     </div>
                                     <div class="q_clear"></div>
