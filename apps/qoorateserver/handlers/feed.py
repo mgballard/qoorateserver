@@ -118,6 +118,16 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         return self.get_argument('post_to', None)
 
     @lazyprop
+    def is_anonymous(self):
+        """ is_anonymous argument.
+        If present indicates we want to post anonymously.
+        """
+        is_anonymous = 0
+        if self.get_argument('is_anonymous', None) == '1':
+            is_anonymous = 1
+        return is_anonymous
+
+    @lazyprop
     def locationId(self):
         """ locationId argument.
         Not sure how this is different than location.
@@ -193,6 +203,22 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
     def oauth_settings(self):
         """get the base oauth settings"""
         return self.application.get_settings('oauth')
+
+    @lazyprop
+    def app_settings(self):
+        """get the base app settings"""
+        return self.application.get_settings('app')
+
+    @lazyprop
+    def anonymous_capable(self):
+        """ See if we should a llow a post to be submitted anonymously by an authenticated user.
+        The user is still stored with the record, but not displayed.
+        """
+        anonymous_capable = False
+        if ('anonymous_capable' in self.app_settings and
+            self.app_settings['ANONYMOUS_CAPABLE'] == 1):
+                anonymous_capable = True
+        return anonymous_capable
 
     # Voting constants
     UP = 1
@@ -455,6 +481,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'location':         self.location,
             'userId':           self.current_user.id,
             'type':             type,
+            'is_anonymous':     self.is_anonymous,
             'voteCount':        0,
             'voteNumber':       0,
             'votesUp':          0,
@@ -1272,7 +1299,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'parentCount': self.parentCount,
             'childCount': self.childCount,
             'moreIndex': self.moreIndex,
-            'has_more_contributions': self.has_more_contributions(comments),
+            'has_more_contributions': self.has_more_contributions(comments)
         }
         self.add_to_payload("content", self.render_partial(
                 self.preferences['THEME'] + '/comments.html',

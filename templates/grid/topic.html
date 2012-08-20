@@ -21,10 +21,18 @@
                             <div class="q_main_footer">
                                 <div class="q_main_user">
                                     <div class="q_thumbnail">
+                                        {% if comment.is_anonymous %}
+                                        <img width="30" height="30" src="http://qrate.co/img/blank.gif" />
+                                        {% else %}
                                         <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
+                                        {% endif %}
                                     </div>
                                     <div class="q_user_info">
+                                        {% if comment.is_anonymous %}
+                                        <span class="q_usr">Anonymous</span>
+                                        {% else %}
                                         <span class="q_usr">{{(comment.username|e)|default(current_user.username|e|e)}}</span>
+                                        {% endif %}
                                         <span class="time">{{comment.getTimeAgo()}}</span>
                                     </div>
                                     <div class="q_clear"></div>

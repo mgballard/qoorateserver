@@ -132,7 +132,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
             SELECT f.`parent_sequence` , f.`child_sequence` , f.`id` , f.`locationId` , f.`relatedId`,
                 f.`parentId` , f.`userId` , `u`.`username`, u.`thumbnailLarge` as userThumbnailLarge,
                 ur.`username` as relatedUsername, ur.`thumbnailLarge` as relatedUserThumbnailLarge, f.`type`,
-                f.`name` , f.`location` ,f.`description`,f.`referer`,
+                f.`is_anonymous` , r.`is_anonymous` as `related_is_anonymous`, f.`name` , f.`location` ,f.`description`,f.`referer`,
                 f.`voteCount` , f.`voteNumber` , f.`votesUp` ,f.`votesDown` , f.`flagCount`,  f.`childCount`, f.`sortOrder` , f.`status`,
                 f.`thumbnailSmall` ,f.`thumbnailLarge` , f.`changeDate` , f.`createDate`
             FROM (

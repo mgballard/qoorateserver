@@ -272,6 +272,7 @@ class QoorateMixin(object):
     def preferences(self):
         """our client preferences"""
         json_string = self.qoorate.preferences.replace("\r\n","\n").replace("\n", "")
+        logging.debug('qoorate preferences: %s' % json_string)
         return json.loads(json_string)
 
     @lazyprop

@@ -60,6 +60,7 @@ class Comment(Document):
     parentId = fields.LongField(required=True)
     userId = fields.LongField(required=True)
     type = fields.LongField(required=True)
+    is_anonymous = fields.IntField(required=True)
     name = fields.StringField(required=True, max_length=1000)
     location = fields.StringField(required=True, max_length=255)
     description = fields.StringField(required=True, max_length=10000)
@@ -76,7 +77,6 @@ class Comment(Document):
     referer = fields.StringField(required=True, max_length=2083)
     changeDate = fields.DateTimeField(required=True)
     createDate = fields.DateTimeField(required=True)
-
     # The table name, since each API user has unique table name for comments
     tableName = fields.StringField(required=True, max_length=255)
 	 
@@ -125,6 +125,7 @@ class CommentItem(Document):
     relatedUsername = fields.StringField(max_length=255)
     relatedUserThumbnailLarge = fields.StringField(max_length=255)
     type = fields.IntField(required=True)
+    is_anonymous = fields.IntField(required=True)
     name = fields.StringField(max_length=1000)
     location = fields.StringField(max_length=255)
     description = fields.StringField(max_length=5000)

@@ -1177,6 +1177,14 @@ $(document).ready(function() {
                         '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
                      '</span>';
 
+        var postAnonymous = '';
+        if (qoorateConfig.ANONYMOUS_CAPABLE === true) {
+            var postAnonymous = '<span class="isAnonymous">' +
+                            '<input class="is_anonymous" type="checkbox" name="is_anonymous" value="1" />' +
+                            '<label for "is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                         '</span>';
+        }
+        
         // our default action, submit button label and state
         var actionType = 'addItem';
         var actionLabel = qoorateLang.POST_BUTTON;
@@ -1193,6 +1201,7 @@ $(document).ready(function() {
         } else if ( _form == 'share' ) {
             // Don't display our social post_to checkbox and change the action and label for the submit button
             postTo = '<input class="post_to" type="hidden" name="post_to" value="post_to" />';
+            postAnonymous = '';
             actionType = 'shareItem';
             actionLabel = qoorateLang.POST_TO_BUTTON + ' ' + social;
             disabled = '';
@@ -1217,6 +1226,7 @@ $(document).ready(function() {
                         '</div>';
             form_html = '';
             postTo = '';
+            postAnonymous = '';
         }
 
         var $dynForm = $('.dyn.'+_id);
@@ -1228,7 +1238,7 @@ $(document).ready(function() {
             // SM: 20111214 - Create link now defaults to disabled, and now has a var that can be changed
             // SM: 20120104 - Cancel button now lives outside the div so it can be positioned with float only
             var form = form_html + 
-                        '<div class="dynFormFooter">' + postTo + 
+                        '<div class="dynFormFooter">' + postTo + postAnonymous + 
                         form_action + 
                         '<br class="q_clear" />' + 
                         '</div>' +
@@ -1311,6 +1321,14 @@ $(document).ready(function() {
                         '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
                      '</span>';
 
+        var postAnonymous = '';
+        if (qoorateConfig.ANONYMOUS_CAPABLE === true) {
+            var postAnonymous = '<span class="isAnonymous">' +
+                            '<input class="is_anonymous" type="checkbox" name="is_anonymous" value="1" />' +
+                            '<label for "is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                         '</span>';
+        }
+
         // our default action, submit button label and state
         var actionType = 'addItem';
         var actionLabel = qoorateLang.POST_BUTTON;
@@ -1327,6 +1345,7 @@ $(document).ready(function() {
         } else if ( _form == 'share' ) {
             // Don't display our social post_to checkbox and change the action and label for the submit button
             postTo = '<input class="post_to" type="hidden" name="post_to" value="post_to" />';
+            postAnonymous = '';
             actionType = 'shareItem';
             actionLabel = qoorateLang.POST_TO_BUTTON + ' ' + social;
             disabled = '';
@@ -1351,6 +1370,7 @@ $(document).ready(function() {
                         '</div>';
             form_html = '';
             postTo = '';
+            postAnonymous = '';
         }
 
         var $dynForm = $('.dyn.'+_id);
@@ -1363,7 +1383,7 @@ $(document).ready(function() {
             // SM: 20111214 - Create link now defaults to disabled, and now has a var that can be changed
             // SM: 20120104 - Cancel button now lives outside the div so it can be positioned with float only
             var form = '<a class="do x" href="#">x</a>' + form_html + 
-                        '<div class="dynFormFooter ' + _form + '">' + postTo + 
+                        '<div class="dynFormFooter ' + _form + '">' + postTo + postAnonymous + 
                         form_action + 
                         '<br class="q_clear" />' + 
                         '</div>' +

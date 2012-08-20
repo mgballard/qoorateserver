@@ -998,12 +998,18 @@ This contains CSS for margins, padding, display, float, etc ...
 }
 
 
-#q_ .postTo {
+#q_ .postTo,
+#q_ .isAnonymous {
     float: left;
     margin: 0 0 5px 0;
 }
 
-#q_ .postTo label {
+#q_ .isAnonymous {
+    padding-left: 1em;
+}
+
+#q_ .postTo label,
+#q_ .isAnonymous label {
     margin-left: .25em;
 }
 

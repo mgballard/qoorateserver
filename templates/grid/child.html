@@ -15,16 +15,28 @@
                             <div class="q_main_body">
                                 <div class="q_main_user">
                                     <div class="q_thumbnail">
+                                        {% if comment.is_anonymous %}
+                                        <img width="30" height="30" src="http://qrate.co/img/blank.gif" />
+                                        {% else %}
                                         <img width="30" height="30" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge) }}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
+                                        {% endif %}
                                     </div>
                                     <div class="q_user_info">
+                                        {% if comment.is_anonymous %}
+                                        <span class="q_usr">Anonymous</span>
+                                        {% else %}
                                         <span class="q_usr">{{(comment.username|e)|default(current_user.username|e|e)}}</span>
+                                        {% endif %}
                                         <span class="time">{{comment.getTimeAgo()}}</span>
                                     </div>
                                     <div class="q_clear"></div>
                                 </div>
                                 <div class="q_txt">
-                                    <a class="q_parent disabled" href="#"><span class="q_r_usr">{{comment.relatedUsername|default(related_user|attr('username'))}}</span></a>
+                                        {% if comment.related_is_anonymous %}
+                                        <a class="q_parent disabled" href="#"><span class="q_r_usr">{{Anonymous}}</span></a>
+                                        {% else %}
+                                        <a class="q_parent disabled" href="#"><span class="q_r_usr">{{comment.relatedUsername|default(related_user|attr('username'))}}</span></a>
+                                        {% endif %}
                                     <p class="itemName caption type-{{comment.type}}">{{comment.name|e}}</p>
                                 </div>
                                 <div class="q_clear"></div>
