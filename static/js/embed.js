@@ -2044,7 +2044,7 @@ $(document).ready(function() {
                         $q_cmnt.addClass(' admin');
                         $q_head_wrap.addClass('admin');
                     }
-                    $qSocl.find('.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
+                    $qSocl.find('div.q_inr').attr('class', 'q_inr logged-in ' + oAuthProvider);
                     $q_head_wrap.addClass(oAuthProvider);
                     $qSocl.find('.ttl.signin').html(qoorateLang.SIGNEDIN);
                     $qSocl.find('.ttl.logoff').html('<a href="#" id="q_logoff" class="do action logoffUser">' + qoorateLang.LOGOUT + '</a>');
