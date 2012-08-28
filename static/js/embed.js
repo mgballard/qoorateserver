@@ -2606,7 +2606,9 @@ $(document).ready(function() {
         );
     };
     var grid_dynamicResize_pre = function() {
-        return grid_position()
+        grid_position();
+        grid_height();
+        return;
     }; // end grid_dynamicResize_pre
 
     var position = function() {
