@@ -2709,20 +2709,28 @@ $(document).ready(function() {
     }; // end grid_position
 
     var grid_height = function() {
-        var c = $('#q_cmnt_contents'),
-            o = $('#q_cmnt_contents .q_item.lv-1.col-0'),
+        var $c = $('#q_cmnt_contents'),
+            $o = $c.find('.q_item.lv-1'),
+            $more_link = $c.find(".more_link_all"),
             myheight = 0;
 
-        jQuery.each(o, function(i, val) { 
-            myheight = myheight + ($(val).height() + 15); 
-            console.log(i + ". myheight now: " + myheight);
-        });
-        console.log("myheight final: " + myheight);
+        if ($more_link.lenght==1) {
+            myheight = $more_link.position().top + $more_link.height() + 15; 
+        }else{
+            jQuery.each($o, function(i, val) { 
+                var $val = $(val);
+                height = $val.position().top + $val.height() + 15; 
+                if (height > myheight){
+                    myheight = height;
+                }
+                console.log(i + ". myheight now: " + myheight);
+            });
+            console.log("myheight final: " + myheight);
+        }
         if(myheight > 0){
-            c.height(myheight);
+            $c.height(myheight);
         }
     };
-
     /*!
     * jQuery OAuth via popup window plugin
     *
