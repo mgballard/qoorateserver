@@ -2692,7 +2692,7 @@ $(document).ready(function() {
             // position our more link
             // get our last row and find the item that goes to the end
             var bottom = 0, b=0;
-            for(var y=0; i<cols; i++){
+            for(var y=0; y<cols; y++){
                 var o = lastrowheights[lastrowheights.length - y - 1];
                 b = o[0] + o[1];
                 if(b > bottom) {
