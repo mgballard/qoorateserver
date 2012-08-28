@@ -2714,7 +2714,7 @@ $(document).ready(function() {
             $more_link = $c.find(".more_link_all"),
             myheight = 0;
 
-        if ($more_link.lenght==1) {
+        if ($more_link.length==1) {
             myheight = $more_link.position().top + $more_link.height() + 15; 
         }else{
             jQuery.each($o, function(i, val) { 
