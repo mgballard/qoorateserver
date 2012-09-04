@@ -25,8 +25,8 @@ function get_class_element(elem, pos) {
 // for an img tag to use it you must add the attribute: onerror="ImgError(this, '/images/none.gif');"
 // This must be done server side, by the time you set it i jquery, it is too late
 function ImgError( source, url1, url2 ) {
-    $(source).load(function () {
-        $this = $(this);
+    jQuery(source).load(function () {
+        $this = jQuery(this);
         var $thisParent = $this.parents('.q_item .q_main_body .q_txt'),
             width = $thisParent.width();
         if($this.width() > width - 14) {
@@ -44,22 +44,22 @@ function ImgError( source, url1, url2 ) {
 }
 
 
-$(document).ready(function() {
+jQuery(document).ready(function($) {
 
     /* Our "global" vars */
     // GD moved for availability in sort
-    var location_md5 = $('#q_').attr('class');
+    var location_md5 = jQuery('#q_').attr('class');
     
     //close the sort drop down if its open
-    $('body').click(function(){
-        $('#q_sort_list').css('visibility', 'hidden');
+    jQuery('body').click(function(){
+        jQuery('#q_sort_list').css('visibility', 'hidden');
     });
 
 
     // SM: Assign function to variable in function scope to keep out of global namespace
     // SM: 20120106 - This get called on load
     var init = function() {
-        addLastItemClassToChildren( $('#q_cmnt_contents') ); // add a class to style our last children
+        addLastItemClassToChildren( jQuery('#q_cmnt_contents') ); // add a class to style our last children
         // resize our width for narrow screens
         call_theme_function('dynamicResize_pre')
         if (call_theme_function('dynamicResize') == false){
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
         // Attach error to anything, we will just display a message
         // this is needed when using $.post
-        $( "#q_" ).ajaxError(function(e, jqxhr, settings, exception) {
+        jQuery( "#q_" ).ajaxError(function(e, jqxhr, settings, exception) {
           if(jqxhr.responseText.length > 0) {
             errorMsg(jqxhr.status, jqxhr.responseText);
           }
@@ -130,7 +130,7 @@ $(document).ready(function() {
     // style for mobile stylesheet 
     // really just add a class and let css do it's magic
     var styleMobile = function(enabled) {
-      var $q = $('#q_');
+      var $q = jQuery('#q_');
       if ( enabled ) {
         $q.addClass('mobile');
       } else {
@@ -147,7 +147,7 @@ $(document).ready(function() {
            $children.removeClass('lm');
 
            $children.each(function() { 
-                var $this = $(this);
+                var $this = jQuery(this);
                 var $nextitem = $this.next();
                 if( $nextitem != null && $nextitem.length > 0 ) {
                     if( !$nextitem.hasClass('c') ) {
@@ -173,7 +173,7 @@ $(document).ready(function() {
                         }else{
                             $this.find('.q_toggle').css('display','block');
                         }
-                     $(this).addClass('l');
+                     jQuery(this).addClass('l');
                 }
     
          });
@@ -185,16 +185,16 @@ $(document).ready(function() {
     var resize_job;
     // reset the width of our images if they are too big
     var rescaleImages = function() {
-        var $images = $('#q_ .q_main_body .q_img img, #q_ .q_main_body .q_img a img');
+        var $images = jQuery('#q_ .q_main_body .q_img img, #q_ .q_main_body .q_img a img');
         var $image = null;
         images_to_rescale = $images.length
         images_rescaled = 0;
         for( var i = 0; i < $images.length; i++ ) {     
-            $image = $($images[i]);
+            $image = jQuery($images[i]);
     
             $image.load(function () {
                 images_rescaled++;
-                $this = $(this);
+                $this = jQuery(this);
                 var $thisParent = $this.parents('.q_item .q_main_body'),
                     width = $thisParent.width();
                 
@@ -240,7 +240,7 @@ $(document).ready(function() {
     // A wrapper for scrollToObject
     var scrollToItem = function(q_short_name, item) {
         if(item) {
-            var $item = $( "#" + q_short_name + "-" + item.id );        
+            var $item = jQuery( "#" + q_short_name + "-" + item.id );        
             if ( $item.length > 0 )
                 scrollToObject($item);
         }
@@ -268,7 +268,7 @@ $(document).ready(function() {
             }
 
             if( $item.length > 0 && scrollTo > -1 ) {
-                $( 'html, body' ).animate( {
+                jQuery( 'html, body' ).animate( {
                     scrollTop: scrollTo
                 }, 200 );
             }
@@ -326,7 +326,7 @@ $(document).ready(function() {
 
         // get the child index of our content
         for ( var i = 0; i < $siblings.length; i++ ) {
-            $child = $( $siblings[i] );
+            $child = jQuery( $siblings[i] );
             if( $child.attr("id") == $content.attr("id") ) {
                 childIndex = i;
                 break;
@@ -351,7 +351,7 @@ $(document).ready(function() {
             if( childIndex == 0 ) {
                 $parent.prepend($newContent);
             } else {
-                var $siblingBefore = $( $parent.children()[ childIndex - 1 ] );
+                var $siblingBefore = jQuery( $parent.children()[ childIndex - 1 ] );
                 $siblingBefore.after( $newContent );
             }
             $newContent.show(animationDuration);
@@ -379,7 +379,7 @@ $(document).ready(function() {
 
         // get the child index of our content
         for ( var i = 0; i < $siblings.length; i++ ) {
-            $child = $( $siblings[i] );
+            $child = jQuery( $siblings[i] );
             if( $child.attr("id") == $content.attr("id") ) {
                 childIndex = i;
                 break;
@@ -393,7 +393,7 @@ $(document).ready(function() {
             if( childIndex == 0 ) {
                 $parent.prepend( $originalContent );
             } else {
-                var $siblingBefore = $( $parent.children()[ childIndex - 1 ] );
+                var $siblingBefore = jQuery( $parent.children()[ childIndex - 1 ] );
                 $siblingBefore.after( $originalContent );
             }
         };
@@ -414,7 +414,7 @@ $(document).ready(function() {
         var cn = null;
         var item_class = null;
         for ( var i = 0; i < $data.length; i++ ) {
-            $item = $($data[i]);
+            $item = jQuery($data[i]);
             if ( $item.hasClass('c') ) {
                 cn = 'cn-' + sequence ++;
                 item_class = $item.attr( 'class' ).replace( /cn-[0-9]*/, cn );
@@ -432,7 +432,7 @@ $(document).ready(function() {
         var preVal = null;
         var $input = null;
         for ( var i = 0 ; i < $inputs.length ; i++ ) {
-            $input = $($inputs[i]);
+            $input = jQuery($inputs[i]);
             preVal = $input.data("preVal");
             if( preVal != null ) {
                 $input.val(preVal);
@@ -508,15 +508,15 @@ $(document).ready(function() {
     // SM: 20110106 - Add a div for our overlays
     // The transparent overlay itself is seperate than the overlay popup
     var createOverlay = function() {
-        $('body').prepend('<div id="q_overlay" style="display: none;"></div>' + 
+        jQuery('body').prepend('<div id="q_overlay" style="display: none;"></div>' + 
                           '<div id="q_overlay_content" style="display: none;"></div>');
     };
 
 
     // SM: 20110106 - Show an overlay
     var showOverlay = function($html) {
-        var $overlay = $('#q_overlay');
-        var $overlayContent = $('#q_overlay_content');
+        var $overlay = jQuery('#q_overlay');
+        var $overlayContent = jQuery('#q_overlay_content');
         if( $html.hasClass('error') ) {
             $overlayContent.addClass('error');
         } else {
@@ -572,8 +572,8 @@ $(document).ready(function() {
 
     // SM: 20110106 - Hide our overlayContent, then our overlay
     var closeOverlay = function(callback, source) {
-        var $overlay = $('#q_overlay');
-        var $overlayContent = $('#q_overlay_content');
+        var $overlay = jQuery('#q_overlay');
+        var $overlayContent = jQuery('#q_overlay_content');
 
         var getFadeOutOverlay = function( $overlay, callback, source ) {
 
@@ -595,7 +595,7 @@ $(document).ready(function() {
 
     // SM: 20110106 - Our error message overlay
     var showErrorOverlay = function(error, message, onCloseCallback) {
-        var $html = $('<div class="overlayContent error">' + 
+        var $html = jQuery('<div class="overlayContent error">' + 
                         '<div class="contentMessage"><span class="error" style="display: none;">[ ' + error + ']</span> ' + message + '</div>' +
                         '<div class="contentButtons">' + 
                             '<a class="dialog ok"><span>' + qoorateLang.OK + '</span></a>' + 
@@ -612,7 +612,7 @@ $(document).ready(function() {
 
     // SM: 20110106 - Our error message overlay
     var showMessageOverlay = function(message, onCloseCallback) {
-        var $html = $('<div class="overlayContent message">' + 
+        var $html = jQuery('<div class="overlayContent message">' + 
                         '<div class="contentMessage">' + message + '</div>' +
                         '<div class="contentButtons">' + 
                             '<a class="dialog ok"><span>' + qoorateLang.OK + '</span></a>' + 
@@ -630,7 +630,7 @@ $(document).ready(function() {
     // SM: 20110106 - Our unauthorized message overlay
     // Includes login buttons
     var showLoginOverlay = function(error, message, onLoggedInCallback) {
-        var $html = $('<div class="overlayContent error">' + 
+        var $html = jQuery('<div class="overlayContent error">' + 
                         '<div class="contentMessage">' + message + '</div>' +
                         getLoginActions() + 
                         '<div class="contentButtons">' + 
@@ -721,7 +721,7 @@ $(document).ready(function() {
                     maxLength = $textarea.data("maxLength");
                 
                 if ( $addItem.length == 0) {
-                    $addItem = $( 'a.shareItem' );
+                    $addItem = jQuery( 'a.shareItem' );
                 }
                 // SM: 20111214 - Would we want enter key behavior in a textarea?
                 // For now, no.
@@ -732,11 +732,11 @@ $(document).ready(function() {
                     if( ($textarea.val() != '' && $textarea.val() != preVal || $addItem.hasClass('shareItem') ) &&
                         // SM: 20120104 - We don't care about having a thumbnail anymore
                         (
-                            (!$textarea.hasClass('replyLink') || $(".contribUI_Wrap").length > 0 ) ||
+                            (!$textarea.hasClass('replyLink') || jQuery(".contribUI_Wrap").length > 0 ) ||
                             // But we do need a somewhat valid link
                             (!$textarea.hasClass('replyLink') || isURL( $textareaParent.find('input.replyLink').val() ) )
                         ) &&
-                        (!$textarea.hasClass('replyPhoto') || $(".q_qq-uploader ul li.q_qq-upload-success").length > 0 ) &&
+                        (!$textarea.hasClass('replyPhoto') || jQuery(".q_qq-uploader ul li.q_qq-upload-success").length > 0 ) &&
                         ( !maxLength || $textarea.val().length <= maxLength)
                       ) {
                         $addItem.removeClass("disabled");
@@ -811,13 +811,13 @@ $(document).ready(function() {
                             var parent_votes = data_object.parent_votes;
 
                             if(parent_votes) { // SM: 20111220 - Update our parent vote count too
-                                changeVote( parent_votes, $( "#" + parent_votes.q_short_name + "-" + parent_votes.id ) );
+                                changeVote( parent_votes, jQuery( "#" + parent_votes.q_short_name + "-" + parent_votes.id ) );
                             }
                         }
                         $source_object.removeClass('disabled');
                     } else if ( _action == 'flag' ) {
                         // just restore our flag options back to the icon
-                        // restoreContent( $( $source_object.parent(), 495 ) );
+                        // restoreContent( jQuery( $source_object.parent(), 495 ) );
                         // we are in dynForm now
                         if( ! _block.hasClass('dyn') )
                             _block = _block.find('.dyn:first');
@@ -825,7 +825,7 @@ $(document).ready(function() {
                         restorePrevals(_block);
 
                         
-                        var $message =$('<div class="footerMessage">' + qoorateLang.FLAG_SUCCESS + '</div>');
+                        var $message =jQuery('<div class="footerMessage">' + qoorateLang.FLAG_SUCCESS + '</div>');
 
                         if( data_object.error == 0 ) {
                             _block.before( $message );
@@ -841,14 +841,14 @@ $(document).ready(function() {
                             setTimeout( getRemoveBlock($message, 250 ), 2000 );
                             
                             // put a message in the header, and give us a message
-                            _block = $('#' + data_object.q_short_name + '-' + data_object.item.id);
-                            var $message =$('<div class="q_item lv-1 footerMessage">' + qoorateLang.DELETE_SUCCESS + '</div>');
+                            _block = jQuery('#' + data_object.q_short_name + '-' + data_object.item.id);
+                            var $message =jQuery('<div class="q_item lv-1 footerMessage">' + qoorateLang.DELETE_SUCCESS + '</div>');
     
                             _block.remove();
                             var deleted_related_item_ids = eval(data_object.deleted_related_item_ids);
                             for (var i=0; i < deleted_related_item_ids.length; i++){
                                 related_item_id = deleted_related_item_ids[i];
-                                $('#' + data_object.q_short_name + '-' + related_item_id).remove();
+                                jQuery('#' + data_object.q_short_name + '-' + related_item_id).remove();
                             }
                             // now remove all our children
                             position();
@@ -856,7 +856,7 @@ $(document).ready(function() {
                         return;
                     } else if ( _action == 'shareItem' ) {
 
-                        $reply_button = $('.' + data_object.q_short_name + '-' + data_object.item.id + '.do.makeForm.reply span:first');
+                        $reply_button = jQuery('.' + data_object.q_short_name + '-' + data_object.item.id + '.do.makeForm.reply span:first');
                         $reply_button.html(qoorateLang.REPLY_BUTTON)
                         childToggleControls($reply_button);
 
@@ -867,7 +867,7 @@ $(document).ready(function() {
                         restorePrevals(_block);
 
                         
-                        var $message =$('<div class="footerMessage">' + qoorateLang.SHARE_SUCCESS + '</div>');
+                        var $message =jQuery('<div class="footerMessage">' + qoorateLang.SHARE_SUCCESS + '</div>');
 
                         if( data_object.error == 0 ) {
                             _block.before( $message );
@@ -878,15 +878,15 @@ $(document).ready(function() {
                         return;
                     } else {
                         if( data != null && data != '' ) {
-                            var $data = $(data),
+                            var $data = jQuery(data),
                                 close_dyn_form = true;
                             if(_action == 'sort') {
-                                $('#q_cmnt').css('visibility', 'hidden');
-                                $('#q_cmnt_contents').children().remove();
-                                $('#q_cmnt_contents').append($data);
-                                $('#q_cmnt').css('visibility', 'visible');
+                                jQuery('#q_cmnt').css('visibility', 'hidden');
+                                jQuery('#q_cmnt_contents').children().remove();
+                                jQuery('#q_cmnt_contents').append($data);
+                                jQuery('#q_cmnt').css('visibility', 'visible');
                                 position();
-                                addLastItemClassToChildren( $('#q_cmnt_contents') );
+                                addLastItemClassToChildren( jQuery('#q_cmnt_contents') );
                                 return false;
                             }
 
@@ -894,7 +894,7 @@ $(document).ready(function() {
 
                             if (_block.hasClass('dyn')) {
                                 // SM: 20111217 - Prepend new comment to top of list for immediate gratification
-                                $('#q_cmnt_contents').prepend($data);
+                                jQuery('#q_cmnt_contents').prepend($data);
                                 // SM: added callback to scroll to item
                                 var item = data_object.item;
                                 var q_short_name = data_object.q_short_name;
@@ -905,8 +905,8 @@ $(document).ready(function() {
                                 // See if we are an img and need to be resized
                                 var item = data_object.item;
                                 if(item.type==1){
-                                    $('#' + data_object.q_short_name + '-' + item.id + ' .q_img' + ' img').load(function () {
-                                        $this = $(this);
+                                    jQuery('#' + data_object.q_short_name + '-' + item.id + ' .q_img' + ' img').load(function () {
+                                        $this = jQuery(this);
                                         var $thisParent = $this.parents('.q_item .q_main_body .q_txt'),
                                             width = $thisParent.width();
                                         if($this.width() > width - 14) {
@@ -919,8 +919,8 @@ $(document).ready(function() {
                             }
 
                             if(_action == 'getMore') {
-                                $('.getMore').remove();
-                                var $comments = $('#q_cmnt_contents');
+                                jQuery('.getMore').remove();
+                                var $comments = jQuery('#q_cmnt_contents');
                                 childToggleControls($data);
                                 $comments.append($data);
                                 addLastItemClassToChildren( $comments );
@@ -930,16 +930,16 @@ $(document).ready(function() {
     
                             if (_action == 'logoffUser') {
                                 // re-enable our logoff buttons
-                                $('.q_inr.logged-in').attr('class', 'q_inr');
-                                $('#q_cmnt').attr('class', 'anon');
-                                $('#q_ .q_head_wrap').attr('class', 'q_head_wrap');
-                             //   $('#q_fllw').html('<div class="q_inr"><span class="ttl">+ Follow</span></div>'); 
-                                $('#q_socl .ttl.signin').html(qoorateLang.SIGNIN);
-                                $('#q_socl .ttl.logoff').html('');
+                                jQuery('.q_inr.logged-in').attr('class', 'q_inr');
+                                jQuery('#q_cmnt').attr('class', 'anon');
+                                jQuery('#q_ .q_head_wrap').attr('class', 'q_head_wrap');
+                             //   jQuery('#q_fllw').html('<div class="q_inr"><span class="ttl">+ Follow</span></div>'); 
+                                jQuery('#q_socl .ttl.signin').html(qoorateLang.SIGNIN);
+                                jQuery('#q_socl .ttl.logoff').html('');
     
                                 // SM: 20120112 - destroy any dynamic forms we may have had from another login
-                                $('#q_ .dyn').fadeOut(250, function(){
-                                                $('#q_ .dyn').html('');
+                                jQuery('#q_ .dyn').fadeOut(250, function(){
+                                                jQuery('#q_ .dyn').html('');
                                                 });
     
                                return false;
@@ -947,15 +947,15 @@ $(document).ready(function() {
 
                             var q_short_name = data_object.q_short_name, p_id = 0;
 
-                            if ( !$('#'+_id).hasClass('lv-1') ) {
-                                $parent = $('#'+_id).parent('.lv-1');
+                            if ( !jQuery('#'+_id).hasClass('lv-1') ) {
+                                $parent = jQuery('#'+_id).parent('.lv-1');
                                 p_id = getValueFromClasses('co', _block.attr('class'));
                                 if($parent.length==0) {
-                                    $parent = $('#' + q_short_name + '-' + p_id);
+                                    $parent = jQuery('#' + q_short_name + '-' + p_id);
                                 } else {
                                     close_dyn_form = false;
                                 }
-                                $('.co-' + p_id).remove();
+                                jQuery('.co-' + p_id).remove();
 
                                 if($parent.find('.q_item.c').length > 0 || $data.find('.q_item.c').length > 0){
                                     $data = $data.find('.q_item.c');
@@ -969,17 +969,17 @@ $(document).ready(function() {
                                 } else {
                                     $parent.after($data);
                                 }
-                            } else if ( $('#'+_id).hasClass('lv-1') ) {
+                            } else if ( jQuery('#'+_id).hasClass('lv-1') ) {
                                 var child_class = 'p_' + _id,
                                     child_embedded = 0;
-                                $parent = $('#'+_id);
+                                $parent = jQuery('#'+_id);
                                 if($parent.find('.q_item.c').length > 0 || $data.find('.q_item.c').length > 0){
                                     $data = $data.find('.q_item.c');
                                     child_embedded = 1;
                                 }else{
                                     $data = $data.slice(1);
                                 }
-                                $children = $('.' + child_class);
+                                $children = jQuery('.' + child_class);
                                 if ( $children.length > 0 ) {
                                     $children.remove();
                                     if(child_embedded>0) {
@@ -997,13 +997,13 @@ $(document).ready(function() {
                                 }
                             }
                             // update our parents reply count if we have it
-                            $replycount = $('#' + q_short_name + '-' + p_id + ' .replycount');
+                            $replycount = jQuery('#' + q_short_name + '-' + p_id + ' .replycount');
                             $replycount.html(data_object.replycount);
                             $toggle = $parent.find('.replyWrapper:first');
                             childToggleControls($toggle, data_object.replycount);
                             if(_action == "addItem" && data_object.replycount > 0){
                                 //show our replies
-                                $toggleButton = $('#toggle_' + $parent.attr('id'));
+                                $toggleButton = jQuery('#toggle_' + $parent.attr('id'));
                                 if($toggleButton.hasClass('expand')) {
                                     $toggleButton.click()
                                 }
@@ -1011,7 +1011,7 @@ $(document).ready(function() {
                             // SM: 20111220 - We now have information on the new item
                             // This greatly simplifies our scrolling behavior
                             // SM: 20111214 - We need the slideUp now that we removed the "hover" slideup
-                            addLastItemClassToChildren( $('#q_cmnt_contents') );
+                            addLastItemClassToChildren( jQuery('#q_cmnt_contents') );
                             var $slide_up_block = _block.find( ".dyn"),
                                 item = data_object.item,
                                 q_short_name = data_object.q_short_name;
@@ -1038,16 +1038,16 @@ $(document).ready(function() {
 
                     /*
                     else {
-                          $('.dyn.'+_id).slideUp(250, function() { 
-                          $('#q_cmnt_contents').fadeOut(250, function() {
-                                $(this).remove();
-                                $('#q_cmnt').hide();
+                          jQuery('.dyn.'+_id).slideUp(250, function() { 
+                          jQuery('#q_cmnt_contents').fadeOut(250, function() {
+                                jQuery(this).remove();
+                                jQuery('#q_cmnt').hide();
                                          //slideUp(2000);
                           $.get(qoorateConfig.PROXY_URI, function(data) {
-                            if ($('#q_cmnt_contents')) $('#q_cmnt_contents').remove();
-                            $q_all = $(data).find('#q_cmnt');
-                            $('#q_cmnt').append($q_all.html());
-                            $('#q_cmnt').fadeIn(250);
+                            if (jQuery('#q_cmnt_contents')) jQuery('#q_cmnt_contents').remove();
+                            $q_all = jQuery(data).find('#q_cmnt');
+                            jQuery('#q_cmnt').append($q_all.html());
+                            jQuery('#q_cmnt').fadeIn(250);
                             });
                           });
                         });
@@ -1066,9 +1066,9 @@ $(document).ready(function() {
         call_theme_function('doMakeForm', [_q_short_name,_item,_id,_form])
 
         // SM: 20111214 - Attach our preVals to our inputs
-        var $allInputs = $('.dyn.' + _id + ' :input');
+        var $allInputs = jQuery('.dyn.' + _id + ' :input');
         for ( var i = 0; i < $allInputs.length; i++ ) {
-            var $input = $($allInputs[i]);
+            var $input = jQuery($allInputs[i]);
             var type = $input.attr('type');
             if(type != "checkbox" && type != "submit") {
                 preVal = $input.data("preVal");
@@ -1079,7 +1079,7 @@ $(document).ready(function() {
 
         // SM: 20111223 - Attach our max length to all our inputs
         for ( var i = 0; i < $allInputs.length; i++ ) {
-            var $input = $($allInputs[i]);
+            var $input = jQuery($allInputs[i]);
             var type = $input.attr('type');
             if(type != "checkbox" && type != "submit") {
                 $input.data("maxLength", qoorateConfig.POST_MAX_LEN);
@@ -1089,16 +1089,16 @@ $(document).ready(function() {
 
 
         // SM: 20111214 - Now use preVal attached to input element
-        $("textarea")
+        jQuery("textarea")
             .focus(function() {
-                var $this = $(this);
+                var $this = jQuery(this);
                 var preVal = $this.data('preVal');
 
                 if( preVal == $this.val() )
-                    $(this).val('');
+                    jQuery(this).val('');
             })
             .blur(function() {
-                 var $this = $(this);
+                 var $this = jQuery(this);
                  var preVal = $this.data('preVal');
                  if( $this.val() == '' ) {
                      $this.val(preVal);
@@ -1106,16 +1106,16 @@ $(document).ready(function() {
         });
 
         // SM: 20111214 - Now use preVal attached to input element
-        $("input")
+        jQuery("input")
             .focus(function() {
-                var $this = $(this);
+                var $this = jQuery(this);
                 var preVal = $this.data('preVal');
 
                 if( preVal == $this.val() )
-                    $(this).val('');
+                    jQuery(this).val('');
             })
             .blur(function() {
-                 var $this = $(this);
+                 var $this = jQuery(this);
                 var preVal = $this.data('preVal');
                  if( $this.val() == '' ) {
                      $this.val(preVal);
@@ -1160,7 +1160,7 @@ $(document).ready(function() {
                                 '</div>' +
                             '</div>';
 
-        var social = get_class_element($('#q_socl .logged-in'),2);
+        var social = get_class_element(jQuery('#q_socl .logged-in'),2);
         var login_types = qoorateLang.LOGIN_TYPES;
         var login_type;
 
@@ -1229,7 +1229,7 @@ $(document).ready(function() {
             postAnonymous = '';
         }
 
-        var $dynForm = $('.dyn.'+_id);
+        var $dynForm = jQuery('.dyn.'+_id);
         if ( $dynForm.html() == '' ||
              $dynForm.parents().is('.q_head_wrap') ||
              $dynForm.find("." + actionType).length ==0 
@@ -1247,7 +1247,7 @@ $(document).ready(function() {
                 if(_form == 'replyPhoto') {
                     //console.log(photoId);
                     createUploader(photoId);
-                    $('#'+photoId).append('<input id="photoHash" name="thumbnailLarge" type="hidden" />' +
+                    jQuery('#'+photoId).append('<input id="photoHash" name="thumbnailLarge" type="hidden" />' +
                                           '<input id="replyPhoto" name="replyPhoto" type="hidden" value="" />');
                 }
                 scrollToObject($dynForm);
@@ -1271,7 +1271,7 @@ $(document).ready(function() {
         var commText = qoorateLang.COMMENT;
         var imgText = qoorateLang.IMAGE_COMMENT;
 
-        $reply_button = $('.' + _q_short_name + '-' + _item + '.do.makeForm.reply span:first');
+        $reply_button = jQuery('.' + _q_short_name + '-' + _item + '.do.makeForm.reply span:first');
         if(_form == 'replyLink') {
             commText = qoorateLang.REPLY_LINK_COMMENT;
             $reply_button.html(qoorateLang.REPLY_BUTTON)
@@ -1304,7 +1304,7 @@ $(document).ready(function() {
                                 '</div>' +
                             '</div>';
 
-        var social = get_class_element($('#q_socl .logged-in'),2);
+        var social = get_class_element(jQuery('#q_socl .logged-in'),2);
         var login_types = qoorateLang.LOGIN_TYPES;
         var login_type;
 
@@ -1373,7 +1373,7 @@ $(document).ready(function() {
             postAnonymous = '';
         }
 
-        var $dynForm = $('.dyn.'+_id);
+        var $dynForm = jQuery('.dyn.'+_id);
         $dynForm.html("");
         if ( $dynForm.html() == '' ||
              $dynForm.parents().is('.q_head_wrap') ||
@@ -1392,7 +1392,7 @@ $(document).ready(function() {
                 if(_form == 'replyPhoto') {
                     //console.log(photoId);
                     createUploader(photoId);
-                    $('#'+photoId).append('<input id="photoHash" name="thumbnailLarge" type="hidden" />' +
+                    jQuery('#'+photoId).append('<input id="photoHash" name="thumbnailLarge" type="hidden" />' +
                                           '<input id="replyPhoto" name="replyPhoto" type="hidden" value="" />');
                 }
                 scrollToObject($dynForm);
@@ -1407,7 +1407,7 @@ $(document).ready(function() {
         }
         $dynForm.show();
 
-        $(".q_item textarea").resizable({
+        jQuery(".q_item textarea").resizable({
             resize: function(event, ui) {
                     position(); 
                 },
@@ -1442,7 +1442,7 @@ $(document).ready(function() {
         var $fhtml = '';
 
         if( formType == 'replyLink' ) {
-            $fhtml = $('<div><div class="dynReplyWrap">' +
+            $fhtml = jQuery('<div><div class="dynReplyWrap">' +
                         '<div class="inputAreaWrap-outer ' + formType + '">' +
                             '<div class="inputAreaWrap-inner">' +
                                 '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
@@ -1454,7 +1454,7 @@ $(document).ready(function() {
              $fhtml.find('#q_' + formType).after('<a href="#" class="do action attachLink ' + id + ' disabled" >Add Thumbnail</a>' +
                                                  '<div class="q_clear"></div>');
         } else {
-            $fhtml = $('<div class="dynReplyWrap">' +
+            $fhtml = jQuery('<div class="dynReplyWrap">' +
                         '<div class="inputAreaWrap-outer ' + formType + '">' +
                             '<div class="inputAreaWrap-inner">' +
                                 '<input id="q_'+formType+'" name="' + formType + '" class="do action ' + formType+' ' + id + '" value="' + value + '" />' +
@@ -1473,10 +1473,10 @@ $(document).ready(function() {
 
         // place here for closure in callback
         // SM: 20110105 - We now replace with loading instead of disable
-        // var $replyLink = $('input.replyLink');
+        // var $replyLink = jQuery('input.replyLink');
         // var $replyLinkWrapper =  $replyLink.parent();
-        // var $attachLink = $('a.attachLink');
-        var $elem = $( '.dyn.' + id).find(".dynReplyWrap");
+        // var $attachLink = jQuery('a.attachLink');
+        var $elem = jQuery( '.dyn.' + id).find(".dynReplyWrap");
 
         return function(data) {
             if (data instanceof Object) {
@@ -1501,15 +1501,15 @@ $(document).ready(function() {
                 //$replyLink.removeClass('disabled');
                 //$attachLink.removeClass('disabled');
 
-                 //$elem.append('<div class="contribUI_Wrap"><div class="contribUI_Content"><div class="contribUI_Title"><h2>'+$('input.replyLink').val()+'</h2></div></div></div>');
-                // $('.contribUI_Content').css('position','');
+                 //$elem.append('<div class="contribUI_Wrap"><div class="contribUI_Content"><div class="contribUI_Title"><h2>'+jQuery('input.replyLink').val()+'</h2></div></div></div>');
+                // jQuery('.contribUI_Content').css('position','');
                 // SM: 20120122 - we now use restoreContent instead
                 //hideLoader();
                 restoreContent($loading);
                 return;
             }
 
-           var $contribHTML = $('<div class="contribUI_Wrap">' + 
+           var $contribHTML = jQuery('<div class="contribUI_Wrap">' + 
                                     '<div class="contribUI_Image"><ul></ul></div>' + 
                                     '<div class="contribUI_Content">' + 
                                         '<div class="contribUI_Title"> <h2></h2> </div>' + 
@@ -1644,7 +1644,7 @@ $(document).ready(function() {
                     $contribHTML.find('.contribUI_Image img').eq(count-1).css('visibility', 'hidden');
                 }
 
-                textareaValidateAction( $('textarea.replyLink.' + id) );
+                textareaValidateAction( jQuery('textarea.replyLink.' + id) );
             };
         };
 
@@ -1668,7 +1668,7 @@ $(document).ready(function() {
         function getForEach(id, $contribHTML, $elem) {
             return function(intIndex, objVal) {
                // create and load img in memory first
-               var $img =  $('<img />');
+               var $img =  jQuery('<img />');
                function getImgLoad(id, $contribHTML, $elem) {
                     return function() {
                         var img_width = this.width;
@@ -1676,14 +1676,14 @@ $(document).ready(function() {
                         // SM: 20120114 - added ratio back into the mix
                         ratio = img_width / img_height;
                         if ( !( (img_height < 40 && img_width < 40) || ratio > 4 || ratio < .25 ) ) {
-                            var $this = $(this);
+                            var $this = jQuery(this);
                             // SM: 20120114 - we need to set current/count here now that it is based on success
                             if($contribHTML.data('current') == -1){
                                 // we are our first succesful image
                                 createSliderControls( $contribHTML, $elem );
                                 $contribHTML.data('current', 0);
                                 $contribHTML.find('.contribUI_PageNumber_Current').text(1);
-                                textareaValidateAction( $('textarea.replyLink.' + id) );
+                                textareaValidateAction( jQuery('textarea.replyLink.' + id) );
                             }
                             var count = $contribHTML.data("count") + 1;
                             $contribHTML.data('count', count);
@@ -1697,7 +1697,7 @@ $(document).ready(function() {
                             }
 
                             var $slider_ul = $contribHTML.find('ul'); 
-                            var $image_li = $('<li id="shareImg-'+intIndex+'"></li>');
+                            var $image_li = jQuery('<li id="shareImg-'+intIndex+'"></li>');
                             $image_li.html($this);
                             $contribHTML.find('ul').css("width", (count * 100) + "pc");
                             $slider_ul.append($image_li);
@@ -1716,8 +1716,8 @@ $(document).ready(function() {
 
 
     var hideLoader = function() {
-       //$('.imgLoad').slideUp('slow');//fadeOut('slow');
-       $('.imgLoad').remove();
+       //jQuery('.imgLoad').slideUp('slow');//fadeOut('slow');
+       jQuery('.imgLoad').remove();
     };
 
     var filterImage = function(img) {
@@ -1728,7 +1728,7 @@ $(document).ready(function() {
 
 
     var addImages = function(index, val) {
-        $('.contribUI_Image').append('<img class="contibUI_Single_Image" src='+val+' id="'+index+'" />');
+        jQuery('.contribUI_Image').append('<img class="contibUI_Single_Image" src='+val+' id="'+index+'" />');
     };
 
 
@@ -1741,13 +1741,13 @@ $(document).ready(function() {
         //    console.log("class:"+_class);
         //console.log("action:" + _action);
         // SM: 20111230 - Eveything we look for should be within our form
-        var $dynForm = $('.dyn.' + _id);
+        var $dynForm = jQuery('.dyn.' + _id);
         var $allInputs = $dynForm.find(':input');
 
         if( _action != 'attachLink') {
             // SM: 20111214 - Remove any preVal text from "blank" fields
             for (var i = 0 ; i < $allInputs.length; i++ ) {
-                var $input = $($allInputs[i]);
+                var $input = jQuery($allInputs[i]);
                 var preVal = $input.data('preVal');
                 if( preVal != null && $input.val() == preVal ) {
                     $input.val('');
@@ -1805,31 +1805,31 @@ $(document).ready(function() {
         if (_action == 'getMore') {
             _id = parseInt(_id) + qoorateConfig.PARENT_PAGE_SIZE;
             _query.push({"name":"moreIndex", "value":_id});
-            var sort = $('#q_sort_by').val();
+            var sort = jQuery('#q_sort_by').val();
             _query.push({"name":"sort", "value":sort});
         }
         if (_action == 'sort' ) {
-           var sort = $('#q_sort_by').val();
+           var sort = jQuery('#q_sort_by').val();
            _query.push({"name":"sort", "value":sort});
         }
         if(_action == 'attachLink') {
            _query[0]["value"] = validateURL(_query[0]["value"]);
             var $replyLink = $dynForm.find('input.replyLink');
-            var $replyLinkParent = $($replyLink.parent());
+            var $replyLinkParent = jQuery($replyLink.parent());
             if ($dynForm.find('.contribUI_Wrap')) {
                 $dynForm.find('.contribUI_Wrap').remove();
 
                 // SM: 20121114 Now just disable until success
-                //$('input.replyLink').val('');
+                //jQuery('input.replyLink').val('');
                 // SM: 20110105 - We now replace with loading instead of disable
                 // $replyLinkParent.addClass('disabled');
                 // $replyLink.addClass('disabled');
                 // $dynForm.find('a.attachLink').addClass('disabled');
             }
-            var $loading = $('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_API_URI + '/img/load.gif" /></div></div></div>');
+            var $loading = jQuery('<div class="contribUI_Wrap"><div class="imgLoad"><div align="center"><img src="' + qoorateConfig.QOORATE_API_URI + '/img/load.gif" /></div></div></div>');
 
             // SM: 20120104 - Moved loading image
-            //$('div.' + _id).prepend(loading_html);
+            //jQuery('div.' + _id).prepend(loading_html);
             replaceContent($replyLinkParent, $loading);
             // SM: 20121114 Added complete and error handlers
             // Needed to change from post to ajax
@@ -1885,7 +1885,7 @@ $(document).ready(function() {
             //console.log(tally_val[0]);
             //console.log(tally_val.join(" "));
             var upTally = tally_val.join(" ");
-            tally.fadeOut(250,function() {$(this).text(upTally).fadeIn(); } )
+            tally.fadeOut(250,function() {jQuery(this).text(upTally).fadeIn(); } )
         }
 
         tally = _block.find('.downVote span');
@@ -1893,14 +1893,14 @@ $(document).ready(function() {
         if(tally_val[0] != data.votesDown) {
             tally_val[0] = data.votesDown;
             var downTally = tally_val.join(" ");
-            tally.fadeOut(250,function() {$(this).text(downTally).fadeIn(); } )
+            tally.fadeOut(250,function() {jQuery(this).text(downTally).fadeIn(); } )
         }
 
     };
 
 
     var authenticate = function() {
-        var allInputs = $('#logsign').find(':input');
+        var allInputs = jQuery('#logsign').find(':input');
         console.log(allInputs);
         var _query = allInputs.serializeArray();
             _query.push({ "name":"action",    "value":"authentication"});
@@ -1954,7 +1954,7 @@ $(document).ready(function() {
 
     var updateContributions = function(contrib_count) {
          if (typeof(contrib_count)=='number'&&parseInt(contrib_count)==contrib_count &&contrib_count > 0) {
-             $elem = $("#q_cntr .ttl");
+             $elem = jQuery("#q_cntr .ttl");
              $lbl = contrib_count;
              if(contrib_count == 1) {
                  $lbl += " " + qoorateLang.CONTRIBUTION;
@@ -1974,18 +1974,18 @@ $(document).ready(function() {
             action: qoorateConfig.PROXY_URI + '?action=uploader',
             debug: true,
             onComplete: function(id, fileName, responseJSON) { 
-                                                                if( $('.q_qq-upload-success').length > 0 ) { 
+                                                                if( jQuery('.q_qq-upload-success').length > 0 ) { 
                                                                     var preImg = '<img src="' + qoorateConfig.QOORATE_API_URI + '/uploader/images/' + responseJSON.hash + '">'
-                                                                    $('.q_qq-upload-success').prepend('<span class="q_qq-upload-file-preview">' + preImg + '</span>');
-                                                                    var $replyPhoto = $('.do.action.replyPhoto');
+                                                                    jQuery('.q_qq-upload-success').prepend('<span class="q_qq-upload-file-preview">' + preImg + '</span>');
+                                                                    var $replyPhoto = jQuery('.do.action.replyPhoto');
                                                                     var preVal = $replyPhoto.data("preVal");
                                                                     if ( preVal && $replyPhoto.val() != preVal ) {
-                                                                        $(".do.action.addItem").removeClass("disabled");
+                                                                        jQuery(".do.action.addItem").removeClass("disabled");
                                                                     } else {
-                                                                        $(".do.action.addItem").addClass("disabled");
+                                                                        jQuery(".do.action.addItem").addClass("disabled");
                                                                     }
                                                                 } else { 
-                                                                    $(".do.action.addItem").addClass("disabled");
+                                                                    jQuery(".do.action.addItem").addClass("disabled");
                                                                 }
                                                              }
         });
@@ -2011,7 +2011,7 @@ $(document).ready(function() {
             }
 
             var url = qoorateConfig.QOORATE_API_URI + '/oauth/' + provider_full + '/login',
-                q_short_name = getValueFromClasses('shortName', $('div.q_sort_wrap').attr('class'));
+                q_short_name = getValueFromClasses('shortName', jQuery('div.q_sort_wrap').attr('class'));
             $.oauthpopup({
                 path: url + '?QOOID=' + $.cookie('QOOID') + '&QOOTID=' + $.cookie('QOOTID') + '&q_short_name=' + q_short_name,
                 callback: getCallback(callback),
@@ -2027,7 +2027,7 @@ $(document).ready(function() {
                 var data_object = parseJSONresponse(data)[0];
 
                 // SM: 20120112 - destroy any dynamic forms we may have had from another login
-                $('#q_ .dyn').fadeOut(250, function(){
+                jQuery('#q_ .dyn').fadeOut(250, function(){
                                             $('#q_ .dyn').html('');
                                             });
 
