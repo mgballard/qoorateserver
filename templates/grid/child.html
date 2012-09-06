@@ -37,7 +37,7 @@
                                         {% else %}
                                         <a class="q_parent disabled" href="#"><span class="q_r_usr">{{comment.relatedUsername|default(related_user|attr('username'))}}</span></a>
                                         {% endif %}
-                                    <p class="itemName caption type-{{comment.type}}">{{comment.name|e}}</p>
+                                    <p class="itemName caption type-{{comment.type}}">{{comment.name|e|sc}}</p>
                                 </div>
                                 <div class="q_clear"></div>
                             </div>

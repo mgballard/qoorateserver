@@ -11,11 +11,11 @@
                                 </div>
                             </div>
                             <div class="q_main_body">
-                                <h3 class="itemDesc pre"><a href="{{comment.description|e}}" target="_blank" rel="nofollow">{{comment.description|e}}</a></h3>
+                                <h3 class="itemDesc pre"><a href="{{comment.description|e|sc}}" target="_blank" rel="nofollow">{{comment.description|e|sc}}</a></h3>
                                 <div class="q_img">                            
-                                    <a href="{{comment.description|e}}" target="_blank" rel="nofollow"><img src="{{app["S3_IMG_PATH"]}}{{comment.thumbnailLarge|default(thumbnailLargeHash)}}_t.jpg" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" /></a>
+                                    <a href="{{comment.description|e|sc}}" target="_blank" rel="nofollow"><img src="{{app["S3_IMG_PATH"]}}{{comment.thumbnailLarge|default(thumbnailLargeHash)}}_t.jpg" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" /></a>
                                 </div>
-                                <p class="itemName caption type-1">{{comment.name|e}}</p>
+                                <p class="itemName caption type-1">{{comment.name|e|sc}}</p>
                                 <div class="q_clear"></div>
                             </div>
                             <div class="q_main_footer">

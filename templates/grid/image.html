@@ -17,7 +17,7 @@
                                         <img src="{{app["S3_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}_m.jpg" 
                                                 onerror="ImgError(this, '{{app["QOORATE_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}','{{app["BROKEN_IMG_URI"]}}')">
                                     </div>
-                                    <h3 class="itemName title type-{{comment.type}}">{{comment.name|e}}</h3>
+                                    <h3 class="itemName title type-{{comment.type}}">{{comment.name|e|sc}}</h3>
                                     {% endfor %}
                                 </div>
                                 <div class="q_clear"></div>
