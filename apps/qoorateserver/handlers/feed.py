@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import sys
 import urllib2
 import functools
@@ -410,6 +411,11 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             self.replyPhoto if self.replyPhoto != None else
             self.replyComment if self.replyLink != None else
             self.replyComment if self.replyComment != None else None)
+        
+        #if name is not None:
+        #    name = name.encode('ascii', 'xmlcharrefreplace')
+
+        
         type = (10 if self.replyTopic != None else
             2 if self.replyLink != None else
             1 if self.replyPhoto != None else

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from qoorateserver.modules.brooklyncodebrubeck.application import BrooklynCodeBrubeck
 from brubeckmysql.base import create_db_conn
 import time
@@ -80,6 +81,18 @@ def qoorate_compute_relevency(item):
     logging.info("qoorate_compute_relevency, end: %s" % item)
     return voteNumber
 
+def unsanitize_safe_htmlentities(sanitized_text):
+    """unsanitizes html elements"""
+    logging.debug("unsanitizing: %s" % sanitized_text)
+    sanitized_text = sanitized_text.encode('ascii', 'xmlcharrefreplace')
+    logging.debug("unsanitizing encoded ascii: %s" % sanitized_text)
+    sanitized_text = sanitized_text.encode('utf8')
+    logging.debug("unsanitizing encoded utf8: %s" % sanitized_text)
+
+    unsanitized_text = sanitized_text.replace("&amp;#", "&#")
+    logging.debug(" unsanitized: %s" % unsanitized_text)
+    return unsanitized_text
+    
 class Qoorate(BrooklynCodeBrubeck):
     """Custom application class for Qoorate."""
     def __init__(self, settings_file=None, project_dir=None,
@@ -92,7 +105,7 @@ class Qoorate(BrooklynCodeBrubeck):
         pool_size = 10
 
         if self.db_conn == None:
-            # create our db_conn if we have the settings to        
+            # create our db_conn if we have the settings to
             if settings_file != None:
                 mysql_settings = self.get_settings('mysql')
                 if mysql_settings != None:
@@ -100,6 +113,8 @@ class Qoorate(BrooklynCodeBrubeck):
                     self.db_conn = Queue()
                     for i in range(pool_size): 
                         self.db_conn.put_nowait(create_db_conn(mysql_settings)) 
+
+        self.template_env.filters['sc'] = unsanitize_safe_htmlentities
 
     def determine_relevency(self, item):
         """schedule an indexing using concurrency"""

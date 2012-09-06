@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import pymysql
 import json
 import logging
@@ -9,7 +10,7 @@ from brubeck.queryset import AbstractQueryset
 import dictshield
 from dictshield.fields import mongo as MongoFields
 from dictshield.fields import compound as CompoundFields
-from brubeckmysql.querysets import MySqlQueryset, MySqlApiQueryset
+from brubeckmysql.querysets import MySqlQueryset, MySqlApiQueryset, unescape
 
 from qoorateserver.models.models import Comment, Image, User, Qoorate, CommentItem, Vote, Flag, FlagType, KeyPair, Qoorate
 
@@ -198,6 +199,8 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
  
             # logging.debug("row -> \n %s" % (row))
             comment = CommentItem(**row)
+            #comment.name = unescape(comment.name)
+
             # logging.debug("comment -> \n %s" % (comment.to_json()))
             if comment.type==1:
                 #logging.debug("table, comment.id: %s, %s" % (table, comment.id))
