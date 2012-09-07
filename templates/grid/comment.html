@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="q_user_info">
                                         {% if comment.is_anonymous %}
-                                        <span class="q_usr">Anonymous</span>
+                                        <span class="q_usr">{{comment.nickname}}</span>
                                         {% else %}
                                         <span class="q_usr">{{(comment.username|e|sc)|default(current_user.username|e|sc)}}</span>
                                         {% endif %}

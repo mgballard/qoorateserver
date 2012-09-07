@@ -77,6 +77,7 @@ class Comment(Document):
     referer = fields.StringField(required=True, max_length=2083)
     changeDate = fields.DateTimeField(required=True)
     createDate = fields.DateTimeField(required=True)
+    nickname = fields.StringField(required=False, max_length=255)
     # The table name, since each API user has unique table name for comments
     tableName = fields.StringField(required=True, max_length=255)
 	 
@@ -143,6 +144,7 @@ class CommentItem(Document):
     createDate = fields.DateTimeField(required=True)
     imageUrl = fields.StringField(max_length=512)
     images = fields.compound.ListField(EmbeddedDocumentField(Image))
+    nickname = fields.StringField(max_length=255)
 
     # The comment table name, since each API user has unique table names
     tableName = fields.StringField(required=True, max_length=255)

@@ -993,6 +993,12 @@ This contains CSS for margins, padding, display, float, etc ...
     margin: 0px;
 }
 
+#q_ .dynFormFooter input.post_to,
+#q_ .dynFormFooter input.is_anonymous{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 #q_ .gp .postTo {
     display: none;
 }

@@ -135,7 +135,7 @@ class CommentItemQueryset(MySqlQueryset, AbstractQueryset):
                 ur.`username` as relatedUsername, ur.`thumbnailLarge` as relatedUserThumbnailLarge, f.`type`,
                 f.`is_anonymous` , r.`is_anonymous` as `related_is_anonymous`, f.`name` , f.`location` ,f.`description`,f.`referer`,
                 f.`voteCount` , f.`voteNumber` , f.`votesUp` ,f.`votesDown` , f.`flagCount`,  f.`childCount`, f.`sortOrder` , f.`status`,
-                f.`thumbnailSmall` ,f.`thumbnailLarge` , f.`changeDate` , f.`createDate`
+                f.`thumbnailSmall` ,f.`thumbnailLarge` , f.`changeDate` , f.`createDate`, f.`nickname`, r.`nickname` as `related_nickname`
             FROM (
                 # this query adds the sequence fields to filter by for paging
                 SELECT  s1.*, @parentrownum := convert( IF( ( parentId = 0), @parentrownum +1, @parentrownum ), UNSIGNED INTEGER) AS parent_sequence,

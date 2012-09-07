@@ -23,8 +23,7 @@
                                     </div>
                                     <div class="q_user_info">
                                         {% if comment.is_anonymous %}
-                                        <span class="q_usr">Anonymous</span>
-                                        {% else %}
+                                        <span class="q_usr">{{comment.nickname}}</span>                                        {% else %}
                                         <span class="q_usr">{{(comment.username|e)|default(current_user.username|e|e)}}</span>
                                         {% endif %}
                                         <span class="time">{{comment.getTimeAgo()}}</span>
@@ -33,7 +32,7 @@
                                 </div>
                                 <div class="q_txt">
                                         {% if comment.related_is_anonymous %}
-                                        <a class="q_parent disabled" href="#"><span class="q_r_usr">{{Anonymous}}</span></a>
+                                        <a class="q_parent disabled" href="#"><span class="q_r_usr">{{{{comment.related_nickname}}}}</span></a>
                                         {% else %}
                                         <a class="q_parent disabled" href="#"><span class="q_r_usr">{{comment.relatedUsername|default(related_user|attr('username'))}}</span></a>
                                         {% endif %}

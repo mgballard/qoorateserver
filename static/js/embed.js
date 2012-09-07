@@ -1174,14 +1174,16 @@ jQuery(document).ready(function($) {
 
         var postTo = '<span class="postTo">' +
                         '<input class="post_to" type="checkbox" checked="checked" name="post_to" value="post_to" />' +
-                        '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
+                        '<label for="post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
                      '</span>';
 
         var postAnonymous = '';
         if (qoorateConfig.ANONYMOUS_CAPABLE === true) {
             var postAnonymous = '<span class="isAnonymous">' +
                             '<input class="is_anonymous" type="checkbox" name="is_anonymous" value="1" />' +
-                            '<label for "is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                            '<label for="is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                            '<label for="nickname" style="display: none">' + qoorateLang.NICKNAME +'</label>' +
+                            '<input type="textbox" class="nickname" name="nickname" style="display: none;" value="' + qoorateLang.DEFAULT_NICKNAME + '">' +
                          '</span>';
         }
         
@@ -1318,14 +1320,16 @@ jQuery(document).ready(function($) {
 
         var postTo = '<span class="postTo">' +
                         '<input class="post_to" type="checkbox" checked="checked" name="post_to" value="post_to" />' +
-                        '<label for "post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
+                        '<label for="post_to">' + qoorateLang.POST_TO + ' ' + social + '</label>' +
                      '</span>';
 
         var postAnonymous = '';
         if (qoorateConfig.ANONYMOUS_CAPABLE === true) {
             var postAnonymous = '<span class="isAnonymous">' +
                             '<input class="is_anonymous" type="checkbox" name="is_anonymous" value="1" />' +
-                            '<label for "is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                            '<label for="is_anonymous">' + qoorateLang.POST_ANONYMOUS +'</label>' +
+                            '<label for="nickname">' + qoorateLang.NICKNAME +'</label>' +
+                            '<input type="textbox" class="nickname" name="nickname" style="display: none;" value="' + qoorateLang.DEFAULT_NICKNAME + '">' +
                          '</span>';
         }
 
@@ -1764,7 +1768,6 @@ jQuery(document).ready(function($) {
         _query.push({ "name":"QOOID",    "value":$.cookie('QOOID')});
         _query.push({ "name":"QOOTID",    "value":$.cookie('QOOTID')});
 
-        
 
         if ( _action=='flag' ) {
             var flagTypeId = getValueFromClasses( 'value', $source_object.attr( 'class' ) );
@@ -1795,6 +1798,9 @@ jQuery(document).ready(function($) {
             
             if($dynForm.find('#attach_image_thumbnail').is(':checked')) {
                 _query.push( {"name":"thumbnailLarge", "value": $slider.find('img').eq(imgPos).attr('src')} );
+            }
+            if($dynForm.find('input.is_anonymous').is(':checked')) {
+                _query.push({ "name":"nickname",    "value":$dynForm.find('input.is_anonymous').parent().find('input.nickname')});
             }
         }
 
@@ -2192,6 +2198,28 @@ jQuery(document).ready(function($) {
                     $this.val(preVal);
                 }
             }
+        }); 
+    
+       $document.delegate("input.is_anonymous", "click", function(event) {
+            // SM: 20111214 - Now attach preVal to input element for pretext hint
+            var $this = $(this),
+                $parent = $this.parent(),
+                $is_anonymous_label = $parent.find('label[for="is_anonymous"]'),
+                $nickname_label = $parent.find('label[for="nickname"]'),
+                $nickname = $parent.find('input.nickname');
+            
+            if($this.is(':checked')){
+                // display our textbox for the nickname
+                $nickname.css('display', 'inline');
+                $nickname_label.css('display', 'inline');
+                $is_anonymous_label.css('display', 'none');
+            }else{
+                // make our input hidden our textbox for the nickname
+                $nickname.css('display', 'none');
+                $nickname_label.css('display', 'none');
+                $is_anonymous_label.css('display', 'inline');
+            }
+    
         }); 
     
         $document.delegate(".q_item div.dyn","hover", function(e) {

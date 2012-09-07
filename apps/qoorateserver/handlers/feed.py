@@ -178,20 +178,20 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
         """ comment argument.
         Used in vote and flag, but never passed from application.
         """
-        return self.get_argument('comment', None)    
+        return self.get_argument('comment', None)
 
     @lazyprop
     def flagTypeId(self):
         """ flagTypeId argument.
         """
-        return self.get_argument('flagTypeId', None)    
+        return self.get_argument('flagTypeId', None)
 
     @lazyprop
     def uploader(self):
         """ Image mainipulation and s3 upload object.
         This is an extenal Brubeck Package.
         """
-        return Uploader(self.application.get_settings('uploader'))    
+        return Uploader(self.application.get_settings('uploader'))
 
     @lazyprop
     def oauth_base(self):
@@ -220,6 +220,13 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             self.app_settings['ANONYMOUS_CAPABLE'] == 1):
                 anonymous_capable = True
         return anonymous_capable
+
+    @lazyprop
+    def nickname(self):
+        """ nickname used for anonymous posts.
+        """
+        return self.get_argument('nickname', None)
+
 
     # Voting constants
     UP = 1
@@ -501,6 +508,7 @@ class FeedHandler(Jinja2Rendering, QoorateMixin,JSONMessageHandler):
             'referer':          self.referer,
             'changeDate':       now,
             'createDate':       now,
+            'nickname':         self.nickname,
         }
         item = Comment(**data)
         logging.debug(item.to_json())
