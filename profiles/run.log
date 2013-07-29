@@ -50127,3 +50127,10 @@ DEBUG:root:fetch_one
 DEBUG:root:db_conn:<pymysql.connections.Connection object at 0x1108c7590>
 DEBUG:root:Number of contributions 8
 INFO:root:200 POST /q/feed (127.0.0.1)
+DEBUG:root:set_table
+DEBUG:root:unable to set_table
+DEBUG:root:set_table
+DEBUG:root:unable to set_table
+DEBUG:root:set_table
+DEBUG:root:unable to set_table
+INFO:root:200 GET /q/feeder (127.0.0.1)

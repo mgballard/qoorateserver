@@ -1,1 +1,0 @@
-This folder contains files that are not part of the Qoorate application, but open source or licensed code
