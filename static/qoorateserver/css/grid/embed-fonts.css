@@ -1,0 +1,238 @@
+/*
+This contains all font styles except color
+*/
+
+#q_, #q_ textarea, #q_ input {
+    font-family:helvetica;
+    font-size:14px;
+}
+
+
+#q_ .q_sort_list {
+    text-align: center;
+}
+
+#q_ .inputAreaWrap-outer.replyLink .inputAreaWrap-inner {
+    font-family: helvetica !important;
+    font-size: 14px !important;
+}
+
+#q_ a.topic {
+    text-indent: 0 !important;
+    text-transform: uppercase !important;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+#q_ a.do.cancel {
+    text-indent:-9000px;
+}
+
+#q_ a.do.x {
+    line-height: .7em;
+}
+
+#q_ .downVote  a,
+#q_ .upVote  a {
+    text-align: center;
+}
+
+
+#q_ .upVote a,
+#q_ .downVote a {
+    line-height: 10px;
+}
+#q_ .upVote.topic a,
+#q_ .downVote.topic a {
+    line-height: 1.5em;
+}
+#q_ .upVote.wrap.topic, 
+#q_ .downVote.wrap.topic {
+    line-height: 1.5em;
+    color: #FFFFFF;
+    font-size: 11px;
+}
+#q_ .upVote.wrap.topic a, 
+#q_ .downVote.wrap.topic a {
+    line-height: inherit;
+    font-size: inherit;
+}
+#q_ .upVote.wrap.topic a:visited, 
+#q_ .downVote.wrap.topic a:visited,
+#q_ .upVote.wrap.topic a, 
+#q_ .downVote.wrap.topic a {
+    color: #FFFFFF;
+}
+#q_ .upVote.wrap.topic span, 
+#q_ .downVote.wrap.topic span {
+    line-height: inherit;
+    font-size: inherit;
+}
+
+#q_ a,
+#q_overlay_content a{
+    text-decoration:none;
+}
+
+#q_ a.do.flag,
+#q_ a.do.deleteItem,
+#q_overlay_content a.dialog,
+#q_ a.q_sort_button,
+#q_ a.do.makeForm {
+    text-transform: uppercase;
+    font-size: 10px;
+}
+#q_ a.do.sort {
+  font-size: 12px;
+}
+
+#q_ div#topReplyText span  {
+    font-size:1.25em;
+}
+
+
+#q_overlay_content a.dialog span,
+#q_ a.do.action.shareItem span,
+#q_ a.do.action.addItem span {
+    font-weight: normal;
+    text-transform:none;
+}
+#q_ .q_bottom.lv-1 a.do.makeForm.replyComment.reply span {
+    font-weight: normal;
+    text-transform: none;
+    font-size: 12px;
+}
+
+
+#q_ #q_cntr span.ttl {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+#q_overlay_content span.ttl,
+#q_ #q_socl span.ttl,
+#q_ #q_soclusr span.ttl, 
+#q_ #q_fllw span.ttl {
+    font-size: 1em;
+}
+
+#q_ #q_logoff {
+  font-size: .825em;
+}
+
+#q_ #q_fllw span,
+#q_ #q_soclusr span {
+    font-size:1.25em;
+}
+
+#q_ .q_main_body .itemName {
+    line-height:1.25em;
+}
+
+#q_ h3.itemName {
+    font-size: 1.2em;
+    text-align: center;
+    font-style: italic;
+}
+
+#q_ .q_main_top .q_usr {
+    font-weight:bold;
+    text-transform: uppercase;
+    
+}
+
+#q_ .q_item .time {
+    color: #C4C5C0;
+    font-size: .8em;
+}
+
+#q_ .contribUI_Text {
+    font-size: 9px;
+    line-height: 20px;
+}
+
+#q_ .contribUI_Text span {
+    font-weight: bold;
+}
+
+#q_ .contribUI_Checkbox {
+    text-align: left;
+    font-weight: bold;
+    font-size: 9px;
+}
+
+#q_ .contribUI_Title h2 {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+#q_ .contribUI_Summary p{
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 12.2px;
+}
+
+#q_ #q_bndg a {
+    text-indent:-9000px;
+}
+
+#q_overlay_content a.login span,
+#q_ #q_socl a span  {
+    text-indent: -9000px;
+}
+#q_ span.voted {
+    text-align:center;
+}
+
+
+#q_ .q_r_usr {
+    font-size:.9em;
+    line-height:1em;
+}
+
+.q_qq-upload-button {
+    text-align:center;
+}
+
+.q_qq-upload-drop-area {
+    text-align:center;
+}
+
+.q_qq-upload-drop-area span {
+    font-size:16px;
+}
+
+.q_qq-upload-list li {
+    line-height:15px;
+    font-size:12px;
+}
+.q_qq-upload-size,.q_qq-upload-cancel {
+    font-size:11px;
+}
+
+
+#q_ a.q_toggle.q_children {
+    text-indent:-9000px;
+}
+
+#q_overlay_content .overlayContent .contentMessage {
+    text-align: center;
+}
+
+#q_overlay_content .overlayContent .loginOption,
+#q_overlay_content .overlayContent .contentButtons {
+    text-align: center;
+}
+#q_ .getMore,
+#q_ .getMoreChildren {
+    text-transform: uppercase;
+    text-align: center;
+}
+#q_ .dynForm-header {
+    padding: 1em 0;
+    text-transform: uppercase;
+}
+#q_ .q_head_wrap .dynForm-header {
+    color: #ffffff;
+}

@@ -1,0 +1,61 @@
+#!/bin/bash
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with sudo:"
+    echo "sudo $0 $*"
+    exit 1
+fi
+
+cd $1
+echo "Stopping procer"
+export pid_file="$PWD/run/procer.pid"
+echo "looking for pid file: $pid_file"
+if [ -f "$pid_file" ]
+    then
+	pid=`cat $pid_file`
+	kill  $pid
+	rm -f $pid_file
+	echo "Stopped procer"
+    else
+	echo "no pid file found"
+fi
+
+echo "stopping mongrel2"
+pid_file=`cat ./profiles/mongrel2/pid_file`
+echo "looking for pid file: $pid_file"
+if [ -f "$pid_file" ]
+    then
+        pid=`cat $pid_file`
+        kill  $pid
+        rm -f $pid_file
+        echo "Stopped mongrel2"
+    else
+        echo "no pid file found"
+fi
+
+echo "stopping qoorateserver"
+pid_file=`cat ./profiles/qoorateserver/pid_file`
+echo "looking for pid file: $pid_file"
+if [ -f "$pid_file" ]
+    then
+        pid=`cat $pid_file`
+        kill  $pid
+        rm -f $pid_file
+        echo "Stopped qoorateserver"
+    else
+        echo "no pid file found"
+fi
+
+echo "stopping uploader"
+pid_file=`cat ./profiles/uploader/pid_file`
+echo "looking for pid file: $pid_file"
+if [ -f "$pid_file" ]
+    then
+        pid=`cat $pid_file`
+        kill  $pid
+        rm -f $pid_file
+        echo "Stopped uploader"
+    else
+        echo "no pid file found"
+fi
+
+echo "done stopping"

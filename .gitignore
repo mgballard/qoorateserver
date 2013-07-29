@@ -5,3 +5,4 @@ apps/dist
 build
 dist
 *.conf.js
+.DS_Store

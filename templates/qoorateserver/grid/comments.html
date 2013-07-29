@@ -1,0 +1,39 @@
+{% for comment in comments %}
+     {% if (comment.parent_sequence|default(1) < ((moreIndex) + (parentCount))) or parentCount == 0 or childCount == 0 %}
+        {% if comment.relatedId > 0 %}
+            {% if (comment.child_sequence|default(0) < childCount + 1) or childCount == 0 %}
+            <div id="{{q_short_name}}-{{comment.id}}" class="q_item lv-2 vi-l tp-0 co-{{comment.parentId}} c cn-{{comment.child_sequence|int}} {{parent_tag}}-{{comment.parentId}}">
+                {% include "grid/child.html" %}
+            </div>
+            {% else %}
+                {% include "grid/more-comments.html" %}
+            {% endif %}
+        {% else %}
+            {% if (loop.index > 1) %}
+            </div>
+            {% endif%}
+            {% if comment.type == 0 %}
+            <div id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "grid/comment.html" %}
+            {% elif comment.type == 1 %}
+            <div id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "grid/image.html" %}
+            {% elif comment.type == 2 %}
+            <div id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "grid/link.html" %}
+            {% elif comment.type == 10 %}
+            <div id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "grid/topic.html" %}
+            {% endif %} 
+        {% endif %}
+    {% endif%}
+{% else %}
+    <div class="q_clear"></div>
+    <!-- no comments -->
+{% endfor %}
+</div>
+{% if has_more_contributions %}
+    {% set comment = comments[comments|length-1] %}
+    {% include "grid/more-contributions.html" %}
+{% endif %}
+<div class="q_clear"></div>

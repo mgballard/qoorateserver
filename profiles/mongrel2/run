@@ -1,0 +1,4 @@
+#!/bin/bash
+m2sh load -config $PWD/../conf/mongrel2.conf -db $PWD/../conf/the.db
+sudo m2sh start -db $PWD/../conf/the.db -name main
+

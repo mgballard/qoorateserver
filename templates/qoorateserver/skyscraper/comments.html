@@ -1,0 +1,37 @@
+{%- for comment in comments -%}
+     {%- if (comment.parent_sequence|default(1) < ((moreIndex) + (parentCount))) or parentCount == 0 or childCount == 0 -%}
+        {%- if comment.relatedId > 0 -%}
+            {%- if (comment.child_sequence|default(0) < childCount + 1) or childCount == 0 -%}
+            <li id="{{q_short_name}}-{{comment.id}}" class="q_item lv-2 vi-l tp-0 co-{{comment.parentId}} c cn-{{comment.child_sequence|int}} {{parent_tag}}-{{comment.parentId}}">
+                {% include "skyscraper/child.html" %}
+            </li>
+            {%- else -%}
+                {% include "skyscraper/more-comments.html" %}
+            {%- endif -%}
+        {%- else -%}
+            {%- if comment.type == 0 %}
+            <li id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "skyscraper/comment.html" %}
+            </li>
+            {%- elif comment.type == 1 -%}
+            <li id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "skyscraper/image.html" %}
+            </li>
+            {%- elif comment.type == 2 -%}
+            <li id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "skyscraper/link.html" %}
+            </li>
+            {%- elif comment.type == 10 -%}
+            <li id="{{q_short_name}}-{{comment.id}}" class="q_item lv-1 vi-l tp-{{comment.type}}">
+                {% include "skyscraper/topic.html" %}
+            </li>
+            {%- endif -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- else -%}
+    <!-- no comments -->
+{%- endfor -%}
+{%- if has_more_contributions -%}
+{% set comment = comments[comments|length-1] %}
+{% include "skyscraper/more-contributions.html" %}
+{%- endif -%}

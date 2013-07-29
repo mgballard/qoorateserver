@@ -1,0 +1,31 @@
+#!/bin/sh
+#library and path settings
+FILE_PATH=`dirname $0`
+PARENT_FOLDER=`basename $FILE_PATH`
+
+PROFILE_DIR=`dirname $FILE_PATH`
+PROJECT_DIR=`dirname $PROFILE_DIR`
+PROJECT_FOLDER=`basename $PROJECT_DIR`
+
+echo PROFILE_DIR=$PROFILE_DIR
+echo PROJECT_DIR=$PROJECT_DIR
+echo PROJECT_FOLDER=$PROJECT_FOLDER
+
+export PYTHONPATH="./src"
+export APP_NAME=$PARENT_FOLDER
+# virtualenv settings
+export WORKON_HOME=".virtualenvs"
+export VIRTUALENV_WRAPPER="/usr/local/bin/virtualenvwrapper.sh"
+export VIRTUALENV_NAME=$PROJECT_FOLDER
+
+# you should not need to modify below here
+# setup virtualenv
+. $VIRTUALENV_WRAPPER
+# switch to your named virtualenv environment here
+workon $VIRTUALENV_NAME
+cd $PROJECT_DIR
+
+# WARNING: on some systems the nohup doesn't work, like OSX 
+# try running it without nohup 
+python -u ./apps/$APP_NAME/main.py 2>&1 >> ./logs/$APP_NAME.log &
+echo $! > `cat ./profiles/$APP_NAME/pid_file`

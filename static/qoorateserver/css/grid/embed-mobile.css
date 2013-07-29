@@ -1,0 +1,83 @@
+#q_.mobile {
+    width:auto;
+    max-width: 600px;
+    min-width: 250px;
+}
+
+#q_.mobile .q_item.lv-1 .q_data,
+#q_.mobile .getMore {
+    margin: 0;
+}
+
+#q_.mobile .q_item.c .dyn,
+#q_.mobile .q_item.c > .q_inr,
+#q_.mobile .getMoreChildren {
+    margin-left: 31px;
+    margin-right: 0px;
+}
+
+#q_.mobile .q_item > .q_inr {
+  margin-right: 0;
+}
+
+#q_.mobile .q_item.c .q_data {
+  margin-left: 0;
+}
+
+#q_.mobile a.q_toggle.q_children {
+    left: 1px;
+}
+
+#q_.mobile .q_item.lv-1 .q_left {
+    margin-top: 10px;
+    margin-left: 20px;
+    background: none;
+}
+
+#q_.mobile .q_main_top {
+    min-height: 76px;
+}
+
+#q_.mobile .q_main_top .q_usr {
+    border: none;
+}
+
+#q_.mobile  .q_top_info {
+    margin-left: 74px;
+    margin-right: 10px;
+}
+
+#q_.mobile .reply.top {
+   position: relative;
+   clear: left;
+   float: left;
+   margin-left: 74px;
+}
+
+#q_.mobile .reply_top_inr {
+    float: left;
+}
+#q_.mobile .reply_top_inr div.upVote.wrap {
+    margin-left: 0px;
+}
+#q_.mobile .q_item .q_qth {
+    margin-left: 21px;
+}
+#q_.mobile #topReplyFnxn {
+    width: 100%;
+}
+#q_.mobile #topReplyFnxn a.makeForm {
+  width: 100%;
+  border: 1px solid #d6d6d6;
+  border-radius: 5px;
+  height: 30px;
+  margin-bottom: 3px;
+}
+
+#q_.mobile #q_socl .q_inr {
+    border:none;
+    padding-right: 0px;
+}
+#q_.mobile #q_logoff {
+    padding-left: 7px;
+}

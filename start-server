@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo procer $1/profiles $1/run/procer.pid

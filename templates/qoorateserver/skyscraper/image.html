@@ -1,0 +1,59 @@
+            <div class="q_inr">
+                <div class="q_left">
+                    {% if comment.is_anonymous %}
+                    <img width="50" height="50" src="http://qrate.co/img/blank.gif" />
+                    {% else %}
+                    <img width="50" height="50" src="{{comment.userThumbnailLarge|default(current_user.thumbnailLarge)}}" onerror="ImgError(this, 'http://qrate.co/img/blank.gif')" />
+                    {% endif %}
+                </div>
+                <div class="q_data">
+                    <div class="q_main">
+                        <div class="q_inr">
+                            <div class="q_main_top">
+                                <div class="q_main_top_inr">
+                                    <div class="q_top_info">
+                                        {% if comment.is_anonymous %}
+                                        <span class="q_usr">{{comment.nickname}}</span><span class="time">{{comment.getTimeAgo()}}</span>
+                                        {% else %}
+                                        <span class="q_usr">{{(comment.username|e)|default(current_user.username|e)}}</span><span class="time">{{comment.getTimeAgo()}}</span>
+                                        {% endif %}
+                                        <div class="q_clear"></div>
+                                    </div>
+                                    <div class="reply top">
+                                        <div class="reply_top_inr">
+                                            <div class="upVote wrap"><a href="#" class="do action upVote {{q_short_name}}-{{comment.id}}"></a><span class="voted">{{comment.votesUp}}</span></div>
+                                            <div class="downVote wrap"><a href="#" class="do action downVote {{q_short_name}}-{{comment.id}}"></a><span class="voted">{{comment.votesDown}}</span></div>
+                                            <div class="q_clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="q_clear"></div>
+                                </div>
+                            </div>
+                            <div class="q_main_body">
+                                <h3 class="itemName title type-{{comment.type}}">{{comment.name|e|sc}}</h3>
+                                {% for image in comment.images|default(comment_images) %}
+                                <div class="q_img">
+                                    <img src="{{app["S3_IMG_PATH"]}}{{image.thumbnailLargeHash|default(thumbnailLargeHash)}}_t.jpg"  onerror="ImgError(this, 'http://qrate.co/img/blank.gif')">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="q_bottom lv-1">
+                                <fieldset class="reply bottom">
+                                    <legend>Reply</legend>
+                                    <div class="replyFooterWrapper">
+                                        <a id="share_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm share {{q_short_name}}-{{comment.id}}"><span>+ Share</span></a>
+                                        <a id="flag_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm flag {{q_short_name}}-{{comment.id}}"><span>Flag</span></a>
+                                        <a id="flag_{{q_short_name}}-{{comment.id}}" href="#" class="do action deleteItem {{q_short_name}}-{{comment.id}}"><span>Delete</span></a>
+                                        <a id="reply_{{q_short_name}}-{{comment.id}}" href="#" class="do makeForm replyComment {{q_short_name}}-{{comment.id}} reply"><span>Reply</span></a>
+                                        <div class="q_clear"></div>
+                                    </div>
+                                </fieldset>
+                                <div class="dyn {{q_short_name}}-{{comment.id}}"></div>
+                            </div>
+                            <div class="q_clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+            <div class="q_clear"></div>
